@@ -26,6 +26,7 @@ LDFLAGS = -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS)
 # C includes
 C_INCLUDES =  \
 -I$(TOPDIR)/include \
+-I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include
 
 CFLAGS+= $(C_INCLUDES)
 TARGET = test
@@ -65,3 +66,5 @@ ECHO:
 .PHONY : clean
 clean:
 	rm $(BUILD_DIR)/*.o $(BIN_DIR)/*
+distclean: clean
+	rm $(BUILD_DIR)/*.d
