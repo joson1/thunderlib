@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-02 23:45:22
- * @LastEditTime: 2020-08-03 00:01:04
+ * @LastEditTime: 2020-08-03 00:28:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\st\stm32f429\stm32f429-usart.c
@@ -11,7 +11,7 @@
 #include <thunder/serial.h>
 
 extern void (*_serial_init)(uint32_t);
-
+extern void (*_serial_sendChar)(char);
 
 static void MY_NVIC_Init(uint8_t NVIC_PreemptionPriority,uint8_t NVIC_Channel)	 
 {
@@ -73,8 +73,16 @@ void USART1_IRQHandler(void)
 
 }
 
+void SendChar(char ch)
+{
+	while ((USART1->SR & 0X40) == 0)
+		; //循环发送,直到发送完毕
+	USART1->DR = (char)ch;
+
+}
 
 void stm32f429_serial()
 {
     _serial_init = &stm32f429_serial_init;
+    _serial_sendChar = &SendChar;
 }

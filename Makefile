@@ -32,7 +32,7 @@ C_INCLUDES =  \
 
 
 CFLAGS+= $(C_INCLUDES)
-TARGET = test
+TARGET = thunderlib-stm32f429
 BUILD_DIR = $(TOPDIR)/build_dir
 BIN_DIR = $(TOPDIR)/bin
 

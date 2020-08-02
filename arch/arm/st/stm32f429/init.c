@@ -23,18 +23,7 @@ void MY_NVIC_PriorityGroupConfig(uint8_t NVIC_Group)
 	temp|=temp1;	   
 	SCB->AIRCR=temp;  //设置分组	    	  				   
 }
-//设置NVIC 
-//NVIC_PreemptionPriority：共计16个优先级，范围为 0~15，数值越小,越优先	   
-//NVIC_Channel 中断通道
-static void MY_NVIC_Init(uint8_t NVIC_PreemptionPriority,uint8_t NVIC_Channel)	 
-{
-	uint32_t temp;
-	
-	temp=NVIC_PreemptionPriority<<(4-4);	  
-	temp&=0xf;								//取低四位
-	NVIC->ISER[NVIC_Channel/32]|=1<<NVIC_Channel%32;//使能中断位(要清除的话,设置ICER对应位为1即可)
-	NVIC->IP[NVIC_Channel]|=temp<<4;				//设置响应优先级和抢断优先级   	    	  				   
-}
+
 //外部中断配置函数
 //只针对GPIOA~I;不包括PVD,RTC,USB_OTG,USB_HS,以太网唤醒等
 //参数:

@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 23:17:45
- * @LastEditTime: 2020-08-02 23:59:59
+ * @LastEditTime: 2020-08-03 00:28:15
  * @LastEditors: Please set LastEditors
  * @Description:  
  * @FilePath: \ThunderLib\drivers\serial\serial.c
@@ -14,11 +14,13 @@ unsigned int input_rx_wp = 0;
 char input_state = 0;
 
 extern void (*_serial_init)(uint32_t);
+extern void (*_serial_sendChar)(char);
 void (*_serial_init)(uint32_t) = 0;
+void (*_serial_sendChar)(char) = 0;
 
 char serial_buf_pop()
 {
-	unsigned int t = 0;
+	// unsigned int t = 0;
 	if (input_rx_rp == input_rx_wp)
 	{
 		return 0;
@@ -54,3 +56,23 @@ void serial_init(uint32_t boundRate)
 }
 
 
+
+char serial_sendChar( char ch)
+{
+    if (_serial_sendChar)
+    {
+        _serial_sendChar(ch);
+    }
+    return ch;
+}
+void serial_println(char* str)
+{
+
+    while (*str)
+    {
+        serial_sendChar(*str);
+        str++;
+    }
+    serial_sendChar('\r');
+    serial_sendChar('\n');
+}

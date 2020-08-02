@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 23:21:05
- * @LastEditTime: 2020-08-02 23:43:19
+ * @LastEditTime: 2020-08-03 00:26:54
  * @LastEditors: Please set LastEditors
  * @Description:  
  * @FilePath: \ThunderLib\include\thunder\serial.h
@@ -13,3 +13,6 @@
 void serial_init(uint32_t boundRate);
 char serial_buf_pop();
 int serial_buf_push(char ch);
+char serial_sendChar( char ch);
+void serial_println(char* str);
+

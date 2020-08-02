@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 21:44:48
- * @LastEditTime: 2020-08-03 00:10:11
+ * @LastEditTime: 2020-08-03 00:30:55
  * @LastEditors: Please set LastEditors
  * @Description:  
  * @FilePath: \ThunderLib\arch\arm\st\stm32f429\stm32f429-gpio.c
@@ -132,7 +132,6 @@ static void stm32f429_gpio_pin_set(struct pinDef* pin)
 static void stm32f429_gpio_pin_reset(struct pinDef* pin)
 {
     GPIO_TypeDef* GPIOx = (GPIO_TypeDef*)pin->bank;
-    uint32_t GPIO_PIN = pin->pin;
     GPIOx->ODR &= ~pin->pin;
 }
 
