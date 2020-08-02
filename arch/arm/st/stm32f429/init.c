@@ -1,5 +1,7 @@
 #include "stm32f429xx.h" 
 #include <stddef.h>
+#include "stm32f429-gpio.h"
+#include "stm32f429-usart.h"
 
 //设置向量表偏移地址
 //NVIC_VectTab:基址
@@ -24,7 +26,7 @@ void MY_NVIC_PriorityGroupConfig(uint8_t NVIC_Group)
 //设置NVIC 
 //NVIC_PreemptionPriority：共计16个优先级，范围为 0~15，数值越小,越优先	   
 //NVIC_Channel 中断通道
-void MY_NVIC_Init(uint8_t NVIC_PreemptionPriority,uint8_t NVIC_Channel)	 
+static void MY_NVIC_Init(uint8_t NVIC_PreemptionPriority,uint8_t NVIC_Channel)	 
 {
 	uint32_t temp;
 	
@@ -190,4 +192,6 @@ void SystemInit()
 	Stm32_Clock_Init(360,25,2,8);//设置时钟,180Mhz
 	SysTick->CTRL&=~(1<<2);	
 	MY_NVIC_PriorityGroupConfig(4);//设置分组
+	stm32f429_gpio();
+	stm32f429_serial();
 }

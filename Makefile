@@ -26,7 +26,10 @@ LDFLAGS = -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS)
 # C includes
 C_INCLUDES =  \
 -I$(TOPDIR)/include \
--I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include
+-I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include \
+-I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/CMSIS \
+-I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/stm32f429 \
+
 
 CFLAGS+= $(C_INCLUDES)
 TARGET = test
@@ -45,8 +48,8 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
 
 
 SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO) \
-			$(TOPDIR)/app
-			# $(TOPDIR)/drivers 
+			$(TOPDIR)/app \
+			$(TOPDIR)/drivers 
 
 LINK_SCRIPT := $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/$(LINK_SCRIPT)
 export CC LD MARCH CFLAGS LDFLAGS TARGET
@@ -54,7 +57,10 @@ export BUILD_DIR BIN_DIR TOPDIR LINK_SCRIPT
 
 ALL:$(TARGET)
 	$(OBJCOPY) -O binary -S $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).bin
-	
+	@echo build success
+	@ls $(BIN_DIR)/ -l
+
+
 
 $(TARGET):$(SUBDIRS)
 	make -C $(BUILD_DIR)

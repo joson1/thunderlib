@@ -1,5 +1,7 @@
 objs += init.o
 objs += startup_stm32f429xx.o
+objs += stm32f429-gpio.o
+objs += stm32f429-usart.o
 
 
 all:$(objs)
