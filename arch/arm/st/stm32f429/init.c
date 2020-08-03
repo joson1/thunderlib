@@ -1,3 +1,12 @@
+/*
+ * @Author: Alanwake@ThunderIndustry
+ * @Date: 2020-08-01 19:57:06
+ * @LastEditTime: 2020-08-03 14:23:39
+ * @LastEditors:  
+ * @Description:  
+ * @FilePath: \ThunderLib\arch\arm\st\stm32f429\init.c
+ */
+
 #include "stm32f429xx.h" 
 #include <stddef.h>
 #include "stm32f429-gpio.h"
@@ -178,6 +187,7 @@ void Stm32_Clock_Init(uint32_t plln,uint32_t pllm,uint32_t pllp,uint32_t pllq)
  
 void SystemInit()
 {
+	SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));   /* 开启FPUset CP10 and CP11 Full Access*/
 	Stm32_Clock_Init(360,25,2,8);//设置时钟,180Mhz
 	SysTick->CTRL&=~(1<<2);	
 	MY_NVIC_PriorityGroupConfig(4);//设置分组
