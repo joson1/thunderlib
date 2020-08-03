@@ -1,9 +1,9 @@
 /*
- * @Author: your name
+ * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 23:45:22
- * @LastEditTime: 2020-08-03 00:28:59
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
+ * @LastEditTime: 2020-08-03 14:23:53
+ * @LastEditors:  
+ * @Description:  
  * @FilePath: \ThunderLib\arch\arm\st\stm32f429\stm32f429-usart.c
  */
 
@@ -32,7 +32,7 @@ void uart_init(uint32_t pclk2, uint32_t bound)
 	uint16_t mantissa;
 	uint16_t fraction;
 	temp = (float)(pclk2 * 1000000) / (bound * 16); //得到USARTDIV@OVER8=0
-	mantissa = temp;								//得到整数部分
+	mantissa = (uint16_t)temp;								//得到整数部分
 	fraction = (temp - mantissa) * 16;				//得到小数部分@OVER8=0
 	mantissa <<= 4;
 	mantissa += fraction;
@@ -56,7 +56,35 @@ void uart_init(uint32_t pclk2, uint32_t bound)
 	USART1->CR1 |= 1 << 13; //串口使能
 }
 
+void uart2_init(uint32_t pclk2, uint32_t bound)
+{
+	float temp;
+	uint16_t mantissa;
+	uint16_t fraction;
+	temp = (float)(pclk2 * 1000000) / (bound * 16); //得到USARTDIV@OVER8=0
+	mantissa = (uint16_t)temp;								//得到整数部分
+	fraction = (temp - mantissa) * 16;				//得到小数部分@OVER8=0
+	mantissa <<= 4;
+	mantissa += fraction;
 
+	RCC->APB1ENR |= 1 << 17;																			  //使能串口1时钟
+	GPIO_Init(GPIOA, STM32F429_GPIO_PIN_3 | STM32F429_GPIO_PIN_2,
+				STM32F429_GPIO_MODE_AF, STM32F429_GPIO_OTYPE_PP,
+				STM32F429_GPIO_SPEED_50M, STM32F429_GPIO_PUPD_PU); //PA9,PA10,复用功能,上拉输出
+	GPIO_AF_Set(GPIOA, STM32F429_GPIO_PIN_3, 7);																	  //PA9,AF7
+	GPIO_AF_Set(GPIOA, STM32F429_GPIO_PIN_2, 7);																	  //PA10,AF7
+																										  //波特率设置
+	USART2->BRR = mantissa;																				  //波特率设置
+	USART2->CR1 &= ~(1 << 15);																			  //设置OVER8=0
+	USART2->CR1 |= 1 << 3;																				  //串口发送使能
+
+	//使能接收中断
+	USART2->CR1 |= 1 << 2;		   //串口接收使能
+	USART2->CR1 |= 1 << 5;		   //接收缓冲区非空中断使能
+	MY_NVIC_Init(15, USART2_IRQn); //组2，最低优先级
+
+	USART2->CR1 |= 1 << 13; //串口使能
+}
 void stm32f429_serial_init(uint32_t boundRate)
 {
     uart_init(90, boundRate);
@@ -83,6 +111,6 @@ void SendChar(char ch)
 
 void stm32f429_serial()
 {
-    _serial_init = &stm32f429_serial_init;
+    _serial_init     = &stm32f429_serial_init;
     _serial_sendChar = &SendChar;
 }
