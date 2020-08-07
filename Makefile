@@ -33,7 +33,7 @@ C_INCLUDES =  \
 -I$(TOPDIR)/include \
 -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include \
 -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/CMSIS \
--I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/stm32f429 \
+
 
 
 CFLAGS+= $(C_INCLUDES)
@@ -65,7 +65,7 @@ SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO) \
 LINK_SCRIPT := $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/$(LINK_SCRIPT)
 export CC LD MARCH CFLAGS LDFLAGS TARGET
 export BUILD_DIR BIN_DIR TOPDIR LINK_SCRIPT
-
+export PART_NO
 ALL:$(TARGET)
 	$(OBJCOPY) -O binary -S $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).bin
 	$(OBJDUMP) -D $(BIN_DIR)/$(TARGET).elf > $(BIN_DIR)/$(TARGET).dis

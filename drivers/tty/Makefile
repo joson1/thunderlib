@@ -1,15 +1,16 @@
 
-objs+=gpio.o
-objs+=serial.o
-objs+=timer.o
-
-SUBDIRS =	\
-		tty \
-
-all:$(SUBDIRS)
+objs+=ttyio.o
+objs+=tty.o
+objs+=sysfuncs.o
 
 
-$(SUBDIRS):$(objs)
+SUBDIRS =
+
+
+all:$(objs)
+
+
+$(objs):$(SUBDIRS)
 
 
 %.o:%.c

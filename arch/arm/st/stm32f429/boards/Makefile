@@ -1,4 +1,4 @@
-objs += serial.o
+objs += thunderboards32.o
 
 all:$(objs)
 

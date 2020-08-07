@@ -1,14 +1,20 @@
 objs += init.o
 objs += startup_stm32f429xx.o
-objs += stm32f429-gpio.o
-objs += stm32f429-usart.o
 
 
-all:$(objs)
+SUBDIRS = common \
+		boards
+
+all:$(SUBDIRS)
+
+$(SUBDIRS):$(objs)
 
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$@ $< -MD -MF $(BUILD_DIR)/$@.d
+	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$(PART_NO)-$@ $< -MD -MF $(BUILD_DIR)/$(PART_NO)-$@.d
 
 %.o:%.s
-	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$@ $< -MD -MF $(BUILD_DIR)/$@.d
+	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$(PART_NO)-$@ $< -MD -MF $(BUILD_DIR)/$(PART_NO)-$@.d
+
+$(SUBDIRS):
+	make -C $@

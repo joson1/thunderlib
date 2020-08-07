@@ -1,16 +1,19 @@
-/*
+<!--
  * @Author: your name
- * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2020-08-07 23:35:34
+ * @Date: 2020-08-03 21:04:09
+ * @LastEditTime: 2020-08-07 23:36:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ThunderLib\app\main.c
- */
+ * @FilePath: \ThunderLib\documentation\timer.md
+-->
+
+# timer
+
+```c
+
 
 #include <thunder/timer.h>
 #include <thunder/serial.h>
-#include <thunder/tty/tty.h>
-
 struct serial_dev* usart0;
 
 
@@ -37,3 +40,8 @@ int main()
 
     return 0;
 }
+
+
+
+
+```
