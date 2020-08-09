@@ -15,10 +15,9 @@ include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/stm32f429.mk
 include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/$(BOARD).mk
 
 # C includes
-C_INCLUDES =  \
+C_INCLUDES +=  \
 -I$(TOPDIR)/include \
 -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include \
--I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/CMSIS \
 
 
 
