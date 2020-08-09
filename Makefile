@@ -11,7 +11,7 @@ LIBDIR =
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 
 CFLAGS = -Wall
-include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/stm32f429.mk
+include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/$(PART_NO).mk
 include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/$(BOARD).mk
 
 # C includes
