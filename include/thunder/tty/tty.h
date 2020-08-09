@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-08-07 22:18:33
- * @LastEditTime: 2020-08-07 22:20:10
- * @LastEditors: your name
+ * @LastEditTime: 2020-08-09 18:57:29
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\include\thunder\tty\tty.h
  */

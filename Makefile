@@ -1,8 +1,8 @@
 
 ARCH := arm
-VENDOR := st
-PART_NO := stm32f429
-BOARD := thunderboard32
+VENDOR := xilinx
+PART_NO := zynq
+BOARD := 
 
 TOPDIR := $(PWD)
 LIBDIR =
@@ -53,3 +53,4 @@ clean:
 	rm $(BUILD_DIR)/*.o $(BIN_DIR)/*
 distclean: clean
 	rm $(BUILD_DIR)/*.d
+	rm $(BUILD_DIR)/*.map

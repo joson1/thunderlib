@@ -6,33 +6,30 @@ CROSS_COMPILE := arm-none-eabi-
 
 # VENDOR := st
 # PART_NO := stm32f429
-LINK_SCRIPT := STM32F429IGTx_FLASH.ld
+LINK_SCRIPT := lscript.ld
 
 TOPDIR := $(PWD)
-LIBDIR =
-# -L$(TOPDIR)/libs/newlib-cygwin/arm-none-eabi/lib
+LIBDIR = -L$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)
+
 # 		/c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 
 
 LIBS = -lc -lm -lnosys
-CPU = -mcpu=cortex-m4
-FPU = -mfpu=fpv4-sp-d16
+CPU = -mcpu=cortex-a9
+FPU = -mfpu=vfpv3
 FLOAT-ABI = -mfloat-abi=hard 
-MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+MCU = $(CPU) $(FPU) $(FLOAT-ABI)
 
 # C defines
 C_DEFS =  \
--DSTM32F429xx
+
+C_INCLUDES += 
 
 CFLAGS+= $(MCU) $(C_DEFS) $(OPT)
 
 
-LDFLAGS = -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-
-C_INCLUDES+= -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/CMSIS
-
-
+LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/Xilinx.spec $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld
