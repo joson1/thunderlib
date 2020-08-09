@@ -1,0 +1,2 @@
+tty=y
+export tty

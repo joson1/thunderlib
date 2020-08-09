@@ -1,16 +1,16 @@
 
-objs+=ttyio.o
-objs+=tty.o
-objs+=sysfuncs.o
+objs-$(tty)+=ttyio.o
+objs-$(tty)+=tty.o
+objs-$(tty)+=sysfuncs.o
 
 
 SUBDIRS =
 
 
-all:$(objs)
+all:$(objs-y)
 
 
-$(objs):$(SUBDIRS)
+$(objs-y):$(SUBDIRS)
 
 
 %.o:%.c
