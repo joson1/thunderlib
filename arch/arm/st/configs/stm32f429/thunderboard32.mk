@@ -1,3 +1,6 @@
+thunderboards32=y
+export thunderboards32
+
 tty=y
 export tty
 

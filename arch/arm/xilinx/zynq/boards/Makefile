@@ -1,4 +1,4 @@
-objs-$(thunderboards32) += thunderboards32.o
+objs-$(MagicBox) += MagicBox.o
 
 all:$(objs-y)
 

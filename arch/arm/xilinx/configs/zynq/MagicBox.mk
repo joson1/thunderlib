@@ -1,0 +1,2 @@
+MagicBox=y
+export MagicBox
