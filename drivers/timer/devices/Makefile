@@ -1,15 +1,13 @@
 
-objs+=gpio.o
+objs-$(timer-stm32f429)+=timer-stm32f429.o
 
-SUBDIRS =	\
-		serial\
-		timer\
-		tty \
-
-all:$(SUBDIRS)
+SUBDIRS =
 
 
-$(SUBDIRS):$(objs)
+all:$(objs-y)
+
+
+$(objs-y):$(SUBDIRS)
 
 
 %.o:%.c

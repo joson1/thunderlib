@@ -1,8 +1,8 @@
 
 ARCH := arm
-VENDOR := xilinx
-PART_NO := zynq
-BOARD := 
+VENDOR := st
+PART_NO := stm32f429
+BOARD := thunderboard32
 
 TOPDIR := $(PWD)
 LIBDIR =

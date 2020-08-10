@@ -1,10 +1,9 @@
 
-objs+=gpio.o
+objs+=timer.o
 
 SUBDIRS =	\
-		serial\
-		timer\
-		tty \
+		devices\
+
 
 all:$(SUBDIRS)
 

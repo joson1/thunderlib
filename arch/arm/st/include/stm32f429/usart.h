@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-06 23:02:19
- * @LastEditTime: 2020-08-07 21:15:53
+ * @LastEditTime: 2020-08-10 16:09:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\st\include\stm32f429\usart.h
@@ -53,7 +53,22 @@
 ////////////////////////////////////////////////////////////////////////////////// 
 #define USART_REC_LEN  			512  	// 2^9 定义最大接收字节数 512
 #define EN_USART1_RX 			0		//使能（1）/禁止（0）串口1接收
-	  	
+
+#include "stm32f429/gpio.h"
+
+typedef struct _Uart_InitDef 
+{
+    GPIO_TypeDef* GPIOx_RX;
+    GPIO_TypeDef* GPIOx_TX;
+    u32 PIN_RX;
+    u32 PIN_TX;
+    u32 GPIO_AF;
+    u32 pclk2;
+    u32 bound;
+    uint8_t rx_int_en;
+}Uart_InitDef ;
+
+
 // extern char  USART_RX_BUF[USART_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符 
 // extern u16 USART_RX_STA;         		//接收状态标记	
 extern char input_state ;
@@ -61,6 +76,7 @@ void uart_init(u32 pclk2, u32 bound,uint8_t int_en);
 //初始化串口1 
 //pclk2是PCLK2时钟频率，默认是90
 //bound 波特率
+
 
 void uart2_init(u32 pclk2, u32 bound ,uint8_t int_en);
 // pclk 默认45

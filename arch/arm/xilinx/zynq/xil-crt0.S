@@ -119,7 +119,7 @@ _start:
 	#endif
 
 #if USE_AMP != 1
-	@ bl XTime_SetTime
+	bl XTime_SetTime
 #endif
 
 #ifdef PROFILING			/* defined in Makefile */

@@ -1,7 +1,7 @@
 
 /******************************************************************************
 *
-* Copyright (C) 2014 - 2017 Xilinx, Inc. All rights reserved.
+* Copyright (C) 2009 - 2015 Xilinx, Inc.  All rights reserved.
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -12,6 +12,10 @@
 *
 * The above copyright notice and this permission notice shall be included in
 * all copies or substantial portions of the Software.
+*
+* Use of the Software is limited solely to applications:
+* (a) running on a Xilinx device, or
+* (b) that interact with a Xilinx device through a bus or interconnect.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -26,64 +30,62 @@
 * this Software without prior written authorization from Xilinx.
 *
 ******************************************************************************/
-
 /*****************************************************************************/
 /**
-* @file sleep.h
 *
-*  This header file contains ARM Cortex A53,A9,R5,Microblaze specific sleep
-*  related APIs.
+* @file usleep.c
+*
+* This function provides a microsecond delay using the Global Timer register in
+* the ARM Cortex A9 MP core.
 *
 * <pre>
-* MODIFICATION HISTORY :
+* MODIFICATION HISTORY:
 *
-* Ver   Who  Date	 Changes
-* ----- ---- -------- -------------------------------------------------------
-* 6.6   srm  11/02/17 Added processor specific sleep rountines
-*								 function prototypes.
-*
+* Ver   Who      Date     Changes
+* ----- -------- -------- -----------------------------------------------
+* 1.00a ecm/sdm  11/11/09 First release
+* 3.07a sgd      07/05/12 Upadted micro sleep function to make use Global Timer
+* 4.2	pkp		 08/04/14 Removed unimplemented nanosleep routine as it is not
+*						  possible to generate timer in nanosecond due to
+*						  limited cpu frequency
 * </pre>
 *
 ******************************************************************************/
+/***************************** Include Files *********************************/
 
-#ifndef SLEEP_H
-#define SLEEP_H
+#include "zynq/sleep.h"
+#include "zynq/xtime_l.h"
+#include "zynq/xparameters.h"
+#include "zynq/xil_types.h"
+#include "zynq/xpseudo_asm.h"
+#include "zynq/xreg_cortexa9.h"
 
-#include "xil_types.h"
-#include "xil_io.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* Global Timer is always clocked at half of the CPU frequency */
+#define COUNTS_PER_USECOND  (XPAR_CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ / (2U*1000000U))
 
 /*****************************************************************************/
 /**
 *
-* This macro polls an address periodically until a condition is met or till the
-* timeout occurs.
-* The minimum timeout for calling this macro is 100us. If the timeout is less
-* than 100us, it still waits for 100us. Also the unit for the timeout is 100us.
-* If the timeout is not a multiple of 100us, it waits for a timeout of
-* the next usec value which is a multiple of 100us.
+* This API gives a delay in microseconds
 *
-* @param            IO_func - accessor function to read the register contents.
-*                   Depends on the register width.
-* @param            ADDR - Address to be polled
-* @param            VALUE - variable to read the value
-* @param            COND - Condition to checked (usually involves VALUE)
-* @param            TIMEOUT_US - timeout in micro seconds
+* @param	useconds requested
 *
-* @return           0 - when the condition is met
-*                   -1 - when the condition is not met till the timeout period
+* @return	0 if the delay can be achieved, -1 if the requested delay
+*		is out of range
 *
-* @note             none
+* @note		None.
 *
-*****************************************************************************/
-s32 usleep(u32 useconds);
-s32 sleep(u32 seconds);
+****************************************************************************/
+s32 usleep(u32 useconds)
+{
+	XTime tEnd, tCur;
 
-#ifdef __cplusplus
+	XTime_GetTime(&tCur);
+	tEnd = tCur + (((XTime) useconds) * COUNTS_PER_USECOND);
+	do
+	{
+		XTime_GetTime(&tCur);
+	} while (tCur < tEnd);
+
+	return 0;
 }
-#endif
-
-#endif

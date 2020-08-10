@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 23:17:45
- * @LastEditTime: 2020-08-07 23:14:02
+ * @LastEditTime: 2020-08-10 16:19:52
  * @LastEditors: Please set LastEditors
  * @Description:  
  * @FilePath: \ThunderLib\drivers\serial\serial.c
@@ -129,6 +129,26 @@ struct serial_dev* serial_open(uint8_t id,uint32_t boundRate)
 	return NULL;
 }
 
+int serial_dev_register(uint8_t id,void* conf)
+{
+	struct serial_dev* p = serial_dev_table ;
+	if (p==NULL)
+	{
+		//no serial devices;
+		return -1;
+	}
+	
+	while (p->id!=id)
+	{
+		p = p->next;
+		if (p==NULL)
+			return -1;
+	}
+
+	p->dev_init_conf = conf;
+	return 0;
+
+}
 
 
 char serial_sendChar(struct serial_dev* dev, char ch)
