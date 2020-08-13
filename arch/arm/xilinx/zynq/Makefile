@@ -10,13 +10,20 @@ objs += translation_table.o
 
 objs += $(patsubst %.c,%.o,$(SOURCES))
 
+SUBDIRS = boards
 
-all:$(objs)
+all:$(SUBDIRS)
 
+
+$(SUBDIRS):$(objs)
 
 %.o:%.c
+	echo CF:$(CFLAGS) $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$(PART_NO)-$@ $< -MD -MF $(BUILD_DIR)/$(PART_NO)-$@.d
 
-%.o:%.s
+%.o:%.S
+	echo CF:$(CFLAGS) $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$(PART_NO)-$@ $< -MD -MF $(BUILD_DIR)/$(PART_NO)-$@.d
 
+$(SUBDIRS):
+	make -C $@

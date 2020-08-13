@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-09 22:24:31
+ * @LastEditTime: 2020-08-11 10:09:10
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ThunderLib\documentation\zynq\zynq调试.md
+-->
 
 # zynq 调试
 
@@ -15,6 +23,9 @@ target 2
 ps7_init
 
 ps7_post_config
+
+rst -processor
+
 
 stop
 

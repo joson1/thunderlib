@@ -1,8 +1,13 @@
 
 ARCH := arm
-VENDOR := st
-PART_NO := stm32f429
-BOARD := thunderboard32
+VENDOR := xilinx
+PART_NO := zynq
+BOARD := MagicBox
+# ARCH := arm
+# VENDOR := st
+# PART_NO := stm32f429
+# BOARD := thunderboard32
+
 
 TOPDIR := $(PWD)
 LIBDIR =
@@ -50,7 +55,7 @@ ECHO:
 
 .PHONY : clean
 clean:
-	rm $(BUILD_DIR)/*.o $(BIN_DIR)/*
+	-rm $(BUILD_DIR)/*.o $(BIN_DIR)/*
 distclean: clean
-	rm $(BUILD_DIR)/*.d
-	rm $(BUILD_DIR)/*.map
+	-rm $(BUILD_DIR)/*.d
+	-rm $(BUILD_DIR)/*.map

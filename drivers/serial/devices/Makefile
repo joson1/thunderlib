@@ -1,5 +1,6 @@
 
 objs-$(serial-stm32f429)+=serial-stm32f429.o
+objs-$(serial-zynq)+=serial-zynq.o
 
 SUBDIRS =
 

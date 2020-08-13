@@ -2,10 +2,6 @@
 CROSS_COMPILE := arm-none-eabi-
 # CFLAGS = -Wall
 
-# OPT = -O0
-
-# VENDOR := st
-# PART_NO := stm32f429
 LINK_SCRIPT := lscript.ld
 
 TOPDIR := $(PWD)
@@ -18,7 +14,7 @@ LIBDIR = -L$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)
 LIBS = -lc -lm -lnosys
 CPU = -mcpu=cortex-a9
 FPU = -mfpu=vfpv3
-FLOAT-ABI = -mfloat-abi=hard 
+FLOAT-ABI = -mfloat-abi=hard
 MCU = $(CPU) $(FPU) $(FLOAT-ABI)
 
 # C defines
@@ -29,7 +25,7 @@ C_INCLUDES +=
 CFLAGS+= $(MCU) $(C_DEFS) $(OPT)
 
 
-LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/Xilinx.spec $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map
+LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/Xilinx.spec -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld

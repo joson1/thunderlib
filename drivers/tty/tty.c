@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-03 21:37:21
- * @LastEditTime: 2020-08-07 23:31:49
+ * @LastEditTime: 2020-08-10 23:31:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\tty\tty.c
@@ -53,7 +53,7 @@ unsigned int NbrOfVar = sizeof(VarTab) / sizeof(struct _VarDesc);
 void cmd_init()
 {
     ttyio_init();
-    timer_setup(CMDTIMER,100,5,&cmd_scan);
+    // timer_setup(CMDTIMER,100,5,&cmd_scan);
 }
 
 void cmd_scan()

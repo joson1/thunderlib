@@ -283,5 +283,6 @@ _SDA2_BASE_ = __sdata2_start + ((__sbss2_end - __sdata2_start) / 2 );
 } > ps7_ddr_0
 
 _end = .;
+end = _end;
 }
 

@@ -129,7 +129,7 @@ _start:
 
    /* run global constructors */
    bl __libc_init_array
-
+	bl board_init
 	/* make sure argc and argv are valid */
 	mov	r0, #0
 	mov	r1, #0
