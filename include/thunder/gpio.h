@@ -1,33 +1,34 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-01 20:41:35
- * @LastEditTime: 2020-08-02 23:00:07
+ * @LastEditTime: 2020-08-16 18:58:59
  * @LastEditors: Please set LastEditors
  * @Description: 
  * @FilePath: \ThunderLib\include\thunder\gpio\gpio.h
  */
 
 #include <stdint.h>
-
-#define GPIO_MODE_OUTPUT    0
-#define GPIO_MODE_INPUT     1
-
-#define GPIO_PUPD_NODE      0
-#define GPIO_PUPD_PU        1
-#define GPIO_PUPD_PD        2
+#include <asm/gpio_defs.h>
 
 
-struct pinDef
+
+struct pinDesc
 {
+    uint8_t             pin_id;
     volatile void*      bank;
     volatile uint32_t   pin;
 };
 
-
-extern void gpio_pin_mode(struct pinDef* pin , uint32_t mode);
-extern void gpio_pin_pull(struct pinDef* pin ,uint32_t mode);
-extern void gpio_pin_set(struct pinDef* pin);
-extern void gpio_pin_reset(struct pinDef* pin);
-
-
+struct gpio_dev
+{
+    uint32_t id;
+    void* dev_init_conf; 
+    struct gpio_dev* next;
+};
+extern struct pinDesc  pin_map[];
+void __attribute__((weak)) gpio_pin_init (uint8_t pin_id);
+void __attribute__((weak)) gpio_pin_mode (uint8_t pin_id, uint32_t mode);
+void __attribute__((weak)) gpio_pin_pull (uint8_t pin_id , uint32_t pull);
+void __attribute__((weak)) gpio_pin_set  (uint8_t pin_id);
+void __attribute__((weak)) gpio_pin_reset(uint8_t pin_id);
 

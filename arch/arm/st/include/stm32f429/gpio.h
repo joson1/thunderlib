@@ -99,6 +99,11 @@
 #define GPIO_OTYPE_PP		0		//推挽输出
 #define GPIO_OTYPE_OD		1		//开漏输出 
 
+
+
+
+
+
 //GPIO通用设置 
 //GPIOx:GPIOA~GPIOI.
 //BITx:0X0000~0XFFFF,位设置,每个位代表一个IO,第0位代表Px0,第1位代表Px1,依次类推.比如0X0101,代表同时设置Px0和Px8.

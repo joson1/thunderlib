@@ -1,18 +1,18 @@
 
+objs+=gpio.o
 
-SUBDIRS +=serial
-SUBDIRS +=gpio
-SUBDIRS +=timer
-SUBDIRS +=tty
-
+SUBDIRS =	\
+		devices
 
 all:$(SUBDIRS)
+
+
+$(SUBDIRS):$(objs)
+
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$@ $< -MD -MF $(BUILD_DIR)/$@.d
 
 
-$(SUBDIRS):ECHO
+$(SUBDIRS):
 	make -C $@
-
-ECHO:

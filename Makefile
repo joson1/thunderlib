@@ -1,12 +1,12 @@
 
-ARCH := arm
-VENDOR := xilinx
-PART_NO := zynq
-BOARD := MagicBox
 # ARCH := arm
-# VENDOR := st
-# PART_NO := stm32f429
-# BOARD := thunderboard32
+# VENDOR := xilinx
+# PART_NO := zynq
+# BOARD := MagicBox
+ARCH := arm
+VENDOR := st
+PART_NO := stm32f429
+BOARD := thunderboard32
 
 
 TOPDIR := $(PWD)
@@ -23,9 +23,10 @@ include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/$(BOARD).mk
 C_INCLUDES +=  \
 -I$(TOPDIR)/include \
 -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include \
+-I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/$(PART_NO)/ \
 
 
-
+OPT = -O2
 CFLAGS+= $(C_INCLUDES)
 CFLAGS+= -g -gdwarf-2
 CFLAGS+= $(OPT)
