@@ -6,6 +6,8 @@
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\include\thunder\timer.h
  */
+#pragma once
+
 #include <stdint.h>
 
 

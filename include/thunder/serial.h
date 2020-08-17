@@ -1,11 +1,13 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 23:21:05
- * @LastEditTime: 2020-08-10 16:27:08
+ * @LastEditTime: 2020-08-16 21:03:12
  * @LastEditors: Please set LastEditors
  * @Description:  
  * @FilePath: \ThunderLib\include\thunder\serial.h
  */
+#pragma once
+
 #include <stdint.h>
 
 #define SERIAL_REC_LEN  			512  	// 2^9 定义最大接收字节数 512

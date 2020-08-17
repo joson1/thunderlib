@@ -1,11 +1,13 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-01 20:41:35
- * @LastEditTime: 2020-08-16 18:58:59
+ * @LastEditTime: 2020-08-16 21:02:43
  * @LastEditors: Please set LastEditors
  * @Description: 
  * @FilePath: \ThunderLib\include\thunder\gpio\gpio.h
  */
+
+#pragma once
 
 #include <stdint.h>
 #include <asm/gpio_defs.h>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-07 22:16:21
- * @LastEditTime: 2020-08-11 12:11:10
+ * @LastEditTime: 2020-08-16 22:19:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\tty\retarget.c
@@ -86,7 +86,6 @@ uint32_t kbhit()
 int _write(int file, char *ptr, int len) 
 {
     unsigned int i;
-    int de =1;
 //initialize_Uart(de);// NOT REQUIRED as UBOOT has already done the job.
 
     /* Transmitting a char from UART */

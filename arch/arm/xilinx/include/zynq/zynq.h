@@ -1,14 +1,48 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 18:03:51
- * @LastEditTime: 2020-08-10 20:26:48
+ * @LastEditTime: 2020-08-17 14:23:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\include\zynq\zynq.h
  */
+#pragma once
 #include <stdint.h>
 
+typedef struct
+{
+  volatile uint32_t DIRM; 
+  volatile uint32_t OEN;
+  volatile uint32_t INT_MASK;
+  volatile uint32_t INT_EN;
+  volatile uint32_t INT_DIS;
+  volatile uint32_t INT_STAT;
+  volatile uint32_t INT_TYPE;
+  volatile uint32_t INT_POLARITY;
+  volatile uint32_t INT_ANY;
+}GPIO_CON_TypeDef;
 
+#define GPIO_BASEADDR 0xE000A000
+
+#define GPIO_CON0 ((GPIO_CON_TypeDef*)(0x00000204+GPIO_BASEADDR))
+#define GPIO_CON1 ((GPIO_CON_TypeDef*)(0x00000244+GPIO_BASEADDR))
+#define GPIO_CON2 ((GPIO_CON_TypeDef*)(0x00000284+GPIO_BASEADDR))
+#define GPIO_CON3 ((GPIO_CON_TypeDef*)(0x000002C4+GPIO_BASEADDR))
+
+typedef struct
+{
+  volatile uint32_t* MASK_DATA_LSW;
+  volatile uint32_t* MASK_DATA_MSW;
+  volatile uint32_t* DATA;
+  volatile uint32_t* DATA_RO;
+  volatile GPIO_CON_TypeDef* controller;
+  
+} GPIO_TypeDef;
+
+GPIO_TypeDef GPIO_BANK0;
+GPIO_TypeDef GPIO_BANK1;
+GPIO_TypeDef GPIO_BANK2;
+GPIO_TypeDef GPIO_BANK3;
 
 
 typedef struct
