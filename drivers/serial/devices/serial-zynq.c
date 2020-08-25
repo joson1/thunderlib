@@ -1,14 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 17:15:15
- * @LastEditTime: 2020-08-10 21:55:30
+ * @LastEditTime: 2020-08-24 13:31:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\serial\devices\serial-zynq.c
  */
 #include <thunder/serial.h>
 #include "zynq/uart.h"
-
+#include <thunder/interrput.h>
+#include <zynq/xil_exception.h>
 
 
 #define BUFFER_LEN_USART0  512
@@ -41,6 +42,19 @@ int usart1_getchar()
 }
 
 
+InterruptHandler uart1_handler(void* Data)
+{
+	char ch;
+	// while( !(UART1->Channel_sts&&(1<<1)) )
+	// {
+		ch = uart_get(UART1);
+		usart1_putchar(ch);
+		serial_buf_push(&dev_usart1,ch);
+	// }
+	
+	UART1->Chnl_int_sts|=0x1;
+}
+
 struct serial_dev dev_usart1 = {
 
 	.id = 0,
@@ -53,8 +67,19 @@ struct serial_dev dev_usart1 = {
 	.getchar     = &usart1_getchar,//boundRate
 
 };
+#define UART1_IER	*((uint32_t *) 0xE0001008)
 
 void zynq_serial_init()
 {
+	
     serial_dev_attach(&dev_usart1);
+	
+	UART1->Intrp_en = 0x1;
+	UART1_IER = 1;
+	UART1->Rcvr_FIFO_trigger_level = 1;
+	irq_register(UART1_IRQ,uart1_handler,TRIGGER_EDGE_HIGHLEVEL);
+	ICDDCR[0] = 0x3;
+	ICCICR[0] = 0x07;
+	ICDISER[2] |=  (1<<18);
+	Xil_ExceptionEnable();
 }

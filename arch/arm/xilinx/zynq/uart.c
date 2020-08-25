@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 18:33:16
- * @LastEditTime: 2020-08-11 12:04:56
+ * @LastEditTime: 2020-08-24 13:23:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\zynq\uart.c
  */
 #include "zynq/uart.h"
-#define InputClockHz 99999999
+#define InputClockHz 100000000
 
 void uart_init(UART_TypeDef* UART,uint32_t Baudrete)
 {
@@ -70,3 +70,7 @@ void uart_send(UART_TypeDef* UART ,char ch)
     UART->TX_RX_FIFO = ch;
 }
 
+char uart_get(UART_TypeDef* UART)
+{
+    return UART->TX_RX_FIFO;
+}

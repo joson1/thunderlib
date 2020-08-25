@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-07 22:16:21
- * @LastEditTime: 2020-08-16 22:19:45
+ * @LastEditTime: 2020-08-24 13:53:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\tty\retarget.c
@@ -95,3 +95,15 @@ int _write(int file, char *ptr, int len)
     }
 return len;
 }
+
+int _read(void)
+{
+    char c =  serial_getChar(stty);
+
+
+  return (int) c;
+
+
+}
+
+ 

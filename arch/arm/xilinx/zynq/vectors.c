@@ -51,7 +51,9 @@
 
 #include "zynq/xil_exception.h"
 #include "zynq/vectors.h"
-
+#include "zynq/zynq.h"
+#include <thunder/interrput.h>
+#include <stdio.h>
 /************************** Constant Definitions *****************************/
 
 /**************************** Type Definitions *******************************/
@@ -104,8 +106,21 @@ void FIQInterrupt(void)
 ******************************************************************************/
 void IRQInterrupt(void)
 {
-	XExc_VectorTable[XIL_EXCEPTION_ID_IRQ_INT].Handler(XExc_VectorTable[
-					XIL_EXCEPTION_ID_IRQ_INT].Data);
+	// int a = 1;
+	// while(a);
+	u32 IntIDFull;
+	u32 InterruptID;
+	IntIDFull = *ICCIAR;
+	InterruptID = IntIDFull&0x000003FF;
+	// printf("INTERFULL:%lu;INTER:%lu\r\n",IntIDFull,InterruptID);
+	if (MAX_IRQn <= InterruptID) {
+	goto IntrExit;
+	}
+
+	IRQ_vector_table[InterruptID].Handler( IRQ_vector_table[InterruptID].data );
+
+IntrExit:
+	*ICCEOIR =IntIDFull;
 }
 
 #if !defined (__aarch64__)

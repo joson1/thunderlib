@@ -10,3 +10,6 @@ export tty
 
 serial-zynq=y
 export serial-zynq
+
+interrupt-zynq=y
+export interrupt-zynq

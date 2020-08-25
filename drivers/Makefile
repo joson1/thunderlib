@@ -1,6 +1,7 @@
 
 
 SUBDIRS +=serial
+SUBDIRS +=interrupt
 SUBDIRS +=gpio
 SUBDIRS +=timer
 SUBDIRS +=tty
