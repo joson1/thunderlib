@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2020-08-24 14:07:19
+ * @LastEditTime: 2020-08-27 10:16:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
  */
 
-#include "zynq/sleep.h"
+#include <thunder/sleep.h>
 #include <stdio.h>
 #include <thunder/tty/tty.h>
 #include <thunder/gpio.h>
@@ -25,10 +25,12 @@ int main()
 	{
 		gpio_pin_set(1);
 		gpio_pin_set(0);
-		sleep(1);
+		printf("on\r\n");
+		usleep(300000);
 		gpio_pin_reset(1);
 		gpio_pin_reset(0);
-		sleep(1);
+		printf("off\r\n");
+		usleep(300000);
 
 
 	}

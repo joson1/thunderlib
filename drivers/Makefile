@@ -1,6 +1,7 @@
 
 
 SUBDIRS +=serial
+SUBDIRS +=sleep
 SUBDIRS +=interrupt
 SUBDIRS +=gpio
 SUBDIRS +=timer

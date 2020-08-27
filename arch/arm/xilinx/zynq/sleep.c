@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-08-10 09:02:16
+ * @LastEditTime: 2020-08-27 10:08:52
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ThunderLib\arch\arm\xilinx\zynq\sleep.c
+ */
 
 /******************************************************************************
 *
@@ -53,6 +61,10 @@
 #include "zynq/xtime_l.h"
 #include "zynq/xparameters.h"
 
+#define COUNTS_PER_USECOND  (XPAR_CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ / (2U*1000000U))
+extern void  _sleep(uint32_t seconds);
+
+
 /*****************************************************************************/
 /*
 *
@@ -65,7 +77,7 @@
 * @note		None.
 *
 ****************************************************************************/
-s32 sleep(u32 seconds)
+void _sleep(u32 seconds)
 {
   XTime tEnd, tCur;
 
@@ -76,5 +88,4 @@ s32 sleep(u32 seconds)
     XTime_GetTime(&tCur);
   } while (tCur < tEnd);
 
-  return 0;
 }

@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2020-08-10 08:57:12
+ * @LastEditTime: 2020-08-27 10:15:41
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ThunderLib\arch\arm\xilinx\zynq\usleep.c
+ */
 
 /******************************************************************************
 *
@@ -60,6 +68,8 @@
 #include "zynq/xpseudo_asm.h"
 #include "zynq/xreg_cortexa9.h"
 
+extern void  _usleep(uint32_t us);
+
 /* Global Timer is always clocked at half of the CPU frequency */
 #define COUNTS_PER_USECOND  (XPAR_CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ / (2U*1000000U))
 
@@ -76,7 +86,7 @@
 * @note		None.
 *
 ****************************************************************************/
-s32 usleep(u32 useconds)
+void _usleep(u32 useconds)
 {
 	XTime tEnd, tCur;
 
@@ -86,6 +96,4 @@ s32 usleep(u32 useconds)
 	{
 		XTime_GetTime(&tCur);
 	} while (tCur < tEnd);
-
-	return 0;
 }
