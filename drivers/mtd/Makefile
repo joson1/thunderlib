@@ -1,12 +1,7 @@
 
 
-SUBDIRS +=bus
-SUBDIRS +=sleep
-SUBDIRS +=interrupt
-SUBDIRS +=gpio
-SUBDIRS +=timer
-SUBDIRS +=tty
-SUBDIRS +=mtd
+
+SUBDIRS +=at24cxx
 
 
 all:$(SUBDIRS)

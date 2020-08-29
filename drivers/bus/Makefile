@@ -1,13 +1,7 @@
 
 
-SUBDIRS +=bus
-SUBDIRS +=sleep
-SUBDIRS +=interrupt
-SUBDIRS +=gpio
-SUBDIRS +=timer
-SUBDIRS +=tty
-SUBDIRS +=mtd
-
+SUBDIRS +=i2c
+SUBDIRS +=serial
 
 all:$(SUBDIRS)
 

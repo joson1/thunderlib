@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 18:03:51
- * @LastEditTime: 2020-08-21 12:33:00
+ * @LastEditTime: 2020-08-29 12:58:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\include\zynq\zynq.h
@@ -138,3 +138,28 @@ typedef struct
 //SPI_STATUS[1]
 #define ICDSGIR         ((uint32_t*)(MPCORE_BASE+0x00001F00))
 
+#define SLCR_LOCK		    *((uint32_t *)0xF8000004)
+#define SLCR_UNLOCK		  *((uint32_t *)0xF8000008)
+#define SLCR_IIC_RST 	  *((uint32_t *)0xF8000224)
+//lock and unlock keys
+#define UNLOCK_KEY	0xDF0D
+#define LOCK_KEY	  0x767B
+
+typedef struct
+{
+  volatile uint32_t Control;
+  volatile uint32_t Status;
+  volatile uint32_t address;
+  volatile uint32_t data;
+  volatile uint32_t Intrpt_status;
+  volatile uint32_t Trans_size;
+  volatile uint32_t Slave_mon_pause;
+  volatile uint32_t Time_out;
+  volatile uint32_t Intrpt_mask;
+  volatile uint32_t Intrpt_enable;
+  volatile uint32_t Intrpt_disable;
+  
+}I2C_TypeDef ;
+
+#define I2C0            ((I2C_TypeDef*)(0xE0004000))
+#define I2C1            ((I2C_TypeDef*)(0xE0005000))

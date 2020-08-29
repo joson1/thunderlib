@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 17:15:15
- * @LastEditTime: 2020-08-24 13:31:31
+ * @LastEditTime: 2020-08-28 13:27:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\serial\devices\serial-zynq.c

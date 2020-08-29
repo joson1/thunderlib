@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-08-09 22:24:31
- * @LastEditTime: 2020-08-16 18:55:38
+ * @LastEditTime: 2020-08-24 11:39:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\documentation\zynq\zynq调试.md
@@ -15,6 +15,9 @@
 ```bash
 
 source E:\\zynqPrj\\TEST_LED_PSPL\\TEST_LED_PSPL.sdk\\system_wrapper_hw_platform_0\\ps7_init.tcl
+
+
+source F:\\MicroZus01\\Demo\\X_demo\\petalinux_boot2\\petalinux_boot_from_sd\\petalinux_boot_from_sd.sdk\\petalinux_boot_from_sd_wrapper_hw_platform_0\\ps7_init.tcl
 
 connect
 
