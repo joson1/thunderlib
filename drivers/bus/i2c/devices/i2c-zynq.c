@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-25 10:21:38
- * @LastEditTime: 2020-08-29 22:29:00
+ * @LastEditTime: 2020-08-29 22:41:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\i2c\devices\i2c-zynq.c
@@ -141,7 +141,7 @@ void i2c_SetSClk(I2C_TypeDef* i2c ,uint32_t FsclHz)
  * @param uint8_t mode 0:Slave 1:Master 
  * @return {type} 
  */
-static inline void i2c_init( I2C_TypeDef* i2c, uint8_t clock  )
+static inline void i2c_init( I2C_TypeDef* i2c, uint32_t clock  )
 {
     
     i2c_SetSClk(i2c,clock);

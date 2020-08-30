@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-25 10:20:30
- * @LastEditTime: 2020-08-29 12:53:02
+ * @LastEditTime: 2020-08-30 12:54:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\include\thunder\i2c.h
@@ -9,9 +9,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define I2C_CLOCK_100K   (1<<0)
-#define I2C_CLOCK_200K   (1<<1)
-#define I2C_CLOCK_400K   (1<<2)
+#define I2C_CLOCK_100K   100000
+#define I2C_CLOCK_200K   200000
+#define I2C_CLOCK_400K   400000
 
 struct i2c_dev
 {
