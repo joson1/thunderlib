@@ -1,13 +1,17 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 18:03:51
- * @LastEditTime: 2020-08-29 12:58:05
+ * @LastEditTime: 2020-10-03 20:00:43
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\include\zynq\zynq.h
  */
 #pragma once
 #include <stdint.h>
+
+
+
+	
 
 typedef struct
 {
@@ -138,12 +142,22 @@ typedef struct
 //SPI_STATUS[1]
 #define ICDSGIR         ((uint32_t*)(MPCORE_BASE+0x00001F00))
 
-#define SLCR_LOCK		    *((uint32_t *)0xF8000004)
-#define SLCR_UNLOCK		  *((uint32_t *)0xF8000008)
+#define SLCRLOCK		    *((uint32_t *)0xF8000004)
+#define SLCRUNLOCK		  *((uint32_t *)0xF8000008)
 #define SLCR_IIC_RST 	  *((uint32_t *)0xF8000224)
 //lock and unlock keys
 #define UNLOCK_KEY	0xDF0D
 #define LOCK_KEY	  0x767B
+
+//unlock SLCRs
+#define SLCR_UNLOCK() \
+  SLCRUNLOCK = UNLOCK_KEY
+
+//relock SLCRs
+#define SLCR_LOCK() \
+  SLCRLOCK = LOCK_KEY
+
+
 
 typedef struct
 {
@@ -163,3 +177,46 @@ typedef struct
 
 #define I2C0            ((I2C_TypeDef*)(0xE0004000))
 #define I2C1            ((I2C_TypeDef*)(0xE0005000))
+
+typedef struct
+{
+  volatile uint32_t config;
+  volatile uint32_t intr_status;
+  volatile uint32_t intrpt_en;
+  volatile uint32_t intrpt_dis;
+  volatile uint32_t intrpt_mask;
+  volatile uint32_t En;
+  volatile uint32_t Delay;
+  volatile uint32_t Tx_data;
+  volatile uint32_t Rx_data;
+  volatile uint32_t slave_idle_count;
+  volatile uint32_t TX_thres;
+  volatile uint32_t RX_thres;
+  volatile uint32_t Mod_id;
+  
+}SPI_TypeDef;
+
+#define SPI0 ((SPI_TypeDef*)(0xE0006000))
+#define SPI1 ((SPI_TypeDef*)(0xE0007000))
+
+
+
+typedef struct 
+{
+  volatile uint32_t clock_control[3];
+  volatile uint32_t counter_control[3];
+  volatile uint32_t counter_value[3];
+  volatile uint32_t interval_counter[3];
+  volatile uint32_t match_0_counter[3];
+  volatile uint32_t match_1_counter[3];
+  volatile uint32_t match_2_counter[3];
+  volatile uint32_t ISR[3];
+  volatile uint32_t IER[3];
+  volatile uint32_t Event_Control_Timer[3];
+  volatile uint32_t Event_Register[3];
+
+}TTC_TypeDef ;
+
+
+#define TTC0 ((TTC_TypeDef*)(0xF8001000))
+#define TTC1 ((TTC_TypeDef*)(0xF8002000))

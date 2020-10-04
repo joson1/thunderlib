@@ -1,14 +1,21 @@
 /*
  * @Author: your name
  * @Date: 2020-08-20 19:42:50
- * @LastEditTime: 2020-08-24 13:34:45
+ * @LastEditTime: 2020-09-01 21:28:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\include\zynq\asm\interrupt_defs.h
  */
 
-
+#include "zynq/xparameters_ps.h"
 #define MAX_IRQn 92
+
+#define TIMER0_IRQ  XPS_TTC0_0_INT_ID
+#define TIMER1_IRQ  XPS_TTC0_1_INT_ID
+#define TIMER2_IRQ  XPS_TTC0_2_INT_ID
+#define TIMER3_IRQ  XPS_TTC1_0_INT_ID
+#define TIMER4_IRQ  XPS_TTC1_1_INT_ID
+#define TIMER5_IRQ  XPS_TTC1_2_INT_ID
 
 #define UART1_IRQ 82
 

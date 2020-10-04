@@ -116,8 +116,13 @@ void IRQInterrupt(void)
 	if (MAX_IRQn <= InterruptID) {
 	goto IntrExit;
 	}
+	if (IRQ_vector_table[InterruptID].Handler)
+	{
+		/* code */
+		IRQ_vector_table[InterruptID].Handler( 0 );
+	}
 
-	IRQ_vector_table[InterruptID].Handler( IRQ_vector_table[InterruptID].data );
+	
 
 IntrExit:
 	*ICCEOIR =IntIDFull;

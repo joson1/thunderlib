@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 17:15:15
- * @LastEditTime: 2020-08-28 13:27:02
+ * @LastEditTime: 2020-10-04 20:50:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\serial\devices\serial-zynq.c
@@ -42,7 +42,7 @@ int usart1_getchar()
 }
 
 
-InterruptHandler uart1_handler(void* Data)
+void uart1_handler(void* Data)
 {
 	char ch;
 	// while( !(UART1->Channel_sts&&(1<<1)) )
@@ -74,12 +74,11 @@ void zynq_serial_init()
 	
     serial_dev_attach(&dev_usart1);
 	
-	UART1->Intrp_en = 0x1;
-	UART1_IER = 1;
+	// UART1->Intrp_en = 0x1;
+	// UART1_IER = 1;
 	UART1->Rcvr_FIFO_trigger_level = 1;
-	irq_register(UART1_IRQ,uart1_handler,TRIGGER_EDGE_HIGHLEVEL);
-	ICDDCR[0] = 0x3;
-	ICCICR[0] = 0x07;
-	ICDISER[2] |=  (1<<18);
-	Xil_ExceptionEnable();
+	// irq_register(UART1_IRQ,&uart1_handler,TRIGGER_EDGE_HIGHLEVEL);
+	// ICDDCR[0] = 0x3;
+	// ICCICR[0] = 0x07;
+
 }

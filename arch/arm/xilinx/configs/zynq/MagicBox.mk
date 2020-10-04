@@ -17,6 +17,8 @@ export serial-zynq
 interrupt-zynq=y
 export interrupt-zynq
 
+timer-zynq=y
+export timer-zynq=y
 
 at24cxx=y
 export at24cxx

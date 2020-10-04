@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-25 10:21:38
- * @LastEditTime: 2020-08-29 22:41:37
+ * @LastEditTime: 2020-08-31 20:40:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\i2c\devices\i2c-zynq.c
@@ -15,11 +15,11 @@
 static void reset_iic(void)
 {
 	volatile int i=0; //i for delay
-	SLCR_UNLOCK = UNLOCK_KEY;	//unlock SLCRs
+	SLCR_UNLOCK();	//unlock SLCRs
 	SLCR_IIC_RST = 0x3;	//assert I2C reset
 	for(i=0;i<1000;i++); //wait
 	SLCR_IIC_RST = 0;	//deassert
-	// SLCR_LOCK = LOCK_KEY;	//relock SLCRs
+	SLCR_LOCK();		//relock SLCRs
 }
 #define XPAR_PS7_I2C_0_I2C_CLK_FREQ_HZ 111111115
 void i2c_SetSClk(I2C_TypeDef* i2c ,uint32_t FsclHz)

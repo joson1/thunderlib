@@ -1,5 +1,6 @@
 
 objs-$(timer-stm32f429)+=timer-stm32f429.o
+objs-$(timer-zynq)+=timer-zynq.o
 
 SUBDIRS =
 
