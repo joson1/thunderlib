@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-20 21:46:25
- * @LastEditTime: 2020-10-05 18:49:22
+ * @LastEditTime: 2020-10-05 19:30:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\interrupt\devices\interrupt-zynq.c
@@ -245,12 +245,14 @@ void zynq_interrupt_init()
 }
 extern void zynq_interrupt_init();
 
-int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge)
+int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge,void* Message,void (*CallBack))
 {
     uint32_t n,m;
     n = Irq_id/16;
     m = (Irq_id%16);
     IRQ_vector_table[Irq_id].Handler = handler;
+    IRQ_vector_table[Irq_id].data	 = Message;
+    IRQ_vector_table[Irq_id].CallBack= CallBack;
     ICDICFR[n] &= ~(Trigger_edge<<(m*2));
     ICDICFR[n] |=  (Trigger_edge<<(m*2));
 
