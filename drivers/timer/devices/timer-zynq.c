@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-27 09:50:49
- * @LastEditTime: 2020-10-04 19:17:19
+ * @LastEditTime: 2020-10-05 18:51:13
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\timer\devices\timer-zynq.c
@@ -28,6 +28,7 @@ void timer_ttc_init(TTC_TypeDef* ttc,uint8_t n,uint32_t ms)
 	ttc->interval_counter[n] = Interval;
     ttc->counter_control[n] |= (1<<1);
 
+    TTC0->IER[n] =0x01;
 
     volatile int b =  TTC0->ISR[n];
 }
@@ -47,7 +48,6 @@ void timer_init(uint32_t id,uint32_t ms,uint32_t Priority,void (*event_handler)(
         irq_register(TIMER0_IRQ+id,event_handler,TRIGGER_EDGE_HIGHLEVEL);
         
         
-        TTC0->IER[1] =0x01;
         ttc_start(TTC0,id);
     }
     

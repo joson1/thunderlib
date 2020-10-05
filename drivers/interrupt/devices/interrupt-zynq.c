@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-20 21:46:25
- * @LastEditTime: 2020-10-04 19:08:18
+ * @LastEditTime: 2020-10-05 18:49:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\interrupt\devices\interrupt-zynq.c
@@ -248,11 +248,11 @@ extern void zynq_interrupt_init();
 int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge)
 {
     uint32_t n,m;
-    // n = Irq_id/16;
-    // m = (Irq_id%16);
+    n = Irq_id/16;
+    m = (Irq_id%16);
     IRQ_vector_table[Irq_id].Handler = handler;
-    // ICDICFR[n] &= ~(Trigger_edge<<(m*2));
-    // ICDICFR[n] |=  (Trigger_edge<<(m*2));
+    ICDICFR[n] &= ~(Trigger_edge<<(m*2));
+    ICDICFR[n] |=  (Trigger_edge<<(m*2));
 
     n = Irq_id/32;
     m = Irq_id%32;
