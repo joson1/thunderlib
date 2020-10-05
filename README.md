@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-08-30 16:29:55
+ * @LastEditTime: 2020-10-05 20:31:19
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ThunderLib\README.md
+-->
 
 # ThunderLib
 
@@ -15,14 +23,14 @@
 [新增驱动]
 
 - BUS
-  - SPI(zynq)
-- Timer(zynq)
+  - [ ] SPI(zynq)
+- [x] Timer(zynq)
 - interrupt
-  - GPIO interrupt(zynq)
+  - [ ] GPIO interrupt(zynq)
 
 [驱动改进]
 
-- uart(zynq)无法触发接收中断的问题
+- [x] uart(zynq)无法触发接收中断的问题
 
 [新增功能]
 
