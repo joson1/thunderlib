@@ -8,6 +8,9 @@ export gpio-zynq
 i2c-zynq=y
 export i2c-zynq
 
+spi-zynq=y
+export spi-zynq
+
 tty=y
 export tty
 

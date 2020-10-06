@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 18:03:51
- * @LastEditTime: 2020-10-03 20:00:43
+ * @LastEditTime: 2020-10-05 21:01:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\include\zynq\zynq.h
@@ -142,20 +142,21 @@ typedef struct
 //SPI_STATUS[1]
 #define ICDSGIR         ((uint32_t*)(MPCORE_BASE+0x00001F00))
 
-#define SLCRLOCK		    *((uint32_t *)0xF8000004)
-#define SLCRUNLOCK		  *((uint32_t *)0xF8000008)
+#define SLCRLOCK_ADDR		    *((uint32_t *)0xF8000004)
+#define SLCRUNLOCK_ADDR		  *((uint32_t *)0xF8000008)
 #define SLCR_IIC_RST 	  *((uint32_t *)0xF8000224)
+#define SLCR_SPI_RST 	  *((uint32_t *)0xF800021C)
 //lock and unlock keys
 #define UNLOCK_KEY	0xDF0D
 #define LOCK_KEY	  0x767B
 
 //unlock SLCRs
 #define SLCR_UNLOCK() \
-  SLCRUNLOCK = UNLOCK_KEY
+  SLCRUNLOCK_ADDR = UNLOCK_KEY
 
 //relock SLCRs
 #define SLCR_LOCK() \
-  SLCRLOCK = LOCK_KEY
+  SLCRLOCK_ADDR = LOCK_KEY
 
 
 
@@ -220,3 +221,9 @@ typedef struct
 
 #define TTC0 ((TTC_TypeDef*)(0xF8001000))
 #define TTC1 ((TTC_TypeDef*)(0xF8002000))
+
+
+
+
+
+

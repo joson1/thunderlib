@@ -2,6 +2,7 @@
 
 SUBDIRS +=i2c
 SUBDIRS +=serial
+SUBDIRS +=spi
 
 all:$(SUBDIRS)
 

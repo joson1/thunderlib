@@ -1,17 +1,20 @@
 /*
  * @Author: Alanwake
  * @Date: 2020-08-25 10:05:07
- * @LastEditTime: 2020-08-31 19:30:24
+ * @LastEditTime: 2020-10-06 21:30:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\include\thunder\spi.h
  */
 #include <stdint.h>
+#include <asm/spi_defs.h>
+#include <stddef.h>
 
 struct spi_dev
 {
 	uint8_t id;
 
+	void (*init)(uint32_t);//
 	void (*setMode)(uint32_t);//
 	void (*setBitOrder)(char);//
 	int (*transfer)(int);//
@@ -20,7 +23,7 @@ struct spi_dev
 };
 
 struct spi_dev* spi_open(uint8_t id);
-void i2c_write(struct i2c_dev* dev,uint8_t* buf,uint32_t length,uint8_t addr7);
+int spi_transfer(struct spi_dev* dev,int data);
 
-int i2c_dev_attach(struct i2c_dev* dev);
-int i2c_dev_register(uint8_t id,void* conf);
+int spi_dev_attach(struct spi_dev* dev);
+int spi_dev_register(uint8_t id,void* conf);

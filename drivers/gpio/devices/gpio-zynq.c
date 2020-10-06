@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-16 19:38:10
- * @LastEditTime: 2020-08-17 14:22:32
+ * @LastEditTime: 2020-10-04 21:19:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\gpio\devices\gpio-zynq.c
@@ -58,6 +58,12 @@ struct pinDesc  pin_map[] =
         .pin_id = 1,
         .bank   = &GPIO_BANK1,
         .pin    = BANK1_MIO_51
+        
+    },
+    {
+        .pin_id = 2,
+        .bank   = &GPIO_BANK0,
+        .pin    = BANK0_MIO_7
         
     },
 
