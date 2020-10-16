@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake
  * @Date: 2020-08-25 10:05:07
- * @LastEditTime: 2020-10-06 21:30:58
+ * @LastEditTime: 2020-10-09 10:29:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\include\thunder\spi.h
@@ -17,6 +17,7 @@ struct spi_dev
 	void (*init)(uint32_t);//
 	void (*setMode)(uint32_t);//
 	void (*setBitOrder)(char);//
+	void (*setClkDiv)(uint8_t);//
 	int (*transfer)(int);//
 	void* dev_init_conf ; 
 	struct spi_dev* next;

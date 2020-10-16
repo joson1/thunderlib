@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-02 23:17:45
- * @LastEditTime: 2020-08-10 16:19:52
+ * @LastEditTime: 2020-10-14 14:37:12
  * @LastEditors: Please set LastEditors
  * @Description:  
  * @FilePath: \ThunderLib\drivers\serial\serial.c
@@ -53,14 +53,7 @@ int serial_buf_pop(struct serial_dev* dev)
 {
 	char ch;
 	// unsigned int t = 0;
-	if (dev->rp == dev->wp)
-	{
-		return 0xffff;
-	}
-	if (dev->buffer ==0 )
-	{
-		return 0;
-	}
+	while (dev->rp == dev->wp);
 	
 
 	ch = dev->buffer[dev->rp & (dev->buffer_length - 1)];

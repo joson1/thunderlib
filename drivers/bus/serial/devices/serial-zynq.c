@@ -50,6 +50,7 @@ void uart1_handler(void* Data)
 		ch = uart_get(UART1);
 		usart1_putchar(ch);
 		serial_buf_push(&dev_usart1,ch);
+
 	// }
 	
 	UART1->Chnl_int_sts|=0x1;
@@ -57,8 +58,8 @@ void uart1_handler(void* Data)
 
 struct serial_dev dev_usart1 = {
 
-	.id = 0,
-	.buffer = BUF_USART0,
+	.id = 1,
+	.buffer = BUF_USART1,
 	.buffer_length = BUFFER_LEN_USART0,
 	.rp = 0,
 	.wp = 0,

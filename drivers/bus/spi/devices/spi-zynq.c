@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-25 10:04:49
- * @LastEditTime: 2020-10-06 21:31:52
+ * @LastEditTime: 2020-10-09 10:27:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\bus\spi\devices\spi-zynq.c
@@ -89,12 +89,16 @@ static void spi_init(SPI_TypeDef* spi,uint8_t SPI_CLOCK_DIV,uint8_t Mode)
     spi->config |= (1<<14); //master mode
     setClockDivider(spi,SPI_CLOCK_DIV);
     setMode(spi,Mode);
+    spi->RX_thres = 1;
     spi->En = 1;
 }
 
 static int zynq_spi_transfer(SPI_TypeDef* spi,int data)
-{ 
+{
+    spi->intrpt_en = (1<<4);
     spi->Tx_data = data;
+    while(!(spi->intr_status&(1<<4)));
+    spi->intrpt_en = 0;
     return spi->Rx_data;
 }
 
@@ -112,6 +116,11 @@ static void spi0_init(uint32_t Mode)
 {
     spi_init(SPI0,SPI_CLOCK_DIV32,Mode);
 }
+static void spi0_setClkDiv(uint8_t SPI_CLOCK_DIV)
+{
+    setClockDivider(SPI0,SPI_CLOCK_DIV);
+    
+}
 
 struct spi_dev spi0 = 
 {
@@ -119,6 +128,7 @@ struct spi_dev spi0 =
     .init = spi0_init,
     .setMode = spi0_setMode,
     .setBitOrder=0,
+    .setClkDiv=spi0_setClkDiv,
     .transfer = spi0_transfer,
 };
 

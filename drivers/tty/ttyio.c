@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-07 22:16:21
- * @LastEditTime: 2020-08-24 13:53:37
+ * @LastEditTime: 2020-10-14 14:36:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\tty\retarget.c
@@ -12,11 +12,12 @@
 
 
 struct serial_dev* stty;
+#define UART1_IER	*((uint32_t *) 0xE0001008)
 
 void ttyio_init()
 {
     
-    stty = serial_open(0,115200);
+    stty = serial_open(1,115200);
     serial_println(stty,"stty ok");
 }
 
@@ -96,12 +97,14 @@ int _write(int file, char *ptr, int len)
 return len;
 }
 
-int _read(void)
+int _read (int fd, const void *buf, size_t count)
 {
-    char c =  serial_getChar(stty);
+
+    char* buffer = (char*)buf;
+    buffer[0] = serial_buf_pop(stty);
 
 
-  return (int) c;
+  return 1;
 
 
 }

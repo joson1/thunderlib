@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-25 10:04:14
- * @LastEditTime: 2020-10-06 21:05:34
+ * @LastEditTime: 2020-10-08 19:41:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\bus\spi\spi.c
@@ -55,3 +55,7 @@ struct spi_dev* spi_open(uint8_t id)
 
 }
 
+int spi_transfer(struct spi_dev* dev,int data)
+{
+	return dev->transfer(data);
+}
