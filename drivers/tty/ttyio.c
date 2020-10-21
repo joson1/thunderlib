@@ -8,16 +8,38 @@
  */
 #include <thunder/tty/ttyio.h>
 #include <thunder/serial.h>
+#include <thunder/interrput.h>
 #include <stdio.h>
 
 
 struct serial_dev* stty;
 #define UART1_IER	*((uint32_t *) 0xE0001008)
 
+void uart1_handler(void* Data)
+{
+	char ch;
+	// while( !(UART1->Channel_sts&&(1<<1)) )
+	// {
+		ch = stty->getchar();
+		stty->putchar(ch);
+        if (ch=='\r')
+        {
+            stty->putchar('\n');
+        }
+        
+		serial_buf_push(stty,ch);
+		stty->interrput.clear();
+		// UART1->Chnl_int_sts|=0x1;
+	// }
+	
+}
+
 void ttyio_init()
 {
     
     stty = serial_open(1,115200);
+	irq_register(stty->interrput.setup(0),&uart1_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
+
     serial_println(stty,"stty ok");
 }
 

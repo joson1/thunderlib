@@ -12,6 +12,13 @@
 
 #define SERIAL_REC_LEN  			512  	// 2^9 定义最大接收字节数 512
 
+typedef struct 
+{
+	int (*setup)(int type);  //parameter:interrput type return IRQn
+	void (*clear)(void);	 //clear interrupt status
+
+}serial_intdef;
+
 
 struct serial_dev
 {
@@ -24,6 +31,7 @@ struct serial_dev
 	void (*putchar)(char);//
 	int (*getchar)(void);//
 	void* dev_init_conf ; 
+	serial_intdef interrput;
 	struct serial_dev* next;
 };
 

@@ -14,6 +14,7 @@
 
 #define BUFFER_LEN_USART0  512
 #define BUFFER_LEN_USART1  512
+#define UART1_IER	*((uint32_t *) 0xE0001008)
 
 extern void zynq_serial_init();
 
@@ -23,7 +24,7 @@ char BUF_USART1[BUFFER_LEN_USART1]; //接收缓冲.
 
 
 struct serial_dev dev_usart1;
-struct serial_dev dev_usart2;
+struct serial_dev dev_usart0;
 
 
 void usart1_open(uint32_t boundRate)
@@ -38,22 +39,27 @@ void usart1_putchar(char ch)
 
 int usart1_getchar()
 {
-    return serial_buf_pop(&dev_usart1);
+    return uart_get(UART1);
 }
 
 
-void uart1_handler(void* Data)
+int uart1_interrupt_setup(int type)
 {
-	char ch;
-	// while( !(UART1->Channel_sts&&(1<<1)) )
-	// {
-		ch = uart_get(UART1);
-		usart1_putchar(ch);
-		serial_buf_push(&dev_usart1,ch);
-
-	// }
 	
+	UART1->Intrp_en = 0x1;
+	UART1_IER = 1;
+	UART1->Rcvr_FIFO_trigger_level = 1;
+	ICDDCR[0] = 0x3;
+	ICCICR[0] = 0x07;
+
+	return UART1_IRQ;
+
+}
+void uart1_interrupt_clear()
+{
+
 	UART1->Chnl_int_sts|=0x1;
+
 }
 
 struct serial_dev dev_usart1 = {
@@ -66,20 +72,17 @@ struct serial_dev dev_usart1 = {
 	.serial_open = &usart1_open,//boundRate
 	.putchar     = &usart1_putchar,//boundRate
 	.getchar     = &usart1_getchar,//boundRate
+	.interrput.setup = &uart1_interrupt_setup,
+	.interrput.clear = &uart1_interrupt_clear,
+
 
 };
-#define UART1_IER	*((uint32_t *) 0xE0001008)
+
 
 void zynq_serial_init()
 {
 	
     serial_dev_attach(&dev_usart1);
 	
-	UART1->Intrp_en = 0x1;
-	UART1_IER = 1;
-	UART1->Rcvr_FIFO_trigger_level = 1;
-	irq_register(UART1_IRQ,&uart1_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
-	ICDDCR[0] = 0x3;
-	ICCICR[0] = 0x07;
 
 }
