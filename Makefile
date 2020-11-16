@@ -8,6 +8,7 @@ BOARD := MagicBox
 # PART_NO := stm32f429
 # BOARD := thunderboard32
 
+CROSS_COMPILE := arm-none-eabi-
 
 TOPDIR := $(PWD)
 LIBDIR =

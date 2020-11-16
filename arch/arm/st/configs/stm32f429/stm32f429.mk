@@ -1,5 +1,5 @@
 # ARCH := arm
-CROSS_COMPILE := arm-none-eabi-
+# CROSS_COMPILE := arm-none-eabi-
 # CFLAGS = -Wall
 
 # OPT = -O0
