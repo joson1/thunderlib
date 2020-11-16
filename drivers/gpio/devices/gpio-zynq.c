@@ -50,26 +50,26 @@ struct pinDesc  pin_map[] =
 {
     {
         .pin_id = 0,
-        .bank   = &GPIO_BANK1,
-        .pin    = BANK1_MIO_50
+        .bank   = &GPIO_BANK0,
+        .pin    = BANK0_MIO_0
         
     },
     {
         .pin_id = 1,
-        .bank   = &GPIO_BANK1,
-        .pin    = BANK1_MIO_51
+        .bank   = &GPIO_BANK0,
+        .pin    = BANK0_MIO_1
         
     },
     {
         .pin_id = 2,
         .bank   = &GPIO_BANK0,
-        .pin    = BANK0_MIO_7
+        .pin    = BANK0_MIO_2
         
     },
     {
         .pin_id = 3,
-        .bank   = &GPIO_BANK2,
-        .pin    = BANK2_EMIO_0
+        .bank   = &GPIO_BANK0,
+        .pin    = BANK0_MIO_3
         
     },
 

@@ -37,7 +37,7 @@ void uart1_handler(void* Data)
 void ttyio_init()
 {
     
-    stty = serial_open(1,115200);
+    stty = serial_open(0,115200);
 	irq_register(stty->interrput.setup(0),&uart1_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
 
     serial_println(stty,"stty ok");

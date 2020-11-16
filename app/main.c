@@ -32,7 +32,7 @@ void timer0_handler()
 
 	}
 	
-	// printf("OK\r\n");
+	printf("OK\r\n");
 }
 
 int main()

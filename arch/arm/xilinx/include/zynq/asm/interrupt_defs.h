@@ -17,6 +17,7 @@
 #define TIMER4_IRQ  XPS_TTC1_1_INT_ID
 #define TIMER5_IRQ  XPS_TTC1_2_INT_ID
 
+#define UART0_IRQ 59
 #define UART1_IRQ 82
 
 
