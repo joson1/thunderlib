@@ -23,7 +23,7 @@
 [新增驱动]
 
 - BUS
-  - [ ] SPI(zynq)
+  - [X] SPI(zynq)
 - [x] Timer(zynq)
 - interrupt
   - [ ] GPIO interrupt(zynq)
@@ -33,9 +33,10 @@
 - [x] uart(zynq)无法触发接收中断的问题
 
 [新增功能]
-
-- shell
-
+- [ ] 设备树支持
+- [ ] USB协议栈
+- [ ] shell
+- [ ] 多线程
 [改进与优化]
 
 - tty
