@@ -7,6 +7,8 @@ objs += asm_vectors.o
 objs += cpu_init.o
 objs += xil-crt0.o
 objs += translation_table.o
+objs += contex_rvds.o
+
 
 objs += $(patsubst %.c,%.o,$(SOURCES))
 

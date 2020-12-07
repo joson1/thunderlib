@@ -45,9 +45,9 @@ OBJCOPY		= $(CROSS_COMPILE)objcopy
 OBJDUMP		= $(CROSS_COMPILE)objdump
 
 
-SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO) \
-			$(TOPDIR)/app \
-			$(TOPDIR)/drivers 
+# SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO) \
+# 			$(TOPDIR)/app \
+# 			$(TOPDIR)/drivers 
 
 LINK_SCRIPT := $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/$(LINK_SCRIPT)
 # export CC LD MARCH CFLAGS LDFLAGS TARGET

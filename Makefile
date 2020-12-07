@@ -37,6 +37,11 @@ BUILD_DIR = $(TOPDIR)/build_dir
 BIN_DIR = $(TOPDIR)/bin
 
 
+SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO) \
+			$(TOPDIR)/app \
+			$(TOPDIR)/drivers \
+			$(TOPDIR)/kernel
+
 export CC LD MARCH CFLAGS LDFLAGS TARGET
 export BUILD_DIR BIN_DIR TOPDIR LINK_SCRIPT
 export PART_NO
