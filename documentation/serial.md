@@ -19,8 +19,7 @@ int main()
 
     usart0 = serial_open(0,115200);
     serial_println(usart0,"this is a serial drv test");
-    usart0->putchar('O');
-    usart0->putchar('K');
+
 
     while (1)
     {
@@ -31,3 +30,5 @@ int main()
     return 0;
 }
 ```
+### int serial_buf_pop(struct serial_dev* dev)
+返回接收到的数据 如果没有数据就会返回 -1
