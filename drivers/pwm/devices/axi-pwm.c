@@ -6,10 +6,23 @@
 #define XTC_ROUND_DIV(a, b)		((a + (b / 2)) / b)
 #define XTC_HZ_TO_NS(Hz)		XTC_ROUND_DIV(1000000000, Hz)
 
+struct pwm_dev pwm0;
+uint32_t axi_clock_period = XTC_HZ_TO_NS(XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ);
+
+// struct pwm_dev
+// {
+// 	uint8_t id;
+//     uint32_t freq;
+//     uint8_t duty;
+// 	void (*_setup)(uint8_t duty,uint32_t freq);//
+// 	int (*_set_duty)(uint8_t duty);//
+// 	int (*_set_freq)(uint32_t freq);//
+
+// 	struct pwm_dev* next;
+// };
 
 static inline void axi_timer_pwm_init(AXI_TIMER_TypeDef* timer,uint8_t n,uint32_t Freq,uint8_t duty)
 {
-   uint32_t axi_clock_period = XTC_HZ_TO_NS(XPAR_AXI_TIMER_0_CLOCK_FREQ_HZ);
    uint32_t pwm_period  = XTC_HZ_TO_NS(Freq);
    uint32_t pwm_high_time = (pwm_period*duty)/100;
     //The mode for both Timer 0 and Timer 1 must be set to Generate mode (bit MDT in the TCSR set to 0).
@@ -62,20 +75,43 @@ TLR1=MAX_COUNT-PWM_HIGH_TIME/AXI_CLOCK_PER+2
 
 }
 
-void pwm_setup(uint8_t id,uint8_t duty,uint32_t freq)
+
+
+static void pwm0_setup(uint8_t duty,uint32_t freq)
 {
     axi_timer_pwm_init(ATIMER1,0,freq,duty);
 
 }
-void pwm_duty_set(uint8_t id,uint8_t duty)
+static void pwm0_duty_set(uint8_t duty)
 {
-
+    uint32_t pwm_period  = XTC_HZ_TO_NS(pwm0.freq);
+    uint32_t pwm_high_time = (pwm_period*duty)/100;
+    ATIMER1->TLR1 = MAX_COUNT - pwm_high_time/axi_clock_period + 2;
 
 }
-void pwm_freq_set(uint8_t id,uint32_t freq)
+static void pwm0_freq_set(uint32_t freq)
 {
+    uint32_t pwm_period  = XTC_HZ_TO_NS(pwm0.freq);
+    uint32_t pwm_high_time = (pwm_period*(pwm0.duty))/100;
 
+
+   ATIMER1->TLR0 = MAX_COUNT - pwm_period/axi_clock_period + 2;
+   ATIMER1->TLR1 = MAX_COUNT - pwm_high_time/axi_clock_period + 2;
     
         
 }
 
+struct pwm_dev pwm0=
+{
+	.id=0,
+	._setup = pwm0_setup,
+	._set_duty=pwm0_duty_set,
+	._set_freq=pwm0_freq_set
+
+};
+
+void zynq_axi_pwm_init()
+{
+    pwm_dev_attach(&pwm0);
+}
+extern void zynq_axi_pwm_init();

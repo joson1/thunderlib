@@ -29,8 +29,9 @@ int main()
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
 	gpio_pin_mode(0,GPIO_MODE_OUTPUT);
 	gpio_pin_mode(1,GPIO_MODE_OUTPUT);
-
-	pwm_setup(0,20,10000);//channel0 duty 20% freq 100Hz
+	struct pwm_dev* pwm0 = pwm_open(0);
+	pwm_setup(pwm0,50,10000);
+	// pwm_setup(0,20,10000);//channel0 duty 20% freq 100Hz
 	// timer_setup(0,300,0,timer_handler);
 
 
@@ -40,6 +41,7 @@ int main()
 		// at24cxx_write(1,0x98);
 		gpio_pin_set(1);
 		gpio_pin_set(0);
+		pwm_set_duty(pwm0,90);
 
 		// printf("match_0_counter:0x%08X\r\n",TTC0->match_0_counter[0]);
 		// printf("interval_counter:0x%08X\r\n",TTC0->interval_counter[0]);
@@ -50,6 +52,7 @@ int main()
 
 		usleep(300000);
 		gpio_pin_reset(1);
+		pwm_set_duty(pwm0,10);
 		gpio_pin_reset(0);
 		// a = at24cxx_read(1);
 		// printf("off:%lu\r\n",a);
