@@ -33,7 +33,8 @@ int main()
 	pwm_setup(pwm0,50,10000);
 	// pwm_setup(0,20,10000);//channel0 duty 20% freq 100Hz
 	// timer_setup(0,300,0,timer_handler);
-
+	scanf("%d",&a);
+		printf("off:%lu\r\n",a);
 
 	while(1)
 	{

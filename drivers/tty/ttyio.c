@@ -20,6 +20,7 @@ void uart1_handler(void* Data)
 	char ch;
 	// while( !(UART1->Channel_sts&&(1<<1)) )
 	// {
+
 		ch = stty->getchar();
 		stty->putchar(ch);
         if (ch=='\r')
@@ -121,11 +122,16 @@ return len;
 
 int _read (int fd, const void *buf, size_t count)
 {
-
+    int tmp;
     char* buffer = (char*)buf;
-    buffer[0] = serial_buf_pop(stty);
 
+    tmp = serial_buf_pop(stty);
+    while (tmp==-1)
+    {
+        tmp = serial_buf_pop(stty);
 
+    }
+    buffer[0] = tmp;
   return 1;
 
 

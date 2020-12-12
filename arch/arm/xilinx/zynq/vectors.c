@@ -118,6 +118,8 @@ void IRQInterrupt(void)
 	}
 	if (IRQ_vector_table[InterruptID].Handler)
 	{
+		// printf("exe irq\r\n");
+
 		/* code */
 		IRQ_vector_table[InterruptID].Handler( IRQ_vector_table[InterruptID].data );
 		if(IRQ_vector_table[InterruptID].CallBack)
