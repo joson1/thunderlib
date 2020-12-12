@@ -4,6 +4,7 @@ SUBDIRS +=bus
 SUBDIRS +=sleep
 SUBDIRS +=interrupt
 SUBDIRS +=gpio
+SUBDIRS +=pwm
 SUBDIRS +=timer
 SUBDIRS +=tty
 SUBDIRS +=mtd

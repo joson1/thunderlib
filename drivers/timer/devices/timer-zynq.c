@@ -14,7 +14,7 @@
 
 extern void (*_timer_setup)(uint32_t id,uint32_t ms,uint32_t Priority,void (*event_handler)());
 
-void timer_ttc_init(TTC_TypeDef* ttc,uint8_t n,uint32_t ms)
+static void timer_ttc_init(TTC_TypeDef* ttc,uint8_t n,uint32_t ms)
 {
 	uint16_t Interval;
 	uint8_t Prescaler;
@@ -28,6 +28,8 @@ void timer_ttc_init(TTC_TypeDef* ttc,uint8_t n,uint32_t ms)
 	ttc->interval_counter[n] = Interval;
     ttc->counter_control[n] |= (1<<1);
     ttc->IER[n] = 0x01;
+    
+	TTC0->counter_control[0]&=(~(1<<5));
 
     volatile int b =  ttc->ISR[n];
 }

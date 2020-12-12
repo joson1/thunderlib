@@ -11,7 +11,16 @@
 #include <stdio.h>
 #include <thunder/tty/tty.h>
 #include <thunder/gpio.h>
+#include "zynq/zynq.h"
+#include <thunder/timer.h>
+#include <thunder/pwm.h>
+#include "zynq/axi-timer.h"
 
+void timer_handler()
+{
+		printf("timer int\r\n");
+
+}
 
 int main()
 {
@@ -21,12 +30,24 @@ int main()
 	gpio_pin_mode(0,GPIO_MODE_OUTPUT);
 	gpio_pin_mode(1,GPIO_MODE_OUTPUT);
 
+	pwm_setup(0,20,10000);//channel0 duty 20% freq 100Hz
+	// timer_setup(0,300,0,timer_handler);
+
+
 	while(1)
 	{
+
 		// at24cxx_write(1,0x98);
 		gpio_pin_set(1);
 		gpio_pin_set(0);
-		// printf("on\r\n");
+
+		// printf("match_0_counter:0x%08X\r\n",TTC0->match_0_counter[0]);
+		// printf("interval_counter:0x%08X\r\n",TTC0->interval_counter[0]);
+
+		// printf("counter_value:0x%08X\r\n",TTC0->counter_value[0]);
+
+  
+
 		usleep(300000);
 		gpio_pin_reset(1);
 		gpio_pin_reset(0);
