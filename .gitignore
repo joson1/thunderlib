@@ -1,3 +1,4 @@
+.vscode/*
 build_dir/*.d
 build_dir/*.o
 build_dir/*.map
