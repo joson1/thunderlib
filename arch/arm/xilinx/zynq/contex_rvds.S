@@ -90,18 +90,18 @@ _reswitch:
 
 
 /*
- * rt_base_t rt_hw_interrupt_disable();
+ * extern uint32_t cpu_hw_interrupt_disable();
  */
-.globl rt_hw_interrupt_disable
-rt_hw_interrupt_disable:
+.globl cpu_hw_interrupt_disable
+cpu_hw_interrupt_disable:
     mrs r0, cpsr
     orr r1, r0, #NOINT
     msr cpsr_c, r1
     bx  lr
 /*
- * void rt_hw_interrupt_enable(rt_base_t level);
+ * extern void cpu_hw_interrupt_enable(uint32_t level);
  */
-.globl rt_hw_interrupt_enable
-rt_hw_interrupt_enable:
+.globl cpu_hw_interrupt_enable
+cpu_hw_interrupt_enable:
     msr cpsr, r0
     bx  lr
