@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-16 19:38:10
- * @LastEditTime: 2020-10-14 14:49:21
+ * @LastEditTime: 2021-01-06 13:37:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\gpio\devices\gpio-zynq.c
@@ -45,6 +45,21 @@ void gpio_pin_reset(uint8_t pin_id)
 {
     (*((GPIO_TypeDef*)(pin_map[pin_id].bank))->DATA) &= ~(pin_map[pin_id].pin) ;
 }
+
+
+uint8_t gpio_pin_read(uint8_t pin_id)
+{
+    // (*((GPIO_TypeDef*)(pin_map[pin_id].bank))->DATA) &= ~(pin_map[pin_id].pin) ;
+    if((*((GPIO_TypeDef*)(pin_map[pin_id].bank))->DATA_RO)&&(pin_map[pin_id].pin))
+    {    
+        return 1;
+    }else
+    {
+        return 0;
+    }
+    
+}
+
 
 struct pinDesc  pin_map[] = 
 {

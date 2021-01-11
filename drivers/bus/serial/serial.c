@@ -53,7 +53,11 @@ int serial_buf_pop(struct serial_dev* dev)
 {
 	char ch;
 	// unsigned int t = 0;
-	while (dev->rp == dev->wp);
+	// while (dev->rp == dev->wp);
+	if (dev->rp == dev->wp)
+	{
+		return -1;
+	}
 	
 
 	ch = dev->buffer[dev->rp & (dev->buffer_length - 1)];

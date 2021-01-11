@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2021-01-11 18:46:22
+ * @LastEditTime: 2021-01-11 18:50:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
@@ -11,12 +11,6 @@
 #include <stdio.h>
 #include <thunder/tty/tty.h>
 #include <thunder/gpio.h>
-#include <thunder/i2c.h>
-#include "mtd/at24cxx.h"
-#include <thunder/timer.h>
-#include <thunder/spi.h>
-#include "mtd/spi-flash.h"
-#include <thunder/interrput.h>
 #include "zynq/zynq.h"
 #include <kernel/thread.h>
 #include <kernel/klist.h>
@@ -104,8 +98,6 @@ int main()
 	uint32_t level = cpu_interrupt_disable();
 	cmd_init();
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
-	// at24cxx_init();
-	// scanf("%d",&a);
 	gpio_pin_mode(0,GPIO_MODE_OUTPUT);
 	gpio_pin_mode(1,GPIO_MODE_OUTPUT);
 	gpio_pin_mode(2,GPIO_MODE_OUTPUT);
@@ -231,9 +223,8 @@ void flag2_1_thread_entry( void *p_arg )
 	{
 		// sys_delay(200);
 
-		printf("thread3\r\n");
 
 	}
+  return 0;
 }
-
 

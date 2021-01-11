@@ -23,5 +23,8 @@ export interrupt-zynq
 timer-zynq=y
 export timer-zynq=y
 
+pwm-zynq=y
+export pwm-zynq=y
+
 at24cxx=y
 export at24cxx

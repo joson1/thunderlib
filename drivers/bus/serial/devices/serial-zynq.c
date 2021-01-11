@@ -15,6 +15,7 @@
 #define BUFFER_LEN_USART0  512
 #define BUFFER_LEN_USART1  512
 #define UART1_IER	*((uint32_t *) 0xE0001008)
+#define UART0_IER	*((uint32_t *) 0xE0000008)
 
 extern void zynq_serial_init();
 
@@ -51,7 +52,7 @@ int usart1_getchar()
 }
 int usart0_getchar()
 {
-    return uart_get(UART1);
+    return uart_get(UART0);
 }
 
 
@@ -71,8 +72,7 @@ int uart0_interrupt_setup(int type)
 {
 	
 	UART0->Intrp_en = 0x1;
-	// UART1_IER = 1;
-	UART0->Intrp_en = 1;
+	UART0_IER = 1;
 	UART0->Rcvr_FIFO_trigger_level = 1;
 	ICDDCR[0] = 0x3;
 	ICCICR[0] = 0x07;

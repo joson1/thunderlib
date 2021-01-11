@@ -1,7 +1,7 @@
 /*
  * @Author: Alanwake@ThunderIndustry
  * @Date: 2020-08-01 20:41:35
- * @LastEditTime: 2020-08-16 21:02:43
+ * @LastEditTime: 2021-01-06 13:47:15
  * @LastEditors: Please set LastEditors
  * @Description: 
  * @FilePath: \ThunderLib\include\thunder\gpio\gpio.h
@@ -33,4 +33,5 @@ void __attribute__((weak)) gpio_pin_mode (uint8_t pin_id, uint32_t mode);
 void __attribute__((weak)) gpio_pin_pull (uint8_t pin_id , uint32_t pull);
 void __attribute__((weak)) gpio_pin_set  (uint8_t pin_id);
 void __attribute__((weak)) gpio_pin_reset(uint8_t pin_id);
+uint8_t __attribute__((weak))  gpio_pin_read(uint8_t pin_id);
 

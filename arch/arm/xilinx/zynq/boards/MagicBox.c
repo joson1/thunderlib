@@ -14,6 +14,7 @@ extern void zynq_i2c_init();
 extern void zynq_timer_init();
 extern void zynq_interrupt_init();
 extern void zynq_spi_init();
+extern void zynq_axi_pwm_init();
 
 void board_init()
 {
@@ -22,4 +23,5 @@ void board_init()
     zynq_spi_init();
     zynq_serial_init();
     zynq_timer_init();
+    zynq_axi_pwm_init();
 }
