@@ -1,11 +1,5 @@
 
-objs+=klist.o
-objs+=kops.o
-
-objs+=thread.o
-objs+=scheduler.o
-
-
+objs+=xlist.o
 
 all:$(objs)
 

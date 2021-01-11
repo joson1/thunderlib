@@ -1,10 +1,29 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-29 11:18:39
+ * @LastEditTime: 2021-01-10 17:45:43
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \ThunderLib\include\kernel\thread.h
+ */
 #pragma once
 
 #include "kdefs.h"
-#include "klist.h"
+#include <xlist.h>
+
+#define THREAD_PRIORITY_MAX (10)
+#define configMAX_TASK_NAME_LEN		            ( 16 )
+#define configMAX_PRIORITIES                     THREAD_PRIORITY_MAX  
 
 
-#define THREAD_PRIORITY_MAX 10
+#define THREAD_STATUS_INIT                  0x00                /* 初始态 */
+#define THREAD_STATUS_READY                 0x01                /* 就绪态 */
+#define THREAD_STATUS_SUSPEND               0x02                /* 挂起态 */
+#define THREAD_STATUS_RUNNING               0x03                /* 运行态 */
+#define THREAD_STATUS_BLOCK                 THREAD_STATUS_SUSPEND   /* 阻塞态 */
+#define THREAD_STATUS_CLOSE                 0x04                /* 关闭态 */
+#define THREAD_STATUS_STAT_MASK             0x0f
+
 
 typedef struct 
 {
@@ -12,16 +31,27 @@ typedef struct
     void*   entry;     /* 线程入口地址 */
     void*   parameter; /* 线程形参 */
     void*   stack_addr;/* 线程栈起始地址 */
+    char    name[configMAX_TASK_NAME_LEN];
+    uint8_t status;
     uint32_t stack_size;
-    k_list_t tlist;     /**/
+    uint32_t remaining_tick;
+
+    uint8_t     current_priority;     /* 当前优先级 */
+    uint8_t     priority;           /* 初始优先级 */
+    uint8_t     number_mask;          /* 当前优先级掩码 */
+    
+    uint32_t    ticks_to_delay;         /* delay */
+
+    ListItem_t tListItem;     /**/
 }thread_t;
 
 k_err_t thread_init(thread_t *thread,
+						const char* name,
                         void (*entry)(void *parameter),
                         void             *parameter,
                         void             *stack_start,
-                        uint32_t       stack_size);
-												
+                        uint32_t       stack_size,
+						uint32_t 		priority);
 k_err_t thread_resume(thread_t* thread);
 												
 k_err_t thread_startup(thread_t* thread);
@@ -46,3 +76,6 @@ void cpu_hw_context_switch_to(uint32_t to);
 void cpu_hw_context_switch_interrupt(uint32_t from, uint32_t to);
 														 
 
+void sys_delay(uint32_t ticks);
+
+void thread_idle_init(void);

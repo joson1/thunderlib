@@ -24,8 +24,11 @@ include $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/configs/$(PART_NO)/$(BOARD).mk
 C_INCLUDES +=  \
 -I$(TOPDIR)/include \
 -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include \
--I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/$(PART_NO)/ \
+-I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/$(PART_NO)/ 
 
+# for libs
+C_INCLUDES +=  \
+-I$(TOPDIR)/libs/include \
 
 OPT = -O0
 CFLAGS+= $(C_INCLUDES)
@@ -40,6 +43,7 @@ BIN_DIR = $(TOPDIR)/bin
 SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO) \
 			$(TOPDIR)/app \
 			$(TOPDIR)/drivers \
+			$(TOPDIR)/libs \
 			$(TOPDIR)/kernel
 
 export CC LD MARCH CFLAGS LDFLAGS TARGET
@@ -48,7 +52,7 @@ export PART_NO
 ALL:$(TARGET)
 	$(OBJCOPY) -O binary -S $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).bin
 	$(OBJDUMP) -D $(BIN_DIR)/$(TARGET).elf > $(BIN_DIR)/$(TARGET).dis
-	@echo -e "\033[32mbuild success \033[0m"
+	@echo  "\033[32mbuild success \033[0m"
 	@ls $(BIN_DIR)/ -l
 
 

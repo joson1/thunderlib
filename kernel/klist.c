@@ -32,3 +32,13 @@ inline void k_list_remove(k_list_t *n)
 
     n->next = n->prev = n;
 }
+
+/**
+ * @brief 判断列表是否为空
+ * @param l 需要判断的list
+ */
+inline int k_list_isempty(const k_list_t *l)
+{
+    return l->next == l;
+}
+

@@ -157,9 +157,12 @@ Undefined:					/* Undefined handler */
 
 SVCHandler:					/* SWI handler */
 
-	msr cpsr_c,0x13|0x80
-	msr cpsr_c,0x10
-
+	@ msr cpsr_c,0x13|0x80
+	@ msr cpsr_c,0x10
+	mov lr, r0
+    mrs r0, cpsr
+    and r1,r0,#0x3f
+    msr cpsr_c, r1
     //获取中断标志位，看看是否为0
     LDR     r0, =cpu_thread_switch_interrupt_flag     //加载cpu_thread_switch_interrupt_flag的地址到r0
     LDR     r1, [r0]                                 //加载cpu_thread_switch_interrupt_flag的值到r1

@@ -19,3 +19,5 @@ void k_list_init(k_list_t *l);
 void k_list_insert_after(k_list_t *l, k_list_t *n);
 void k_list_insert_before(k_list_t *l, k_list_t *n);
 void k_list_remove(k_list_t *n);
+int k_list_isempty(const k_list_t *l);
+

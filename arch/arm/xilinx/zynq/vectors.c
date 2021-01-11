@@ -167,11 +167,12 @@ void UndefinedException(void)
 extern uint32_t cpu_thread_switch_interrupt_flag;
 extern uint32_t cpu_interrupt_from_thread;
 extern uint32_t cpu_interrupt_to_thread;
-
+extern uint32_t cpu_interrupt_disable();
+extern void cpu_interrupt_enable(uint32_t level);
 void SWInterrupt(void)
 {
-	asm("msr cpsr_c,0x13|0x80 ");
-	
+	// asm("msr cpsr_c,0x13|0x80 ");
+	uint32_t level = cpu_interrupt_disable();
 	// Xil_ExceptionDisable();
 	// asm("msr cpsr_c 0x10 ");
 	// XExc_VectorTable[XIL_EXCEPTION_ID_SWI_INT].Handler(XExc_VectorTable[
@@ -197,14 +198,16 @@ void SWInterrupt(void)
 		asm("LDR     r1, [r1]");          //加载rt_interrupt_to_thread的值到r1，即sp
 		asm("LDMFD   r1!, {r4 - r11}");   //将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
 		asm("MOV     sp, r1");          //将线程栈指针更新到PSP
+
 			
 
 			
 
 	}
+	cpu_interrupt_enable(level);
 	// asm("msr cpsr_c 0x13 ");
 	// Xil_ExceptionEnable();
-	asm("msr cpsr_c,0x10 ");
+	// asm("msr cpsr_c,0x10 ");
 }
 
 /*****************************************************************************/

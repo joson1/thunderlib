@@ -78,6 +78,7 @@
 *		all processors, when this function called by any one processor.
 *
 ****************************************************************************/
+
 void XTime_SetTime(XTime Xtime_Global)
 {
 	/* Disable Global Timer */

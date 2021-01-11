@@ -41,7 +41,12 @@ cpu_hw_context_switch_to:
     LDR     r1, =cpu_thread_switch_interrupt_flag    @将cpu_thread_switch_interrupt_flag的地址加载到r1
     MOV     r0, #1                                  @配置r0等于1
     STR     r0, [r1]                                @将r0的值存储到cpu_thread_switch_interrupt_flag
-
+	
+    /* 使能全局中断 */
+    mrs r0, cpsr
+    and r1,r0,#0x3f
+    msr cpsr_c, r1
+    @ bx  lr
 
     @ 触发 SWI 异常 (产生上下文切换)
     SWI    0
@@ -53,7 +58,7 @@ cpu_hw_context_switch_to:
 
 ;/*
 ; *-----------------------------------------------------------------------
-; * void rt_hw_context_switch(rt_uint32 from, rt_uint32 to);
+; * void cpu_hw_context_switch(uint32 from, uint32 to);
 ; * r0 --> from
 ; * r1 --> to
 ; *-----------------------------------------------------------------------
@@ -80,28 +85,43 @@ _reswitch:
     STR     r1, [r2]                                      @ 存储r1的值到cpu_interrupt_from_thread，即下一个线程栈指针sp的指针
 
     @ @ 触发SWI异常，实现上下文切换
-
+    mov     r0,lr
 	SWI     0
+    NOP {0}
     @ 子程序返回
-	BX      LR
+	@ BX      LR
+    
 	
 	@ 子程序结束
 
 
 
 /*
- * rt_base_t rt_hw_interrupt_disable();
+ * extern uin32_t cpu_interrupt_disable();
  */
-.globl rt_hw_interrupt_disable
-rt_hw_interrupt_disable:
+.globl cpu_interrupt_disable
+cpu_interrupt_disable:
     mrs r0, cpsr
     orr r1, r0, #NOINT
     msr cpsr_c, r1
     bx  lr
 /*
- * void rt_hw_interrupt_enable(rt_base_t level);
+ * extern void cpu_interrupt_enable(uint32_t level);
  */
-.globl rt_hw_interrupt_enable
-rt_hw_interrupt_enable:
-    msr cpsr, r0
+.globl cpu_interrupt_enable
+cpu_interrupt_enable:
+    msr cpsr , r0
+    @ mrs r0, cpsr
+    @ and r1,r0,#0x3f
+    @ msr cpsr_c, r1
+    bx  lr
+
+/*
+ * extern void cpu_interrupt_enable_f();
+ */
+.globl cpu_interrupt_enable_f
+cpu_interrupt_enable_f:
+    mrs r0, cpsr
+    and r1,r0,#0x3f
+    msr cpsr_c, r1
     bx  lr
