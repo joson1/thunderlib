@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 1970-01-01 08:00:00
- * @LastEditTime: 2021-01-11 18:44:45
+ * @LastEditTime: 2021-01-12 20:16:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /ThunderLib/libs/include/list.h
@@ -10,15 +10,17 @@
 #include <stdint.h>
 #include <stddef.h>
 
+
 #define portMAX_DELAY 0xffffffffU
 
+struct __xList_t;
 typedef struct __ListItem_t
 {
     uint32_t xItemValue;
     struct __ListItem_t* pxNext;
     struct __ListItem_t* pxPrevious;
     void* Owner;
-    void* Container;
+    struct __xList_t* Container;
 } ListItem_t;
 
 
@@ -31,10 +33,10 @@ typedef struct __xMListItem_t
     struct __ListItem_t* pxPrevious;
 } xMListItem_t;
 
-typedef struct 
+typedef struct __xList_t
 {
     uint32_t NumberOfItems; /* 链表节点计数器 */
-    ListItem_t* pxIndex;    /* 链表节点索引指针 */
+    ListItem_t* volatile pxIndex;    /* 链表节点索引指针 */
     xMListItem_t xListEnd;  /* 链表最后一个节点 */
 } xList_t;
 
@@ -72,11 +74,11 @@ typedef struct
 #define xlistGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )										\
 {																							\
 	xList_t * const pxConstList = ( pxList );											    \
-	/* 节点索引指向链表第一个节点调整节点索引指针，指向下一个节点，
-    如果当前链表有N个节点，当第N次调用该函数时，pxInedex则指向第N个节点 */\
+	/* 节点索引指向链表第一个节点调整节点索引指针，指向下一个节点，*/       \
+    /*如果当前链表有N个节点，当第N次调用该函数时，pxInedex则指向第N个节点 */\
 	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;							\
 	/* 当前链表为空 */                                                                       \
-	if( ( void * ) ( pxConstList )->pxIndex == ( void * ) &( ( pxConstList )->xListEnd ) )	\
+	if( !(( pxConstList )->pxIndex->Owner) )	\
 	{																						\
 		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;						\
 	}																						\

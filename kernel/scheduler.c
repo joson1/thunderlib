@@ -90,6 +90,7 @@ void thread_idle_entry(void *parameter)
     while (1)
     {
         idletask_ctr ++;
+		
 		printf(".\r\n");
     }
 }
@@ -157,7 +158,11 @@ inline void schedule(void)
     
 	/* 获取就绪的最高优先级对应的线程控制块 */
 	xlistGET_OWNER_OF_NEXT_ENTRY(to_thread,&(ThreadReadyTable[CurrentTopReadyPriority]));
-
+	// if (to_thread==0)
+	// {
+	// 	xlistGET_OWNER_OF_NEXT_ENTRY(to_thread,&(ThreadReadyTable[CurrentTopReadyPriority]));
+	// }
+	
 
     /* 如果目标线程不是当前线程，则要进行线程切换 */
 	if(to_thread!=pCurrentThread)

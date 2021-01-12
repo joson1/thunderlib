@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2021-01-11 18:50:37
+ * @LastEditTime: 2021-01-12 20:35:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
@@ -15,7 +15,7 @@
 #include <kernel/thread.h>
 #include <kernel/klist.h>
 #include "zynq/xtime_l.h"
-
+#include <thunder/interrput.h>
 
 /*
 *************************************************************************
@@ -38,21 +38,22 @@ extern k_list_t thread_priority_table[THREAD_PRIORITY_MAX];
 /* 定义线程控制块 */
 thread_t flag1_thread;
 thread_t flag2_thread;
-thread_t flag3_thread;
+thread_t flag2_1_thread;
 extern uint32_t cpu_interrupt_disable();
 extern void cpu_interrupt_enable(uint32_t level);
 
 
-ALIGN(4)
+ALIGN(8)
 /* 定义线程栈 */
 uint8_t flag1_thread_stack[512];
 uint8_t flag2_thread_stack[512];
-uint8_t flag3_thread_stack[512];
+uint8_t flag2_1_thread_stack[512];
 
 /* 线程声明 */
 void flag1_thread_entry(void *p_arg);
 void flag2_thread_entry(void *p_arg);
 void flag3_thread_entry(void *p_arg);
+void flag2_1_thread_entry( void *p_arg );
 
 #define GT_CON 	*((unsigned int*)0xF8F00208)
 #define GT_CMPL 	*((unsigned int*)0xF8F00210)
@@ -82,9 +83,9 @@ void gtimer()
 
 	// }
 
+
 	sys_tick_handler();
 		// printf("gtime\r\n");
-
 	GT_CON_REG0 = 0;
 	GT_CON_REG1 = 0;
 	GT_INTS = 1;	
@@ -153,13 +154,7 @@ int main()
 	
 	printf("thread1_init init\r\n");
 	
-	/* 初始化线程 */
-	// thread_init( &flag2_thread,                 /* 线程控制块 */
-	// 				&(thread_priority_table[1]),
-	//                 flag2_thread_entry,               /* 线程入口地址 */
-	//                 NULL,                          /* 线程形参 */
-	//                 &flag2_thread_stack[0],        /* 线程栈起始地址 */
-	//                 sizeof(flag2_thread_stack) );  /* 线程栈大小，单位为字节 */
+
 	thread_init(&flag2_thread,
 				"[2]flag2_thread",
 				flag2_thread_entry,
@@ -169,6 +164,14 @@ int main()
 	// thread_startup(&flag2_thread);
 	printf("thread2_init init\r\n");
 
+	thread_init(&flag2_1_thread,
+				"[2]flag2_1_thread",
+				flag2_1_thread_entry,
+				NULL,flag2_1_thread_stack,
+				sizeof(flag2_1_thread_stack),
+				2);
+
+	printf("flag2_1_thread init\r\n");
 
 	/* 启动系统调度器 */
 	printf("system_scheduler_start\r\n");
@@ -206,9 +209,9 @@ void flag2_thread_entry( void *p_arg )
 		
 		
 		printf("thread2\r\n");
-		// bb++;
-		
-		// sys_delay(20);
+		bb++;
+		delay(20);
+		sys_delay(20);
 
 
 
@@ -219,12 +222,16 @@ void flag2_thread_entry( void *p_arg )
 
 void flag2_1_thread_entry( void *p_arg )
 {
+	static cc =0;
+
 	for( ;; )
 	{
 		// sys_delay(200);
-
+		cc++;
+		delay(200);
+				sys_delay(20);
 
 	}
-  return 0;
+
 }
 

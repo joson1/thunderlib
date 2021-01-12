@@ -48,6 +48,16 @@ uint32_t cpu_interrupt_to_thread = 0;
 /* SWI中断服务函数执行标志 */
 uint32_t cpu_thread_switch_interrupt_flag = 0;
 
+void task_ed()
+{
+
+
+	while (1)
+	{
+		/* code */
+	}
+	
+}
 
 /*
 *************************************************************************
@@ -92,7 +102,7 @@ uint8_t *cpu_hw_stack_init(  void       *tentry,
 	stack_frame->exception_stack_frame.r2  = 0;                        /* r2 */
 	stack_frame->exception_stack_frame.r3  = 0;                        /* r3 */
 	stack_frame->exception_stack_frame.r12 = 0;                        /* r12 */
-	stack_frame->exception_stack_frame.lr  = 0;                        /* lr */
+	stack_frame->exception_stack_frame.lr  = task_ed;                        /* lr */
 	stack_frame->exception_stack_frame.pc  = (unsigned long)tentry;    /* entry point, pc */
 	stack_frame->exception_stack_frame.psr = 0x01000000L;              /* PSR */
 	

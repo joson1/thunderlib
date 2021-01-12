@@ -205,7 +205,9 @@ switch_to_thread:
 	@//cpu_interrupt_to_thread是一个全局变量，里面存的是线程栈指针SP的指针
 	LDR     r1, [r1]         @//加载cpu_interrupt_to_thread的值到r1，即sp指针的指针
 	LDR     r1, [r1]          @加载cpu_interrupt_to_thread的值到r1，即sp
-	LDMFD   r1!, {r4 - r11}   @将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
+	@ LDMFD   r1!, {r4 - r11}   @将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
+	ldmia   r1!, {r4 - r11}   @将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
+
 	movs     sp, r1       				@ //将线程栈指针更新到PSP
 	@ ldmfd sp!, {r0-r12, lr, pc}^ 
 
@@ -214,7 +216,7 @@ SVC_exit:
 	ldmia	sp!,{r0-r3,r12,lr,pc}
     @ ORR     lr, lr, #0x04                             //确保异常返回使用的堆栈指针是PSP，即LR寄存器的位2要为1
     @ BX      lr                                        //异常返回，这个时候任务堆栈中的剩下内容将会自动加载到xPSR，PC（任务入口地址），R14，R12，R3，R2，R1，R0（任务的形参）
-	movs	pc, lr
+	@ movs	pc, lr
 
 	@ ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
 
