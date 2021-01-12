@@ -128,8 +128,10 @@ _start:
 #endif /* PROFILING */
 
    /* run global constructors */
-   bl __libc_init_array
+   	bl __libc_init_array
 	bl board_init
+	bl cpu_dcache_enable
+	bl cpu_icache_enable
 	/* make sure argc and argv are valid */
 	mov	r0, #0
 	mov	r1, #0
