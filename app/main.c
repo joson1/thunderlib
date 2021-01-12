@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2021-01-12 20:35:48
+ * @LastEditTime: 2021-01-12 20:54:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
@@ -60,7 +60,7 @@ void flag2_1_thread_entry( void *p_arg );
 #define GT_CMPH 	*((unsigned int*)0xf8f00214)
 
 #define GT_INTS *((unsigned int*)0xF8F0020C)
-#define OS_TIMER_SLICE_MS 1
+#define OS_TIMER_SLICE_MS 10
 
 #define COUNTS_PER_USECOND  (XPAR_CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ / (2U*1000000U))
 #define GT_CON_REG0 *((unsigned int *)(0xF8F00200))
@@ -175,7 +175,8 @@ int main()
 
 	/* 启动系统调度器 */
 	printf("system_scheduler_start\r\n");
-
+	GT_CON_REG0=0;
+	GT_CON_REG1=0;
 	system_scheduler_start(); 
 
 }

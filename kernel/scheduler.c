@@ -82,6 +82,9 @@ void AddNewThreadToReadyList(thread_t* pthread)
 	xListInsertEnd(&(ThreadReadyTable[pthread->priority]),&(pthread->tListItem));
 	cpu_interrupt_enable(level);
 }
+#define GT_INTS *((unsigned int*)0xF8F0020C)
+#define GT_CON_REG0 *((unsigned int *)(0xF8F00200))
+#define GT_CON_REG1 *((unsigned int *)(0xf8f00204))
 
 //////////////////////////////////////////////IDLE_THREAD////////////////////////////
 void thread_idle_entry(void *parameter)
@@ -90,8 +93,14 @@ void thread_idle_entry(void *parameter)
     while (1)
     {
         idletask_ctr ++;
+
+		printf("GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",GT_INTS,GT_CON_REG0,GT_CON_REG1);
+		if (GT_INTS)
+		{
+			GT_INTS = 1;
+
+		}
 		
-		printf(".\r\n");
     }
 }
 
