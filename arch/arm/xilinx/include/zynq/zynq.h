@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-08-10 18:03:51
- * @LastEditTime: 2020-10-05 21:01:57
+ * @LastEditTime: 2021-01-15 11:21:59
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\arch\arm\xilinx\include\zynq\zynq.h
@@ -225,5 +225,27 @@ typedef struct
 
 
 
+typedef struct
+{
+  volatile uint32_t LOAD;
+  volatile uint32_t COUNTER;
+  volatile uint32_t CONTROL;
+  volatile uint32_t ISR;
+
+} ptimer_reg_t;
+
+/* Values for control register */
+#define PRIVATE_TIMER_CONTROL_PRESCALER_MASK     0x0000FF00
+#define PRIVATE_TIMER_CONTROL_PRESCALER_SHIFT    8
+#define PRIVATE_TIMER_CONTROL_IRQ_ENABLE_MASK    0x00000004
+#define PRIVATE_TIMER_CONTROL_AUTO_RELOAD_MASK   0x00000002
+#define PRIVATE_TIMER_CONTROL_ENABLE_MASK        0x00000001
+
+/* Values for ISR register */
+#define PRIVATE_TIMER_ISR_EVENT_FLAG_MASK        0x00000001
+
+
+#define PRIVATE_TIMER_BASE            0xF8F00600
+#define PRIVATE_TIMER                ((ptimer_reg_t*)PRIVATE_TIMER_BASE)
 
 

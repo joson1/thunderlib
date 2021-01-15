@@ -94,7 +94,7 @@ void thread_idle_entry(void *parameter)
     {
         idletask_ctr ++;
 
-		printf("GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",GT_INTS,GT_CON_REG0,GT_CON_REG1);
+		// printf("GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",GT_INTS,GT_CON_REG0,GT_CON_REG1);
 		if (GT_INTS)
 		{
 			GT_INTS = 1;
