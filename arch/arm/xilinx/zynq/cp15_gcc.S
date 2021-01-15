@@ -84,8 +84,8 @@ finished:
     pop     {r4-r11}
     bx      lr
 
-.globl rt_hw_cpu_dcache_disable
-rt_hw_cpu_dcache_disable:
+.globl cpu_dcache_disable
+cpu_dcache_disable:
     push    {r4-r11, lr}
     bl      rt_cpu_dcache_clean_flush
     mrc     p15, #0, r0, c1, c0, #0
@@ -94,8 +94,8 @@ rt_hw_cpu_dcache_disable:
     pop     {r4-r11, lr}
     bx      lr
 
-.globl rt_hw_cpu_icache_disable
-rt_hw_cpu_icache_disable:
+.globl cpu_icache_disable
+cpu_icache_disable:
     mrc     p15, #0, r0, c1, c0, #0
     bic     r0,  r0, #0x00001000
     mcr     p15, #0, r0, c1, c0, #0

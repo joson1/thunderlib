@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2021-01-15 14:05:22
+ * @LastEditTime: 2021-01-15 16:17:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
@@ -91,9 +91,9 @@ extern void cpu_interrupt_enable(uint32_t level);
 
 ALIGN(8)
 /* 定义线程栈 */
-uint8_t flag1_thread_stack[512];
-uint8_t flag2_thread_stack[512];
-uint8_t flag2_1_thread_stack[512];
+uint8_t flag1_thread_stack[1024];
+uint8_t flag2_thread_stack[1024];
+uint8_t flag2_1_thread_stack[1024];
 
 /* 线程声明 */
 void flag1_thread_entry(void *p_arg);
@@ -248,7 +248,7 @@ int main()
 	/* 启动系统调度器 */
 	printf("system_scheduler_start\r\n");
 	CLEAR();
-	
+
     PRIVATE_TIMER->CONTROL |= PRIVATE_TIMER_CONTROL_ENABLE_MASK;
 
 	system_scheduler_start(); 
@@ -264,12 +264,16 @@ void delay (uint32_t count)
 void flag1_thread_entry( void *p_arg )
 {
 	int aa = 1;
+	float af = 1;
+	uint32_t level;
 	for( ;; )
 	{
 		MOVETO(1,0);
 
 		printf(YELLOW"thread1:%d\r\n",aa);
 		aa++;
+		af+=0.1;
+
 		sys_delay(10);
 
 		/* 线程切换，这里是手动切换 */		
@@ -281,13 +285,16 @@ void flag1_thread_entry( void *p_arg )
 void flag2_thread_entry( void *p_arg )
 {
 	int bb = 2;
+	int af = 10.0;
+
 	for( ;; )
 	{
 		
 		MOVETO(2,0);
 		
-		printf(RED"thread2:%d\r\n",bb);
+		printf(RED"thread2:%08X\r\n",bb);
 		bb++;
+		af+=0.01;
 		delay(20);
 		sys_delay(30);
 
@@ -301,15 +308,17 @@ void flag2_thread_entry( void *p_arg )
 void flag2_1_thread_entry( void *p_arg )
 {
 	int cc =3;
+	float af = 30.0;
 
 	for( ;; )
 	{
 		// sys_delay(200);
 		cc++;
+		af+=0.05;
 		MOVETO(3,0);
 		printf(GREEN"thread3:%d\r\n",cc);
 		delay(200);
-				sys_delay(20);
+		sys_delay(20);
 
 	}
 
