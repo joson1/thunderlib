@@ -3,9 +3,9 @@
 @*************************************************************************
 @                                 全局变量
 @*************************************************************************
-.global cpu_thread_switch_interrupt_flag
+.global cpu_cpu_thread_switch_interrupt_flag
 .global cpu_interrupt_from_thread
-.global cpu_interrupt_to_thread
+.global cpu_cpu_interrupt_to_thread
 #define NOINT           0xc0 
 
 
@@ -25,32 +25,33 @@
 
 .global cpu_hw_context_switch_to
 cpu_hw_context_switch_to:
-    
-	@ 导出cpu_hw_context_switch，让其具有全局属性，可以在C文件调用
+    ldr     sp, [r0]
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    ldmfd sp!, {r1}				/* Restore floating point registers */
+    vmsr FPEXC, r1
+    ldmfd sp!, {r1}
+    vmsr FPSCR, r1
+    vldmia sp!, {d0-d15}
+#endif
 
-    @ 设置cpu_interrupt_to_thread的值
-    LDR     r1, =cpu_interrupt_to_thread             @将cpu_interrupt_to_thread的地址加载到r1
-    STR     r0, [r1]                                @将r0的值存储到cpu_interrupt_to_thread
+    ldmfd   sp!,{r4}
+    @ mov     r0, sp
+    msr     spsr_cxsf, r4
 
-    @ 设置cpu_interrupt_from_thread的值为0，表示启动第一次线程切换
-    LDR     r1, =cpu_interrupt_from_thread           @将cpu_interrupt_from_thread的地址加载到r1
-    MOV     r0, #0x0                                @配置r0等于0
-    STR     r0, [r1]                                @将r0的值存储到cpu_interrupt_from_thread
+    bic     r4,r4,#0x20
+    msr     cpsr_cxsf, r4
 
-    @ 设置中断标志位cpu_thread_switch_interrupt_flag的值为1
-    LDR     r1, =cpu_thread_switch_interrupt_flag    @将cpu_thread_switch_interrupt_flag的地址加载到r1
-    MOV     r0, #1                                  @配置r0等于1
-    STR     r0, [r1]                                @将r0的值存储到cpu_thread_switch_interrupt_flag
+    ldmfd   sp!,{r0-r12,lr,pc}
 	
     /* 使能全局中断 */
-    mrs r0, cpsr
-    and r1,r0,#0x3f
-    msr cpsr_c, r1
+    @ mrs r0, cpsr
+    @ and r1,r0,#0x3f
+    @ msr cpsr_c, r1
     @ bx  lr
 
     @ 触发 SWI 异常 (产生上下文切换)
-    SWI    0
-
+    @ SWI    0
+    @ NOP {0}
     @ 保证中断开启
 
     @ 永远不会到达这里
@@ -66,34 +67,53 @@ cpu_hw_context_switch_to:
 .global cpu_hw_context_switch
 
 cpu_hw_context_switch:
+    stmfd   sp!,{lr}
+    stmfd   sp!,{r0-r12,lr}
 
-    @ 设置中断标志位cpu_thread_switch_interrupt_flag为1     
-    LDR     r2, =cpu_thread_switch_interrupt_flag          @ 加载cpu_thread_switch_interrupt_flag的地址到r2
-    LDR     r3, [r2]                                      @ 加载cpu_thread_switch_interrupt_flag的值到r3
-    CMP     r3, #1                                        @ r3与1比较，相等则执行BEQ指令，否则不执行
-    BEQ     _reswitch
-    MOV     r3, #1                                        @ 设置r3的值为1
-    STR     r3, [r2]                                      @ 将r3的值存储到cpu_thread_switch_interrupt_flag，即置1
-    
-	@ 设置cpu_interrupt_from_thread的值
-    LDR     r2, =cpu_interrupt_from_thread                 @ 加载cpu_interrupt_from_thread的地址到r2
-    STR     r0, [r2]                                      @ 存储r0的值到cpu_interrupt_from_thread，即上一个线程栈指针sp的指针
+    mrs     r4,cpsr
+    tst     lr,#0x01
+    beq     _ARM_MODE
+    orr     r4,r4,#0x20
 
+_ARM_MODE:
+    stmfd   sp!,{r4}
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    vstmdb sp!, {d0-d15}     /* Store floating point registers */
+    vmrs r4, FPSCR
+    stmfd sp!,{r4}
+    vmrs r4, FPEXC
+    stmfd sp!,{r4}
+#endif
+    str sp, [r0]            @ store sp in preempted tasks TCB
+    ldr sp, [r1]            @ get new task stack pointer
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    ldmfd sp!, {r1}				/* Restore floating point registers */
+    vmsr FPEXC, r1
+    ldmfd sp!, {r1}
+    vmsr FPSCR, r1
+    vldmia sp!, {d0-d15}
+#endif
+
+    ldmfd sp!, {r4}         @ pop new task cpsr to spsr
+    msr spsr_cxsf, r4
+
+    ldmfd sp!, {r0-r12, lr, pc}^  @ pop new task r0-r12, lr & pc, copy spsr to cpsr
+
+
+.globl cpu_hw_context_switch_interrupt
+cpu_hw_context_switch_interrupt:
+    ldr r2, =cpu_thread_switch_interrupt_flag
+    ldr r3, [r2]
+    cmp r3, #1
+    beq _reswitch
+    mov r3, #1              @ set cpu_thread_switch_interrupt_flag to 1
+    str r3, [r2]
+    ldr r2, =cpu_interrupt_from_thread   @ set cpu_interrupt_from_thread
+    str r0, [r2]
 _reswitch:
-    @ 设置cpu_interrupt_to_thread的值
-	LDR     r2, =cpu_interrupt_to_thread                   @ 加载cpu_interrupt_from_thread的地址到r2
-    STR     r1, [r2]                                      @ 存储r1的值到cpu_interrupt_from_thread，即下一个线程栈指针sp的指针
-
-    @ @ 触发SWI异常，实现上下文切换
-    mov     r0,lr
-	SWI     0
-    NOP {0}
-    @ 子程序返回
-	@ BX      LR
-    
-	
-	@ 子程序结束
-
+    ldr r2, =cpu_interrupt_to_thread     @ set cpu_interrupt_to_thread
+    str r1, [r2]
+    bx  lr
 
 
 /*

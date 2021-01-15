@@ -8,12 +8,13 @@ extern void cpu_interrupt_enable_f();
 extern uint32_t cpu_interrupt_disable();
 extern void cpu_interrupt_enable(uint32_t level);
 
-
-
+extern void cpu_hw_context_switch_interrupt(uint32_t from, uint32_t to);
+uint32_t interrupt_cnt = 0;
 uint32_t NumOfOverflows = 0;
 uint32_t NextThreadUnblockTime;
 uint32_t CurrentNumberOfThread = 0;
 thread_t* pCurrentThread;
+extern thread_t* pCurrentThread;
 uint32_t sys_tick_counter = 0;
 /* 线程就绪优先级组 */
 uint32_t ThreadReadyPriorityGroup=0;
@@ -37,7 +38,7 @@ static xList_t* volatile pOverflowDelayedThreadList;
 /* 线程休眠列表 */
 k_list_t thread_defunct;
 
-ALIGN(4)
+ALIGN(8)
 /* 定义线程栈 */
 static uint8_t idle_thread_stack[512];
 
@@ -94,12 +95,14 @@ void thread_idle_entry(void *parameter)
     {
         idletask_ctr ++;
 
-		printf("GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",GT_INTS,GT_CON_REG0,GT_CON_REG1);
-		if (GT_INTS)
-		{
-			GT_INTS = 1;
+		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
+		// if (GT_INTS)
+		// {
+		// 	GT_INTS =0;
+		// 	GT_CON_REG0 = 0;
+		// 	GT_CON_REG1 = 0;
 
-		}
+		// }
 		
     }
 }
@@ -129,6 +132,7 @@ void system_scheduler_init(void)
 }
 
 
+extern void show_stack(void* sp);
 
 /* 启动系统调度器 */
 void system_scheduler_start(void)
@@ -146,7 +150,7 @@ void system_scheduler_start(void)
 
 	xlistGET_OWNER_OF_NEXT_ENTRY(pCurrentThread,&(ThreadReadyTable[CurrentTopReadyPriority]));
 
-	
+	// show_stack(pCurrentThread->sp);
 	cpu_hw_context_switch_to((uint32_t)&pCurrentThread->sp);
     /* 永远不会返回 */
 
@@ -176,12 +180,21 @@ inline void schedule(void)
     /* 如果目标线程不是当前线程，则要进行线程切换 */
 	if(to_thread!=pCurrentThread)
 	{
-		// current_priority = (uint8_t)highest_ready_priority;
 		from_thread = pCurrentThread;
 		pCurrentThread = to_thread;
-		cpu_hw_context_switch((uint32_t)&from_thread->sp,
-								(uint32_t)&to_thread->sp);
-
+		if (interrupt_cnt==0)
+		{
+			cpu_hw_context_switch((uint32_t)&from_thread->sp,
+									(uint32_t)&to_thread->sp);
+			cpu_interrupt_enable(level);
+		}else
+		{
+			cpu_hw_context_switch_interrupt((uint32_t)&from_thread->sp,
+											 (uint32_t)&to_thread->sp);
+		}
+		
+		
+		// current_priority = (uint8_t)highest_ready_priority;
 	}
 	cpu_interrupt_enable(level);
 	
@@ -256,6 +269,7 @@ static inline void _tick_increase(void)
 						NextThreadUnblockTime = ItemValue;
 						break;
 					}
+					pThread->status = THREAD_STATUS_RUNNING;
 					xListRemove( &(pThread->tListItem) );
 					AddNewThreadToReadyList(pThread);
 
@@ -285,7 +299,7 @@ extern void sys_tick_handler();
 void sys_delay(uint32_t TicksToWait)
 {
 	register tmp = cpu_interrupt_disable();
-	
+	uint32_t delay;
 	uint32_t TimeToWake;
 	const uint32_t ConstTickCount = sys_tick_counter;
 
@@ -314,9 +328,15 @@ void sys_delay(uint32_t TicksToWait)
 		}
 		
 	}
-
+	pCurrentThread->status = THREAD_STATUS_SUSPEND;
 	cpu_interrupt_enable(tmp);
-	schedule();
+	
+	// schedule();
+	while (pCurrentThread->status == THREAD_STATUS_SUSPEND)
+	{
+		delay++;
+	}
+	
 
 
 
@@ -324,4 +344,20 @@ void sys_delay(uint32_t TicksToWait)
 }
 
 
+extern void interrupt_enter();
 
+void interrupt_enter()
+{
+	// uint32_t level = cpu_interrupt_disable();
+	interrupt_cnt++;
+	// cpu_interrupt_enable(level);
+}
+
+extern void interrupt_exit();
+void interrupt_exit()
+{
+	// uint32_t level = cpu_interrupt_disable();
+	interrupt_cnt--;
+	// cpu_interrupt_enable(level);
+
+}

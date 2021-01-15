@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 1970-01-01 08:00:00
- * @LastEditTime: 2021-01-11 10:57:55
+ * @LastEditTime: 2021-01-13 19:44:16
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /ThunderLib/kernel/thread.c
@@ -34,7 +34,7 @@ k_err_t thread_init(thread_t *thread,
 	/* 初始化线程栈，并返回线程栈指针 */
 	thread->sp = (void *)cpu_hw_stack_init( thread->entry, 
 		                                   thread->parameter,
-							               (void *)((char *)thread->stack_addr + thread->stack_size - 4) );
+							               (uint8_t *)((char *)thread->stack_addr + thread->stack_size - 4) );
 	thread->ticks_to_delay = 0;
 	thread->number_mask = 0;
 

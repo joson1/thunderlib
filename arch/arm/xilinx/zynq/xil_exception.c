@@ -299,6 +299,7 @@ void Xil_SErrorAbortHandler(void *CallBackRef){
 * @note		None.
 *
 ****************************************************************************/
+extern void trap_dabt();
 
 void Xil_DataAbortHandler(void *CallBackRef){
 	(void) CallBackRef;
@@ -317,6 +318,8 @@ void Xil_DataAbortHandler(void *CallBackRef){
 	xdbg_printf(XDBG_DEBUG_GENERAL, "Data abort with Data Fault Status Register  %lx\n",FaultStatus);
 	xdbg_printf(XDBG_DEBUG_GENERAL, "Address of Instruction causing Data abort %lx\n",DataAbortAddr);
 #endif
+	trap_dabt();
+
 	while(1) {
 		;
 	}

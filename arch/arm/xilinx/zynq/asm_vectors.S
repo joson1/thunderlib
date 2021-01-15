@@ -71,6 +71,16 @@
 .global cpu_interrupt_from_thread
 .global cpu_interrupt_to_thread
     
+.equ Mode_USR,        0x10
+.equ Mode_FIQ,        0x11
+.equ Mode_IRQ,        0x12
+.equ Mode_SVC,        0x13
+.equ Mode_ABT,        0x17
+.equ Mode_UND,        0x1B
+.equ Mode_SYS,        0x1F
+
+.equ I_Bit,           0x80            @ when I bit is set, IRQ is disabled
+.equ F_Bit,           0x40            @ when F bit is set, FIQ is disabled
 
 .section .vectors
 _vector_table:
@@ -85,15 +95,14 @@ _vector_table:
 
 
 IRQHandler:					/* IRQ vector handler */
-
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code*/
-#if FPU_HARD_FLOAT_ABI_ENABLED
-	vpush {d0-d7}
-	vpush {d16-d31}
-	vmrs r1, FPSCR
-	push {r1}
-	vmrs r1, FPEXC
-	push {r1}
+	sub		lr,	lr,#4
+	stmdb	sp!,{r0-r12,lr}		/* state save from compiled code*/
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    vstmdb sp!, {d0-d15}     /* Store floating point registers */
+    vmrs r1, FPSCR
+    stmfd sp!,{r1}
+    vmrs r1, FPEXC
+    stmfd sp!,{r1}
 #endif
 
 @ #ifdef PROFILING
@@ -104,6 +113,95 @@ IRQHandler:					/* IRQ vector handler */
 
 	bl	IRQInterrupt			/* IRQ vector */
 
+
+
+    @ if cpu_thread_switch_interrupt_flag set, jump to
+    @ hw_context_switch_interrupt_do and don't return
+    ldr     r0, =cpu_thread_switch_interrupt_flag
+    ldr     r1, [r0]
+    cmp     r1, #1
+    beq     hw_context_switch_interrupt_do
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    ldmfd sp!, {r1}         /* Restore floating point registers */
+    vmsr FPEXC, r1
+    ldmfd sp!, {r1}
+    vmsr FPSCR, r1
+    vldmia sp!, {d0-d15}
+#endif
+
+@ #endif
+    ldmfd   sp!, {r0-r12,pc}^
+    @ subs    pc,  lr, #4
+
+
+hw_context_switch_interrupt_do:
+    mov     r1,  #0         @ clear flag
+    str     r1,  [r0]
+
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    ldmfd sp!, {r1}         /* Restore floating point registers */
+    vmsr FPEXC, r1
+    ldmfd sp!, {r1}
+    vmsr FPSCR, r1
+    vldmia sp!, {d0-d15}
+#endif
+
+    mov     r1, sp          @ r1 point to {r0-r3} in stack
+    add     sp, sp, #4*4
+    ldmfd   sp!, {r4-r12,lr}@ reload saved registers
+    mrs     r0,  spsr       @ get cpsr of interrupt thread
+    sub     r2,  lr, #4     @ save old task's pc to r2
+
+    @ Switch to SVC mode with no interrupt. If the usr mode guest is
+    @ interrupted, this will just switch to the stack of kernel space.
+    @ save the registers in kernel space won't trigger data abort.
+    msr     cpsr_c, #I_Bit|F_Bit|Mode_SVC
+
+    stmfd   sp!, {r2}       @ push old task's pc
+    stmfd   sp!, {r4-r12,lr}@ push old task's lr,r12-r4
+    ldmfd   r1,  {r1-r4}    @ restore r0-r3 of the interrupt thread
+    stmfd   sp!, {r1-r4}    @ push old task's r0-r3
+    stmfd   sp!, {r0}       @ push old task's cpsr
+
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    vstmdb sp!, {d0-d15}    /* Store floating point registers */
+    vmrs r1, FPSCR
+    stmfd sp!,{r1}
+    vmrs r1, FPEXC
+    stmfd sp!,{r1}
+#endif
+
+    ldr     r4,  =cpu_interrupt_from_thread
+    ldr     r5,  [r4]
+    str     sp,  [r5]       @ store sp in preempted tasks's TCB
+
+    ldr     r6,  =cpu_interrupt_to_thread
+    ldr     r7,  [r6]
+    ldr     sp,  [r7]       @ get new task's stack pointer
+
+#if defined (__VFP_FP__) && !defined(__SOFTFP__)
+    ldmfd sp!, {r1}         /* Restore floating point registers */
+    vmsr FPEXC, r1
+    ldmfd sp!, {r1}
+    vmsr FPSCR, r1
+    vldmia sp!, {d0-d15}
+#endif
+
+    ldmfd   sp!, {r4}       @ pop new task's cpsr to spsr
+    msr     spsr_cxsf, r4
+
+    ldmfd   sp!, {r0-r12,lr,pc}^ @ pop new task's r0-r12,lr & pc, copy spsr to cpsr
+
+
+
+
+
+
+
+
+
+
+
 #if FPU_HARD_FLOAT_ABI_ENABLED
 	pop 	{r1}
 	vmsr    FPEXC, r1
@@ -112,14 +210,15 @@ IRQHandler:					/* IRQ vector handler */
 	vpop    {d16-d31}
 	vpop    {d0-d7}
 #endif
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
+	ldmia	sp!,{r0-r12,pc}^		/* state restore from compiled code */
 
 
-	subs	pc, lr, #4			/* adjust return */
+	@ subs	pc, lr, #4			/* adjust return */
 
 
 FIQHandler:					/* FIQ vector handler */
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
+	sub		lr,lr,#4
+	stmdb	sp!,{r0-r12,lr}		/* state save from compiled code */
 #if FPU_HARD_FLOAT_ABI_ENABLED
 	vpush {d0-d7}
 	vpush {d16-d31}
@@ -140,29 +239,32 @@ FIQLoop:
 	vpop    {d16-d31}
 	vpop    {d0-d7}
 #endif
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-	subs	pc, lr, #4			/* adjust return */
+	ldmia	sp!,{r0-r12,pc}		/* state restore from compiled code */
+	@ subs	pc, lr, #4			/* adjust return */
 
 
 Undefined:					/* Undefined handler */
-	stmdb	sp!,{r0-r3,r12,lr}		/* state save from compiled code */
+	stmdb	sp!,{r0-r12,lr}		/* state save from compiled code */
 	ldr     r0, =UndefinedExceptionAddr
 	sub     r1, lr, #4
 	str     r1, [r0]            		/* Store address of instruction causing undefined exception */
 
 	bl	UndefinedException		/* UndefinedException: call C function here */
-	ldmia	sp!,{r0-r3,r12,lr}		/* state restore from compiled code */
-	movs	pc, lr
+	ldmia	sp!,{r0-r12,pc}		/* state restore from compiled code */
+	@ movs	pc, lr
 
 
 SVCHandler:					/* SWI handler */
 
+	mov		lr,r0
+ 	@ stmdb	sp!,{lr}
+ 	stmdb	sp!,{r0-r12,lr}
+	ldmfd	sp!,{r0-r12,pc}
 	@ msr cpsr_c,0x13|0x80
 	@ msr cpsr_c,0x10
-	mov lr, r0
-    mrs r0, cpsr
-    and r1,r0,#0x3f
-    msr cpsr_c, r1
+    @ mrs r0, cpsr
+    @ and r1,r0,#0x3f
+    @ msr cpsr_c, r1
     //获取中断标志位，看看是否为0
     LDR     r0, =cpu_thread_switch_interrupt_flag     //加载cpu_thread_switch_interrupt_flag的地址到r0
     LDR     r1, [r0]                                 //加载cpu_thread_switch_interrupt_flag的值到r1
@@ -184,11 +286,11 @@ SVCHandler:					/* SWI handler */
 @     //当进入PendSVC Handler时，上一个线程运行的环境即：
 @  	//xPSR，PC（线程入口地址），R14，R12，R3，R2，R1，R0（线程的形参）
 @  	//这些CPU寄存器的值会自动保存到线程的栈中，剩下的r4~r11需要手动保存
-	stmfd   sp!, {lr}
- 	stmdb	sp!,{r0-r3,r12,lr}
     MOV     r1, sp                                  //获取线程栈指针到r1
-    STMFD   r1!, {r4 - r11}                          //将CPU寄存器r4~r11的值存储到r1指向的地址(每操作一次地址将递减一次)
-    LDR     r0, [r0]                                 //加载r0指向值到r0，即r0=rt_interrupt_from_thread
+	mrs		r4,spsr
+    STMFD   r1!, {r4}                          //将CPU寄存器r4~r11的值存储到r1指向的地址(每操作一次地址将递减一次)
+	
+    LDR     r0, [r0]                                 //加载r0指向值到r0，即r0=cpu_interrupt_from_thread
     STR     r1, [r0]                                 //将r1的值存储到r0，即更新线程栈sp
 	
 
@@ -206,14 +308,19 @@ switch_to_thread:
 	LDR     r1, [r1]         @//加载cpu_interrupt_to_thread的值到r1，即sp指针的指针
 	LDR     r1, [r1]          @加载cpu_interrupt_to_thread的值到r1，即sp
 	@ LDMFD   r1!, {r4 - r11}   @将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
-	ldmia   r1!, {r4 - r11}   @将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
-
+	ldmia   r1!, {r4}   @将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
+	msr		spsr,r4
 	movs     sp, r1       				@ //将线程栈指针更新到PSP
 	@ ldmfd sp!, {r0-r12, lr, pc}^ 
 
 SVC_exit:
-
-	ldmia	sp!,{r0-r3,r12,lr,pc}
+	mrs r0, spsr
+    and r1,r0,#0x3f
+    msr spsr_c, r1
+	ldmia	sp!,{r0-r12,lr,pc}^
+	@ ldmia	sp!,{r4}  @pc
+	@ ldmia	sp!,{r4}  @psr
+	@ subs	pc, lr,#4
     @ ORR     lr, lr, #0x04                             //确保异常返回使用的堆栈指针是PSP，即LR寄存器的位2要为1
     @ BX      lr                                        //异常返回，这个时候任务堆栈中的剩下内容将会自动加载到xPSR，PC（任务入口地址），R14，R12，R3，R2，R1，R0（任务的形参）
 	@ movs	pc, lr

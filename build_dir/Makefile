@@ -1,6 +1,7 @@
 
 objs =$(wildcard *.o) 
 dep = $(wildcard *.d)
+LDFLAGS+=-u_printf_float
 
 all:
 	@echo Linking
