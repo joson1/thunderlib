@@ -118,7 +118,7 @@ void thread_idle_init(void)
 	                sizeof(idle_thread_stack),
 					0);  /* 线程栈大小，单位为字节 */
 
-	printf("thread_idle_init init\r\n");
+	printf("thread_idle init:%f\r\n",12.233);
 
 }
 

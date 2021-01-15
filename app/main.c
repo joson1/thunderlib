@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2021-01-15 23:12:57
+ * @LastEditTime: 2021-01-15 23:21:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
@@ -136,6 +136,7 @@ void gtimer()
 
 	interrupt_exit();
 
+	
 }
 
 int main()
@@ -195,6 +196,11 @@ int main()
 	// InterruptMaptoCpu(0,27);
     irq_register(IRQ_Zynq7000_PTIMER ,gtimer,TRIGGER_EDGE_RISING,0,0);
 
+    /* The processor timer is always clocked at 1/2 CPU frequency(CPU_3x2x). */
+    PRIVATE_TIMER->COUNTER = APU_FREQ/2/TICK_PER_SECOND;
+    /* Set reload value. */
+    PRIVATE_TIMER->LOAD = APU_FREQ/2/TICK_PER_SECOND;
+    PRIVATE_TIMER->CONTROL |= PRIVATE_TIMER_CONTROL_AUTO_RELOAD_MASK;
 
 	// usleep();
 
