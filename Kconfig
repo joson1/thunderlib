@@ -1,0 +1,10 @@
+#
+# For a description of the syntax of this configuration file,
+# see Documentation/kbuild/kconfig-language.txt.
+#
+mainmenu "ThunderLib $SDK_VERSION Configuration"
+config SDK_VERSION
+	string
+	option env="SDK_VERSION"
+source "kernel/Kconfig"
+source "drivers/Kconfig"

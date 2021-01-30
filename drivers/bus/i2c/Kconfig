@@ -1,0 +1,9 @@
+menu "i2c"
+
+config I2C_EN
+    bool "Enable i2c"
+    default y
+    help
+        This option 
+source "drivers/bus/i2c/devices/Kconfig"
+endmenu

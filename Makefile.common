@@ -1,0 +1,3 @@
+HOSTCC=gcc
+HOSTCXX=g++
+export HOSTCC HOSTCXX

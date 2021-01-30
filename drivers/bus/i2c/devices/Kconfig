@@ -1,0 +1,14 @@
+menu "devices"
+depends on I2C_EN
+
+config I2C_STM32F429
+    bool "i2c-stm32f429"
+    default n
+    help
+
+config I2C_ZYNQ
+    bool "i2c-zynq"
+    default n
+    help
+    
+endmenu

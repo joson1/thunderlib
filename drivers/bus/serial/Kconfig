@@ -1,0 +1,9 @@
+menu "serial"
+
+config SERIAL_EN
+    bool "Enable serial"
+    default y
+    help
+        This option 
+source "drivers/bus/serial/devices/Kconfig"
+endmenu

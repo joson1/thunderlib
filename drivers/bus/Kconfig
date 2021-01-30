@@ -1,0 +1,8 @@
+menu "bus"
+
+source "drivers/bus/serial/Kconfig"
+source "drivers/bus/i2c/Kconfig"
+source "drivers/bus/spi/Kconfig"
+
+
+endmenu

@@ -1,0 +1,9 @@
+menu "kernel"
+
+config KERNEL_EN
+    bool "Enable MultiThread support"
+    default n
+    help
+        This option 
+
+endmenu

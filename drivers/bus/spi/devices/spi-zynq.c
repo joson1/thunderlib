@@ -7,24 +7,7 @@
  * @FilePath: \ThunderLib\drivers\bus\spi\devices\spi-zynq.c
  */
 #include <thunder/spi.h>
-#include "zynq/zynq.h"
-
-
-
-// struct spi_dev
-// {
-// 	uint8_t id;
-
-// 	void (*setMode)(uint32_t);//
-// 	void (*setBitOrder)(char);//
-// 	int (*transfer)(int);//
-// 	void* dev_init_conf ; 
-// 	struct spi_dev* next;
-// };
-
-
-
-
+#include "zynq7000/zynq.h"
 
 
 
@@ -122,7 +105,7 @@ static void spi0_setClkDiv(uint8_t SPI_CLOCK_DIV)
     
 }
 
-struct spi_dev spi0 = 
+spi_dev_t spi0 = 
 {
     .id = 0,
     .init = spi0_init,
@@ -135,7 +118,7 @@ struct spi_dev spi0 =
 void zynq_spi_init()
 {
     spi_zynq_reset();
-    spi_dev_attach(&spi0);
+    spi_dev_attach(&spi0,0);
 
 }
 extern void zynq_spi_init();

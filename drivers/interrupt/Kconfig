@@ -1,0 +1,11 @@
+
+menu "interrupt"
+
+config INTERRUPT_EN
+    bool "Enable interrupt"
+    default y
+    help
+        This option 
+source "drivers/interrupt/devices/Kconfig"
+
+endmenu

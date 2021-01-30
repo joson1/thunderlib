@@ -1,6 +1,6 @@
 #include <thunder/pwm.h>
-#include "zynq/zynq.h"
-#include "zynq/ttc.h"
+#include "zynq7000/zynq.h"
+#include "zynq7000/ttc.h"
 
 
 

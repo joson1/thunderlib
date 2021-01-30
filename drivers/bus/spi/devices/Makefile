@@ -1,5 +1,5 @@
 
-objs-$(spi-zynq)+=spi-zynq.o
+objs-$(CONFIG_SPI_ZYNQ)+=spi-zynq.o
 
 SUBDIRS =
 

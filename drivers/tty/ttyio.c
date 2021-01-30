@@ -8,11 +8,11 @@
  */
 #include <thunder/tty/ttyio.h>
 #include <thunder/serial.h>
-#include <thunder/interrput.h>
+#include <thunder/irq.h>
 #include <stdio.h>
 
 
-struct serial_dev* stty;
+serial_dev_t* stty;
 #define UART1_IER	*((uint32_t *) 0xE0001008)
 
 void uart1_handler(void* Data)
@@ -39,9 +39,14 @@ void ttyio_init()
 {
     
     stty = serial_open(0,115200);
+    if(stty)
+    {
 	irq_register(stty->interrput.setup(0),&uart1_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
 
     serial_println(stty,"stty ok");
+
+    }
+
 }
 
 
@@ -111,12 +116,16 @@ int _write(int file, char *ptr, int len)
 {
     unsigned int i;
 //initialize_Uart(de);// NOT REQUIRED as UBOOT has already done the job.
-
-    /* Transmitting a char from UART */
-    for (i = 0; i < len; ++i, ptr++)
+    if (stty)
     {
-        serial_sendChar(stty,*ptr);
+        for (i = 0; i < len; ++i, ptr++)
+        {
+            serial_sendChar(stty,*ptr);
+        }
     }
+    
+    /* Transmitting a char from UART */
+
 return len;
 }
 

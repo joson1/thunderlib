@@ -7,9 +7,9 @@
  * @FilePath: \ThunderLib\drivers\serial\devices\serial-zynq.c
  */
 #include <thunder/serial.h>
-#include "zynq/uart.h"
-#include <thunder/interrput.h>
-#include <zynq/xil_exception.h>
+#include "zynq7000/uart.h"
+#include <thunder/irq.h>
+#include <zynq7000/xil_exception.h>
 
 
 #define BUFFER_LEN_USART0  512
@@ -24,8 +24,8 @@ char BUF_USART0[BUFFER_LEN_USART0]; //接收缓冲.
 char BUF_USART1[BUFFER_LEN_USART1]; //接收缓冲.
 
 
-struct serial_dev dev_usart1;
-struct serial_dev dev_usart0;
+serial_dev_t dev_usart1;
+serial_dev_t dev_usart0;
 
 
 void usart1_open(uint32_t boundRate)
@@ -93,16 +93,16 @@ void uart0_interrupt_clear()
 
 }
 
-struct serial_dev dev_usart0 = {
+serial_dev_t dev_usart0 = {
 
 	.id = 0,
 	.buffer = BUF_USART0,
 	.buffer_length = BUFFER_LEN_USART0,
 	.rp = 0,
 	.wp = 0,
-	.serial_open = &usart0_open,//boundRate
-	.putchar     = &usart0_putchar,//boundRate
-	.getchar     = &usart0_getchar,//boundRate
+	.serial_open = &usart0_open,//
+	.putchar     = &usart0_putchar,//
+	.getchar     = &usart0_getchar,//
 	.interrput.setup = &uart0_interrupt_setup,
 	.interrput.clear = &uart0_interrupt_clear,
 
@@ -110,16 +110,16 @@ struct serial_dev dev_usart0 = {
 };
 
 
-struct serial_dev dev_usart1 = {
+serial_dev_t dev_usart1 = {
 
 	.id = 1,
 	.buffer = BUF_USART1,
 	.buffer_length = BUFFER_LEN_USART1,
 	.rp = 0,
 	.wp = 0,
-	.serial_open = &usart1_open,//boundRate
-	.putchar     = &usart1_putchar,//boundRate
-	.getchar     = &usart1_getchar,//boundRate
+	.serial_open = &usart1_open,//
+	.putchar     = &usart1_putchar,//
+	.getchar     = &usart1_getchar,//
 	.interrput.setup = &uart1_interrupt_setup,
 	.interrput.clear = &uart1_interrupt_clear,
 
@@ -130,8 +130,8 @@ struct serial_dev dev_usart1 = {
 void zynq_serial_init()
 {
 	
-    serial_dev_attach(&dev_usart1);
-    serial_dev_attach(&dev_usart0);
+    serial_dev_attach(&dev_usart1,0);
+    serial_dev_attach(&dev_usart0,0);
 	
 
 }

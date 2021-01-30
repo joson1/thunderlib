@@ -43,7 +43,7 @@ con
 ```c
 
 
-#include "zynq/sleep.h"
+#include "zynq7000/sleep.h"
 #include <thunder/timer.h>
 #include <thunder/serial.h>
 #include <stdio.h>

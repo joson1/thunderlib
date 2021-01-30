@@ -9,53 +9,23 @@
 #include <thunder/spi.h>
 
 
-static struct spi_dev* spi_dev_dev_table = NULL;
+// static struct spi_dev* spi_dev_dev_table = NULL;
 
 
-
-int spi_dev_attach(struct spi_dev* dev)
+int spi_dev_attach(spi_dev_t* dev,void* pInfo)
 {
-	struct spi_dev* p;
-	if (spi_dev_dev_table==NULL)
-	{
-		spi_dev_dev_table = dev;
-		return 0;
-	}else
-	{
-		p = spi_dev_dev_table;
-		while (p->next!=NULL)
-		{
-			p = p->next;
-		}
-		p->next = dev;
-		
-	}
-	return 0;
-}
-
-
-struct spi_dev* spi_open(uint8_t id)
-{
-	struct spi_dev* p = spi_dev_dev_table ;
-	if (p==NULL)
-	{
-        
-		//no spi devices;
-		return NULL;
-	}
 	
-	while (p->id!=id)
-	{
-		p = p->next;
-		if (p==NULL)
-			return NULL;
-	}
-
-    return p;
-
+	dev->spi_init_info = pInfo;
+	dev_register(dev,DEV_MAJOR_SPI,dev->id);
 }
 
-int spi_transfer(struct spi_dev* dev,int data)
+
+spi_dev_t* spi_open(uint8_t id)
+{
+	return dev_open(DEV_MAJOR_SPI,id);	
+}
+
+int spi_transfer(spi_dev_t* dev,int data)
 {
 	return dev->transfer(data);
 }
