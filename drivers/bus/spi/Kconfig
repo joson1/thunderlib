@@ -1,0 +1,13 @@
+
+menu "spi"
+
+config SPI_EN
+    bool "Enable spi"
+    default y
+    help
+        This option 
+source "drivers/bus/spi/devices/Kconfig"
+
+endmenu
+
+

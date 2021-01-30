@@ -9,8 +9,9 @@
 #include <stdint.h>
 #include <asm/spi_defs.h>
 #include <stddef.h>
+#include <thunder/device.h>
 
-struct spi_dev
+typedef struct __spi_dev
 {
 	uint8_t id;
 
@@ -19,12 +20,12 @@ struct spi_dev
 	void (*setBitOrder)(char);//
 	void (*setClkDiv)(uint8_t);//
 	int (*transfer)(int);//
-	void* dev_init_conf ; 
-	struct spi_dev* next;
-};
+	void* spi_init_info ; 
+	ListItem_t devItem;
+}spi_dev_t;
 
-struct spi_dev* spi_open(uint8_t id);
-int spi_transfer(struct spi_dev* dev,int data);
+spi_dev_t* spi_open(uint8_t id);
+int spi_transfer(spi_dev_t* dev,int data);
 
-int spi_dev_attach(struct spi_dev* dev);
-int spi_dev_register(uint8_t id,void* conf);
+int spi_dev_attach(spi_dev_t* dev,void* pInfo);
+// int spi_dev_register(uint8_t id,void* conf);

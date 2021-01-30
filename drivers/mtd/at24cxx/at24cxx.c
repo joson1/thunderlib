@@ -12,7 +12,7 @@
 #define AT24C04_ADDRESS 0x50  //7bit
 
 
-struct i2c_dev* at24;
+i2c_dev_t* at24;
 
 void at24cxx_init()
 {

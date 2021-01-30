@@ -1,0 +1,9 @@
+menu "interrupt devices"
+depends on PWM_EN
+
+config AXI_PWM
+    bool "axi-pwm"
+    default n
+    help
+
+endmenu

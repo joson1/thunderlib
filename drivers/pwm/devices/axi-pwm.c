@@ -1,6 +1,6 @@
 #include <thunder/pwm.h>
-#include "zynq/zynq.h"
-#include "zynq/axi-timer.h"
+#include "zynq7000/zynq.h"
+#include "zynq7000/axi-timer.h"
 
 
 #define XTC_ROUND_DIV(a, b)		((a + (b / 2)) / b)

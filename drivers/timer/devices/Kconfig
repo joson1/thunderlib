@@ -1,0 +1,14 @@
+menu "timer devices"
+depends on TIMER_EN
+
+config TIMER_STM32F429
+    bool "timer-stm32f429"
+    default n
+    help
+
+config TIMER_ZYNQ7000
+    bool "timer-zynq7000"
+    default n
+    help
+
+endmenu

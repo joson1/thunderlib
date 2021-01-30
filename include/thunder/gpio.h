@@ -18,7 +18,10 @@ struct pinDesc
 {
     uint8_t             pin_id;
     volatile void*      bank;
-    volatile uint32_t   pin;
+    uint32_t            pin;
+    uint32_t            IRQn;
+    void (*irq_handler)(void);
+
 };
 
 struct gpio_dev
@@ -28,10 +31,10 @@ struct gpio_dev
     struct gpio_dev* next;
 };
 extern struct pinDesc  pin_map[];
-void __attribute__((weak)) gpio_pin_init (uint8_t pin_id);
-void __attribute__((weak)) gpio_pin_mode (uint8_t pin_id, uint32_t mode);
-void __attribute__((weak)) gpio_pin_pull (uint8_t pin_id , uint32_t pull);
-void __attribute__((weak)) gpio_pin_set  (uint8_t pin_id);
-void __attribute__((weak)) gpio_pin_reset(uint8_t pin_id);
-uint8_t __attribute__((weak))  gpio_pin_read(uint8_t pin_id);
+void gpio_pin_init (uint8_t pin_id);
+void gpio_pin_mode (uint8_t pin_id, uint32_t mode);
+void gpio_pin_pull (uint8_t pin_id , uint32_t pull);
+void gpio_pin_set  (uint8_t pin_id);
+void gpio_pin_reset(uint8_t pin_id);
+uint8_t gpio_pin_read(uint8_t pin_id);
 

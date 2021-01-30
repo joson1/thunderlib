@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\i2c\devices\i2c-zynq.c
  */
-#include "zynq/zynq.h"
+#include "zynq7000/zynq.h"
 #include <thunder/i2c.h>
 
 
@@ -151,11 +151,11 @@ static inline void i2c_init( I2C_TypeDef* i2c, uint32_t clock  )
 int XIicPs_MasterSendPolled(I2C_TypeDef* i2c,uint32_t slave_addr,uint8_t* buf,uint32_t length,int IsRepeatedStart)
 {
 	uint32_t IntrStatusReg;
-	uint32_t StatusReg;
-	uint32_t BaseAddr;
+
+
 	uint32_t Intrs;
 	int Status;
-	int Value;
+
 
 	// SetupMaster
     i2c->Control|=(0x00000008U|0x00000040U|0x00000004U|0x00000002U );
@@ -213,12 +213,8 @@ int XIicPs_MasterRecvPolled(I2C_TypeDef* i2c, uint8_t *buf ,int length, uint16_t
 {
 	uint32_t IntrStatusReg;
 	uint32_t Intrs;
-	uint32_t StatusReg;
-	uint32_t BaseAddr;
+
 	int Result;
-	int IsHold;
-	int UpdateTxSize = 0;
-    uint32_t RecvByteCount = length;
 
 	// SetupMaster
 
@@ -270,7 +266,7 @@ int XIicPs_MasterRecvPolled(I2C_TypeDef* i2c, uint8_t *buf ,int length, uint16_t
 static inline int i2c_master_transmit(I2C_TypeDef* i2c,uint32_t slave_addr,uint8_t* buf,uint32_t length)
 {
     uint32_t intrpt_s;
-    uint32_t res = length;
+
     i2c->Control = 0x40;    //Set Direction of transfer as write and Clear the FIFOs.
     i2c->Control |=( (1<<1)|(1<<3)|(1<<2));    //Set Direction of transfer as write and Clear the FIFOs.
     intrpt_s = i2c->Intrpt_status; //Clear Interrupts
@@ -345,13 +341,13 @@ int i2c1_read(uint32_t slave_addr,uint8_t* buf,uint32_t length)
 }
 
 
-struct i2c_dev i2c0 = {
+i2c_dev_t i2c0 = {
     .id = 0,
     .i2c_wirte = i2c0_write,
     .i2c_read  = i2c0_read
 
 };
-struct i2c_dev i2c1 = {
+i2c_dev_t i2c1 = {
     .id = 1,
     .i2c_wirte = i2c1_write,
     .i2c_read  = i2c1_read

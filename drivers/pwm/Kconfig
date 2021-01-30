@@ -1,0 +1,11 @@
+
+menu "pwm"
+
+config PWM_EN
+    bool "Enable pwm"
+    default y
+    help
+        This option 
+source "drivers/pwm/devices/Kconfig"
+
+endmenu

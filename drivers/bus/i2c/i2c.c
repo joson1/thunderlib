@@ -7,51 +7,29 @@
  * @FilePath: \ThunderLib\drivers\i2c\i2c.c
  */
 #include <thunder/i2c.h>
+#include <stdio.h>
 
 
-
-static struct i2c_dev* i2c_dev_dev_table = NULL;
-
+// static struct i2c_dev* i2c_dev_dev_table = NULL;
 
 
-int i2c_dev_attach(struct i2c_dev* dev)
+int i2c_dev_attach(i2c_dev_t* dev)
 {
-	struct i2c_dev* p;
-	if (i2c_dev_dev_table==NULL)
-	{
-		i2c_dev_dev_table = dev;
-		return 0;
-	}else
-	{
-		p = i2c_dev_dev_table;
-		while (p->next!=NULL)
-		{
-			p = p->next;
-		}
-		p->next = dev;
-		
-	}
+	
+	dev_register(dev,DEV_MAJOR_I2C,dev->id);
+ 
+}
+
+int i2c_dev_remove(i2c_dev_t* dev)
+{
+	
+	xListRemove(&(dev->devItem));
 	return 0;
 }
 
 
-struct i2c_dev* i2c_open(uint8_t id)
+i2c_dev_t* i2c_open(uint8_t id)
 {
-	struct i2c_dev* p = i2c_dev_dev_table ;
-	if (p==NULL)
-	{
-        
-		//no i2c devices;
-		return NULL;
-	}
 	
-	while (p->id!=id)
-	{
-		p = p->next;
-		if (p==NULL)
-			return NULL;
-	}
-
-    return p;
-
+	return dev_open(DEV_MAJOR_I2C,id);
 }

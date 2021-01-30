@@ -1,6 +1,6 @@
 
-objs-$(i2c-stm32f429)+=i2c-stm32f429.o
-objs-$(i2c-zynq)+=i2c-zynq.o
+objs-$(CONFIG_I2C_STM32F429)+=i2c-stm32f429.o
+objs-$(CONFIG_I2C_ZYNQ)+=i2c-zynq.o
 
 SUBDIRS =
 

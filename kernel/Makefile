@@ -1,12 +1,13 @@
 
-objs+=klist.o
 
-objs+=thread.o
-objs+=scheduler.o
+objs-$(CONFIG_KERNEL_EN)+=klist.o
+objs-$(CONFIG_KERNEL_EN)+=kops.o
+objs-$(CONFIG_KERNEL_EN)+=thread.o
+objs-$(CONFIG_KERNEL_EN)+=scheduler.o
 
 
 
-all:$(objs)
+all:$(objs-y)
 
 
 %.o:%.c

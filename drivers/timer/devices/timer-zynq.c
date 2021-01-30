@@ -6,10 +6,10 @@
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\timer\devices\timer-zynq.c
  */
-#include "zynq/ttc.h"
-#include <thunder/interrput.h>
+#include "zynq7000/ttc.h"
+#include <thunder/irq.h>
 #include <thunder/timer.h>
-#include <zynq/xil_exception.h>
+#include <zynq7000/xil_exception.h>
 
 
 extern void (*_timer_setup)(uint32_t id,uint32_t ms,uint32_t Priority,void (*event_handler)());

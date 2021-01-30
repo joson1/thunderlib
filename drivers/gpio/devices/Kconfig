@@ -1,0 +1,14 @@
+menu "gpio devices"
+depends on GPIO_EN
+
+config GPIO_STM32F429
+    bool "gpio-stm32f429"
+    default n
+    help
+
+config GPIO_ZYNQ7000
+    bool "gpio-zynq7000"
+    default n
+    help
+
+endmenu

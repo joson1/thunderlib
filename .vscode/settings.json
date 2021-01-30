@@ -2,6 +2,7 @@
     "files.associations": {
         "gpio.h": "c",
         "cstdio": "c",
-        "spi.h": "c"
+        "spi.h": "c",
+        "thread.h": "c"
     }
 }

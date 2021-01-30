@@ -1,0 +1,10 @@
+menu "timer"
+
+config TIMER_EN
+    bool "Enable timer"
+    default y
+    help
+        This option 
+source "drivers/timer/devices/Kconfig"
+
+endmenu

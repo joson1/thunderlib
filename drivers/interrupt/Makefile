@@ -1,5 +1,5 @@
 
-objs+=interrupt.o
+objs+=irq.o
 
 SUBDIRS =	\
 		devices

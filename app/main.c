@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-07-31 19:32:57
- * @LastEditTime: 2020-10-14 15:03:42
+ * @LastEditTime: 2021-01-15 23:29:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\app\main.c
@@ -11,56 +11,60 @@
 #include <stdio.h>
 #include <thunder/tty/tty.h>
 #include <thunder/gpio.h>
-#include "zynq/zynq.h"
-#include <thunder/timer.h>
-#include <thunder/pwm.h>
-#include "zynq/axi-timer.h"
+#include <thunder/irq.h>
+#include <thunder/dma.h>
+#include <zynq7000/axi-dma.h>
+#include <zynq7000/xil_cache.h>
+#include "zynq7000/xdmaps.h"
 
-void timer_handler()
+#define MAX_PKT_LEN     127 //һ�β��Եĳ���
+int ok = 0;
+u8 Tries = 6;
+int i;
+int Index;
+// u8 *TxBufferPtr = (u8 *) TX_BUFFER_BASE;
+// u8 *RxBufferPtr = (u8 *) RX_BUFFER_BASE;
+u8 Value;
+ u8 __aligned(4) TxBufferPtr[MAX_PKT_LEN];
+ u8 __aligned(4) RxBufferPtr[MAX_PKT_LEN];
+
+
+
+void dma_handler()
 {
-		printf("timer int\r\n");
 
+	ok = 1;
 }
 
 int main()
 {
-	int a = 0;
+
 	cmd_init();
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
-	gpio_pin_mode(0,GPIO_MODE_OUTPUT);
-	gpio_pin_mode(1,GPIO_MODE_OUTPUT);
-	struct pwm_dev* pwm0 = pwm_open(0);
-	pwm_setup(pwm0,50,10000);
-	// pwm_setup(0,20,10000);//channel0 duty 20% freq 100Hz
-	// timer_setup(0,300,0,timer_handler);
-	scanf("%d",&a);
-		printf("off:%lu\r\n",a);
+	// irq_register(46,dma_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
+	// irq_register(XPAR_XDMAPS_0_DONE_INTR_0,dma_handler,1,0,0);
+	dmac_dev_t* dma = dmac_open(1);
 
-	while(1)
-	{
+	for (i = 0; i < Tries; i++) {
+		Value = 0x55 + (i & 0xFF);
+		for (Index = 0; Index < MAX_PKT_LEN; Index++) {
+			TxBufferPtr[Index] = Value;
 
-		// at24cxx_write(1,0x98);
-		gpio_pin_set(1);
-		gpio_pin_set(0);
-		pwm_set_duty(pwm0,90);
+			Value = (Value + 1) & 0xFF;
+		}
 
-		// printf("match_0_counter:0x%08X\r\n",TTC0->match_0_counter[0]);
-		// printf("interval_counter:0x%08X\r\n",TTC0->interval_counter[0]);
+		// TxBufferPtr[0] = 'h';
+	// zynq_dma_start(0,(uint32_t)RxBufferPtr,(uint32_t)TxBufferPtr,MAX_PKT_LEN);
+	dma_start(dma,(uint32_t)RxBufferPtr,(uint32_t)TxBufferPtr,MAX_PKT_LEN,dma_handler);
 
-		// printf("counter_value:0x%08X\r\n",TTC0->counter_value[0]);
-
-  
-
-		usleep(300000);
-		gpio_pin_reset(1);
-		pwm_set_duty(pwm0,10);
-		gpio_pin_reset(0);
-		// a = at24cxx_read(1);
-		// printf("off:%lu\r\n",a);
-		usleep(300000);
-
-
+	while(!ok);
+	ok = 0;
 	}
-  return 0;
-}
 
+	while (1)
+	{
+		/* code */
+	}
+	
+
+}

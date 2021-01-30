@@ -7,8 +7,8 @@
  * @FilePath: \ThunderLib\drivers\gpio\devices\gpio-zynq.c
  */
 #include <thunder/gpio.h>
-#include "zynq/zynq.h"
-#include "zynq/gpio.h"
+#include "zynq7000/zynq.h"
+#include "zynq7000/gpio.h"
 #include <stdio.h>
 
 void gpio_pin_mode (uint8_t pin_id, uint32_t mode)

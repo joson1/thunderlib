@@ -1,0 +1,13 @@
+
+menu "dma"
+
+config DMA_EN
+    bool "Enable dma"
+    default y
+    help
+        This option 
+source "drivers/dma/devices/Kconfig"
+
+endmenu
+
+

@@ -1,6 +1,6 @@
 
-objs-$(gpio-stm32f429)+=gpio-stm32f429.o
-objs-$(gpio-zynq)+=gpio-zynq.o
+objs-$(CONFIG_GPIO_STM32F429)+=gpio-stm32f429.o
+objs-$(CONFIG_GPIO_ZYNQ7000)+=gpio-zynq.o
 
 SUBDIRS =
 

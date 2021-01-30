@@ -1,16 +1,20 @@
 /*
  * @Author: your name
  * @Date: 2020-08-20 21:46:25
- * @LastEditTime: 2020-10-05 19:30:00
+ * @LastEditTime: 2021-01-14 19:54:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \ThunderLib\drivers\interrupt\devices\interrupt-zynq.c
  */
-#include <thunder/interrput.h>
-#include "zynq/zynq.h"
+#include <thunder/irq.h>
+#include "zynq7000/zynq.h"
 #include <stdio.h>
-#include "zynq/xil_exception.h"
-#include "zynq/xscugic_hw.h"
+#include "zynq7000/xil_exception.h"
+#include "zynq7000/xscugic_hw.h"
+
+#define Zynq7000_GIC_CPU_BASE            0xF8F00100  /* Generic interrupt controller CPU interface */
+#define Zynq7000_GIC_DIST_BASE           0xF8F01000  /* Generic interrupt controller */
+
 static u32 CpuId = 0; /**< CPU Core identifier */
 
 
@@ -234,10 +238,12 @@ static inline void XScuGic_Stop()
 void zynq_interrupt_init()
 {
 
+    arm_gic_dist_init(0, Zynq7000_GIC_DIST_BASE, 0);
+    arm_gic_cpu_init(0, Zynq7000_GIC_CPU_BASE);
 
-    XScuGic_Stop();
-    DistributorInit();
-    CPUInitialize();
+    // XScuGic_Stop();
+    // DistributorInit();
+    // CPUInitialize();
 
     Xil_ExceptionEnable();
 

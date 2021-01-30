@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #define W25Q256 0XEF18
-struct spi_dev* spi_flash;
+spi_dev_t* spi_flash;
 int W25QXX_CS = 3;
 uint16_t W25QXX_TYPE=W25Q256;	//默认是W25Q256
 

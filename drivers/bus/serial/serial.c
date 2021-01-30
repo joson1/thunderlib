@@ -8,6 +8,7 @@
  */
 #include <thunder/serial.h>
 #include <stddef.h>
+#include <stdio.h>
 
 char INPUT_BUF[SERIAL_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.
 unsigned int input_rx_rp = 0;
@@ -20,28 +21,15 @@ void (*_serial_init)(uint32_t) = 0;
 void (*_serial_sendChar)(char) = 0;
 
 
-static struct serial_dev* serial_dev_table = NULL;
+// static serial_dev_t* serial_dev_table = NULL;
 
 
-
-int serial_dev_attach(struct serial_dev* dev)
+int serial_dev_attach(serial_dev_t* dev,void* pinit_info)
 {
-	struct serial_dev* p;
-	if (serial_dev_table==NULL)
-	{
-		serial_dev_table = dev;
-		return 0;
-	}else
-	{
-		p = serial_dev_table;
-		while (p->next!=NULL)
-		{
-			p = p->next;
-		}
-		p->next = dev;
-		
-	}
-	return 0;
+
+	dev->serial_init_info = pinit_info;
+	dev_register(dev,DEV_MAJOR_SERIAL,dev->id);
+
 }
 
 /**
@@ -49,7 +37,7 @@ int serial_dev_attach(struct serial_dev* dev)
  * @param serial_dev*
  * @return the char that poped out the buf
  */
-int serial_buf_pop(struct serial_dev* dev)
+int serial_buf_pop(serial_dev_t* dev)
 {
 	char ch;
 	// unsigned int t = 0;
@@ -66,16 +54,9 @@ int serial_buf_pop(struct serial_dev* dev)
 }
 
 
-/**
- * @description: 
- * @param 
- * 	struct serial_dev*
- * 	ch: the char that will be pushed into buffer 
- * @return 
- * 	-1:buffer_full  
- *   0:successfully pushed 
- */
-int serial_buf_push(struct serial_dev* dev,char ch)
+
+
+int serial_buf_push(serial_dev_t* dev,char ch)
 {
 	if ((dev->wp - dev->rp) == dev->buffer_length)
 	{
@@ -90,70 +71,26 @@ int serial_buf_push(struct serial_dev* dev,char ch)
     return 0;
 }
 
-uint32_t serial_input_length(struct serial_dev* dev)
+uint32_t serial_input_length(serial_dev_t* dev)
 {
 	return (dev->wp - dev->rp);
 }
 
-/**
- * @description: 
- * @param  uint8_t id
- * @param  uint32_t boundRate
- * @return serial_dev* 
- */
-struct serial_dev* serial_open(uint8_t id,uint32_t boundRate)
+
+
+serial_dev_t* serial_open(uint8_t id,uint32_t boundRate)
 {
-	struct serial_dev* p = serial_dev_table ;
-	if (p==NULL)
-	{
-		//no serial devices;
-		return NULL;
-	}
-	
-	while (p->id!=id)
-	{
-		p = p->next;
-		if (p==NULL)
-			return NULL;
-	}
-	if (p->serial_open)
-	{
-		p->serial_open(boundRate);
-
-		return p;
-	}
-	//no method to open the device
-	return NULL;
-}
-
-int serial_dev_register(uint8_t id,void* conf)
-{
-	struct serial_dev* p = serial_dev_table ;
-	if (p==NULL)
-	{
-		//no serial devices;
-		return -1;
-	}
-	
-	while (p->id!=id)
-	{
-		p = p->next;
-		if (p==NULL)
-			return -1;
-	}
-
-	p->dev_init_conf = conf;
-	return 0;
-
+	return dev_open(DEV_MAJOR_SERIAL,id);
 }
 
 
-char serial_sendChar(struct serial_dev* dev, char ch)
+
+char serial_sendChar(serial_dev_t* dev, char ch)
 {
 	dev->putchar(ch);
     return ch;
 }
-void serial_println(struct serial_dev* dev, char* str)
+void serial_println(serial_dev_t* dev, char* str)
 {
 
     while (*str)
@@ -164,7 +101,7 @@ void serial_println(struct serial_dev* dev, char* str)
     dev->putchar('\r');
     dev->putchar('\n');
 }
-char serial_getChar(struct serial_dev* dev)
+char serial_getChar(serial_dev_t* dev)
 {
 	
     return dev->getchar();

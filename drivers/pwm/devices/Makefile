@@ -1,6 +1,6 @@
 
 
-objs-$(pwm-zynq)+=axi-pwm.o
+objs-$(CONFIG_AXI_PWM)+=axi-pwm.o
 
 SUBDIRS =
 

@@ -1,0 +1,14 @@
+menu "interrupt devices"
+depends on GPIO_EN
+
+config INTERRUPT_STM32F429
+    bool "interrupt-stm32f429"
+    default n
+    help
+
+config INTERRUPT_ZYNQ7000
+    bool "interrupt-zynq7000"
+    default n
+    help
+
+endmenu

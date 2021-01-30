@@ -1,0 +1,13 @@
+
+menu "drivers"
+
+source "drivers/bus/Kconfig"
+source "drivers/dma/Kconfig"
+source "drivers/gpio/Kconfig"
+source "drivers/interrupt/Kconfig"
+source "drivers/timer/Kconfig"
+source "drivers/pwm/Kconfig"
+
+
+
+endmenu

@@ -1,6 +1,6 @@
 
-objs-$(serial-stm32f429)+=serial-stm32f429.o
-objs-$(serial-zynq)+=serial-zynq.o
+objs-$(CONFIG_SERIAL_STM32F429)+=serial-stm32f429.o
+objs-$(CONFIG_SERIAL_ZYNQ)+=serial-zynq.o
 
 SUBDIRS =
 

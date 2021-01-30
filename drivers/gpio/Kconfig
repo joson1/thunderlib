@@ -1,0 +1,11 @@
+
+menu "gpio"
+
+config GPIO_EN
+    bool "Enable gpio"
+    default y
+    help
+        This option 
+source "drivers/gpio/devices/Kconfig"
+
+endmenu

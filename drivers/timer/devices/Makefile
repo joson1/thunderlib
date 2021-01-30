@@ -1,6 +1,6 @@
 
-objs-$(timer-stm32f429)+=timer-stm32f429.o
-objs-$(timer-zynq)+=timer-zynq.o
+objs-$(CONFIG_TIMER_STM32F429)+=timer-stm32f429.o
+objs-$(CONFIG_TIMER_ZYNQ7000)+=timer-zynq.o
 
 SUBDIRS =
 
