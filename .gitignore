@@ -5,3 +5,4 @@ build_dir/*.map
 bin/*
 tools
 .config
+.config.old

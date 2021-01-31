@@ -17,26 +17,25 @@
 - STM32F429
 - ZYNQ
 
-# ToDo List
-正在计划完成的驱动，目前主要添加对zynq的驱动支持
+# 编译
 
-[新增驱动]
+在主Makefile中指定以下环境变量,例如
 
-- BUS
-  - [X] SPI(zynq)
-- [x] Timer(zynq)
-- interrupt
-  - [ ] GPIO interrupt(zynq)
+```bash
 
-[驱动改进]
+ARCH := arm
+CPU := cortex-a9
+MARCH :=zynq7000
+BOARD := MagicBox
 
-- [x] uart(zynq)无法触发接收中断的问题
+```
 
-[新增功能]
-- [ ] 设备树支持
-- [ ] USB协议栈
-- [ ] shell
-- [ ] 多线程
-[改进与优化]
+执行
 
-- tty
+make menuconfig
+
+或执行
+
+make xxx_defconfig
+
+>xxx_defconfig文件在目录$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/ 中
