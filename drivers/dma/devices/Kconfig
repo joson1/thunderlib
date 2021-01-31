@@ -4,16 +4,16 @@ depends on DMA_EN
 config DMA_STM32F429
     bool "dma-stm32f429"
     default n
-    help
+    
 
 config DMA_ZYNQ7000
     bool "dma-zynq7000"
     default n
-    help
+    
 
 config AXI_DMA
     bool "axi-dma"
     default n
-    help
+    
 
 endmenu

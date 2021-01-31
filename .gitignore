@@ -4,3 +4,4 @@ build_dir/*.o
 build_dir/*.map
 bin/*
 tools
+.config

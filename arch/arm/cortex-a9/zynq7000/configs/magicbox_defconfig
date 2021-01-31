@@ -1,0 +1,110 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# ThunderLibv1.0 Configuration for MagicBox arm cortex-a9
+#
+
+#
+# Platform Config
+#
+CONFIG_CROSS_COMPILE="arm-none-eabi-"
+
+#
+# kernel
+#
+CONFIG_KERNEL_EN=y
+
+#
+# drivers
+#
+
+#
+# bus
+#
+
+#
+# serial
+#
+CONFIG_SERIAL_EN=y
+
+#
+# devices
+#
+# CONFIG_SERIAL_STM32F429 is not set
+CONFIG_SERIAL_ZYNQ=y
+
+#
+# i2c
+#
+CONFIG_I2C_EN=y
+
+#
+# devices
+#
+# CONFIG_I2C_STM32F429 is not set
+CONFIG_I2C_ZYNQ=y
+
+#
+# spi
+#
+CONFIG_SPI_EN=y
+
+#
+# devices
+#
+# CONFIG_SPI_STM32F429 is not set
+CONFIG_SPI_ZYNQ=y
+
+#
+# dma
+#
+CONFIG_DMA_EN=y
+
+#
+# dma devices
+#
+# CONFIG_DMA_STM32F429 is not set
+CONFIG_DMA_ZYNQ7000=y
+# CONFIG_AXI_DMA is not set
+
+#
+# gpio
+#
+CONFIG_GPIO_EN=y
+
+#
+# gpio devices
+#
+# CONFIG_GPIO_STM32F429 is not set
+CONFIG_GPIO_ZYNQ7000=y
+
+#
+# interrupt
+#
+CONFIG_INTERRUPT_EN=y
+
+#
+# interrupt devices
+#
+# CONFIG_INTERRUPT_STM32F429 is not set
+CONFIG_INTERRUPT_ZYNQ7000=y
+
+#
+# timer
+#
+CONFIG_TIMER_EN=y
+
+#
+# timer devices
+#
+# CONFIG_TIMER_STM32F429 is not set
+CONFIG_TIMER_ZYNQ7000=y
+
+#
+# pwm
+#
+CONFIG_PWM_EN=y
+
+#
+# interrupt devices
+#
+CONFIG_AXI_PWM=y
