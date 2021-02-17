@@ -2,25 +2,9 @@
 # For a description of the syntax of this configuration file,
 # see Documentation/kbuild/kconfig-language.txt.
 #
-mainmenu "ThunderLib$SDK_VERSION Configuration for $BOARD $ARCH $CPU"
-config SDK_VERSION 
-    string 
-    option env="SDK_VERSION"
-
+mainmenu "ThunderLib$(SDK_VERSION) Configuration for $(BOARD) ($(ARCH) $(CPU))"
 
 menu "Platform Config"
-config ARCH 
-    string 
-    option env="ARCH"
-	
-config CPU 
-    string 
-    option env="CPU"
-
-config BOARD 
-    string 
-    option env="BOARD"
-
 
 config CROSS_COMPILE
 	string "Compiler"

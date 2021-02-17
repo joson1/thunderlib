@@ -1,0 +1,110 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# ThunderLibv1.0 Configuration for thunderboard32 arm cortex-m4
+#
+
+#
+# Platform Config
+#
+CONFIG_CROSS_COMPILE="arm-none-eabi-"
+
+#
+# kernel
+#
+# CONFIG_KERNEL_EN is not set
+
+#
+# drivers
+#
+
+#
+# bus
+#
+
+#
+# serial
+#
+CONFIG_SERIAL_EN=y
+
+#
+# devices
+#
+CONFIG_SERIAL_STM32F429=y
+# CONFIG_SERIAL_ZYNQ is not set
+
+#
+# i2c
+#
+CONFIG_I2C_EN=y
+
+#
+# devices
+#
+CONFIG_I2C_STM32F429=y
+# CONFIG_I2C_ZYNQ is not set
+
+#
+# spi
+#
+CONFIG_SPI_EN=y
+
+#
+# devices
+#
+CONFIG_SPI_STM32F429=y
+# CONFIG_SPI_ZYNQ is not set
+
+#
+# dma
+#
+CONFIG_DMA_EN=y
+
+#
+# dma devices
+#
+CONFIG_DMA_STM32F429=y
+# CONFIG_DMA_ZYNQ7000 is not set
+# CONFIG_AXI_DMA is not set
+
+#
+# gpio
+#
+CONFIG_GPIO_EN=y
+
+#
+# gpio devices
+#
+CONFIG_GPIO_STM32F429=y
+# CONFIG_GPIO_ZYNQ7000 is not set
+
+#
+# interrupt
+#
+CONFIG_INTERRUPT_EN=y
+
+#
+# interrupt devices
+#
+CONFIG_INTERRUPT_STM32F429=y
+# CONFIG_INTERRUPT_ZYNQ7000 is not set
+
+#
+# timer
+#
+CONFIG_TIMER_EN=y
+
+#
+# timer devices
+#
+CONFIG_TIMER_STM32F429=y
+# CONFIG_TIMER_ZYNQ7000 is not set
+
+#
+# pwm
+#
+CONFIG_PWM_EN=y
+
+#
+# interrupt devices
+#
+# CONFIG_AXI_PWM is not set

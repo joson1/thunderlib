@@ -13,16 +13,16 @@ CONFIG_EXPORT_VARS=$(patsubst %=y, %,$(filter %=y, $(shell cat $(TOPDIR)/.config
 export $(CONFIG_EXPORT_VARS)
 endif
 
-ARCH 	:= $(CONFIG_ARCH)
-CPU 	:= $(CONFIG_CPU)
-MARCH 	:= $(CONFIG_MARCH)
-BOARD 	:= $(CONFIG_BOARD)
-CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
+# ARCH 	:= $(CONFIG_ARCH)
+# CPU 	:= $(CONFIG_CPU)
+# MARCH 	:= $(CONFIG_MARCH)
+# BOARD 	:= $(CONFIG_BOARD)
+# CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
 
 ARCH := arm
-CPU := cortex-a9
-MARCH :=zynq7000
-BOARD := MagicBox
+CPU := cortex-m4
+MARCH :=stm32f429
+BOARD := thunderboard32
 
 
 
@@ -94,16 +94,23 @@ distclean: clean
 menuclean:
 	cd $(KCONFIG_SRC_PATH) &&make distclean
 
-$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/%onf:
-	cd $(KCONFIG_SRC_PATH) && ./configure  CFLAGS="" LDFLAGS=""
-	cd $(KCONFIG_SRC_PATH) && make
+# $(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/%onf:
+# 	cd $(KCONFIG_SRC_PATH) && ./configure  CFLAGS="" LDFLAGS="" && make
 
-menuconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
-	$< $(KCONFIG_FILE_PATH)
 
-%_defconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
+# menuconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
+# 	$< $(KCONFIG_FILE_PATH)
+
+menuconfig:
+	menuconfig
+
+# %_defconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
+# 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
+# 	$< $(KCONFIG_FILE_PATH) 
+
+%_defconfig:
 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
-	$< $(KCONFIG_FILE_PATH) 
+	menuconfig
 
 
 

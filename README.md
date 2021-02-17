@@ -17,8 +17,14 @@
 - STM32F429
 - ZYNQ
 
-# 编译
+# 编译指南
+## 依赖
+- python3
+- pip3
 
+执行
+pip3 install kconfiglib
+## 编译
 在主Makefile中指定以下环境变量,例如
 
 ```bash
