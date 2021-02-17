@@ -1,4 +1,4 @@
-objs-$(MagicBox) += MagicBox.o
+objs-$(CONFIG_MagicBox) += MagicBox.o
 
 all:$(objs-y)
 

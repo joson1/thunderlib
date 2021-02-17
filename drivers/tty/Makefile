@@ -1,7 +1,7 @@
 
-objs-$(tty)+=ttyio.o
-objs-$(tty)+=tty.o
-objs-$(tty)+=sysfuncs.o
+objs-$(CONFIG_TTY_EN)+=ttyio.o
+objs-$(CONFIG_TTY_EN)+=tty.o
+objs-$(CONFIG_TTY_EN)+=sysfuncs.o
 
 
 SUBDIRS =

@@ -1,0 +1,10 @@
+menu "tty"
+
+config TTY_EN
+    bool "Enable tty"
+    default y
+    help
+        This option 
+# source "drivers/timer/devices/Kconfig"
+
+endmenu

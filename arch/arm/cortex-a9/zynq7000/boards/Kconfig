@@ -1,0 +1,16 @@
+menu "Select Target Board"
+
+config MagicBox
+    bool "MagicBox"
+    default n
+    help
+        This option 
+
+config Lite7020
+    bool "Lite7020"
+    default n
+    help
+        This option 
+
+
+endmenu

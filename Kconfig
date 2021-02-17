@@ -2,9 +2,9 @@
 # For a description of the syntax of this configuration file,
 # see Documentation/kbuild/kconfig-language.txt.
 #
-mainmenu "ThunderLib$(SDK_VERSION) Configuration for $(BOARD) ($(ARCH) $(CPU))"
+mainmenu "ThunderLib$(SDK_VERSION) Configuration for $(MARCH) ($(ARCH) $(CPU))"
 
-menu "Platform Config"
+menu "Build Config"
 
 config CROSS_COMPILE
 	string "Compiler"
@@ -13,5 +13,6 @@ config CROSS_COMPILE
 
 endmenu
 
+source "$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/boards/Kconfig"
 source "kernel/Kconfig"
 source "drivers/Kconfig"

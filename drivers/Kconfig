@@ -7,7 +7,7 @@ source "drivers/gpio/Kconfig"
 source "drivers/interrupt/Kconfig"
 source "drivers/timer/Kconfig"
 source "drivers/pwm/Kconfig"
-
+source "drivers/tty/Kconfig"
 
 
 endmenu

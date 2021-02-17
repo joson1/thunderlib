@@ -22,18 +22,19 @@ endif
 # CPU 	:= $(CONFIG_CPU)
 # MARCH 	:= $(CONFIG_MARCH)
 # BOARD 	:= $(CONFIG_BOARD)
-# CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
+CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
 
+# ARCH := arm
+# CPU := cortex-m4
+# MARCH :=stm32f429
+# BOARD := thunderboard32
 ARCH := arm
-CPU := cortex-m4
-MARCH :=stm32f429
-BOARD := thunderboard32
-
+CPU := cortex-a9
+MARCH :=zynq7000
 
 
 CFLAGS = -Wall
 include $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$(MARCH).mk
-include $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$(BOARD).mk
 
 # C includes
 C_INCLUDES +=  \
