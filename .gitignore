@@ -6,3 +6,4 @@ bin/*
 tools
 .config
 .config.old
+config.h

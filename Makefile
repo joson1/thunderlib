@@ -103,7 +103,7 @@ menuclean:
 
 menuconfig:
 	menuconfig
-
+	genconfig
 # %_defconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
 # 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
 # 	$< $(KCONFIG_FILE_PATH) 
@@ -111,6 +111,7 @@ menuconfig:
 %_defconfig:
 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
 	menuconfig
+	genconfig
 
 
 
