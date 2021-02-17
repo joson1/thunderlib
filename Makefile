@@ -1,5 +1,10 @@
 
-TOPDIR := $(PWD)
+ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
+    SHELL=cmd.exe
+endif
+
+
+TOPDIR := $(shell pwd)
 LIBDIR =
 SDK_VERSION=v1.0
 # -L$(TOPDIR)/libs/newlib-cygwin/arm-none-eabi/lib
