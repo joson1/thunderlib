@@ -40,6 +40,10 @@ BOARD := MagicBox
 
 make menuconfig
 
+在windows环境中建议执行 
+
+make menuconfig-win
+
 或执行
 
 make xxx_defconfig
