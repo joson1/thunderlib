@@ -1,10 +1,13 @@
 
-ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
-    SHELL=cmd.exe
-endif
+# ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
+#     # SHELL=cmd.exe
+# TOPDIR = /thunderlib
+# else
+# endif
+
+TOPDIR := $(PWD)
 
 
-TOPDIR := $(shell pwd)
 LIBDIR =
 SDK_VERSION=v1.0
 # -L$(TOPDIR)/libs/newlib-cygwin/arm-none-eabi/lib
@@ -24,11 +27,11 @@ endif
 # BOARD 	:= $(CONFIG_BOARD)
 CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
 
-# ARCH := arm
+ARCH := arm
 # CPU := cortex-m4
 # MARCH :=stm32f429
 # BOARD := thunderboard32
-ARCH := arm
+# ARCH := arm
 CPU := cortex-a9
 MARCH :=zynq7000
 
@@ -87,7 +90,8 @@ $(TARGET):$(SUBDIRS)
 	make -C $(BUILD_DIR)
 
 $(SUBDIRS):ECHO
-	make -C $@
+	@genconfig
+	@make -C $@
 ECHO:
 
 .PHONY : clean
@@ -97,8 +101,8 @@ distclean: clean
 	-rm $(BUILD_DIR)/*.d
 	-rm $(BUILD_DIR)/*.map
 
-menuclean:
-	cd $(KCONFIG_SRC_PATH) &&make distclean
+# menuclean:
+# 	cd $(KCONFIG_SRC_PATH) &&make distclean
 
 # $(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/%onf:
 # 	cd $(KCONFIG_SRC_PATH) && ./configure  CFLAGS="" LDFLAGS="" && make
@@ -107,17 +111,20 @@ menuclean:
 # menuconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
 # 	$< $(KCONFIG_FILE_PATH)
 
+menuconfig-win:
+	cmd.exe /c start menuconfig
+	
+
 menuconfig:
-	menuconfig
-	genconfig
+	@menuconfig
+	# genconfig
 # %_defconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
 # 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
 # 	$< $(KCONFIG_FILE_PATH) 
 
 %_defconfig:
-	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
-	menuconfig
-	genconfig
+	@cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
+	# genconfig
 
 
 
