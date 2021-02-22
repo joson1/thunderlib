@@ -37,4 +37,4 @@ void gpio_pin_pull (uint8_t pin_id , uint32_t pull);
 void gpio_pin_set  (uint8_t pin_id);
 void gpio_pin_reset(uint8_t pin_id);
 uint8_t gpio_pin_read(uint8_t pin_id);
-
+void gpio_pin_write(uint8_t pin_id,uint8_t value);

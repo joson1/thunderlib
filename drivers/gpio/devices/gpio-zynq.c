@@ -46,6 +46,18 @@ void gpio_pin_reset(uint8_t pin_id)
     (*((GPIO_TypeDef*)(pin_map[pin_id].bank))->DATA) &= ~(pin_map[pin_id].pin) ;
 }
 
+void gpio_pin_write(uint8_t pin_id,uint8_t value)
+{
+    if (value)
+    {
+        gpio_pin_set(pin_id);
+    }else
+    {
+        gpio_pin_reset(pin_id);
+    }
+    
+}
+
 
 uint8_t gpio_pin_read(uint8_t pin_id)
 {

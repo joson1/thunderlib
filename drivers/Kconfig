@@ -9,5 +9,11 @@ source "drivers/timer/Kconfig"
 source "drivers/pwm/Kconfig"
 source "drivers/tty/Kconfig"
 
+menu "sensors"
+
+source "drivers/sensors/Kconfig"
+
+endmenu
+
 
 endmenu

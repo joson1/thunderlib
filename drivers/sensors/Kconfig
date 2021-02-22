@@ -1,0 +1,5 @@
+config US015
+    bool "us015"
+    default n
+    help
+        supersonic sensor

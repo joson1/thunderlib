@@ -1,8 +1,15 @@
 {
     "files.associations": {
+        "Kconfig": "kconfig",
         "gpio.h": "c",
         "cstdio": "c",
         "spi.h": "c",
-        "thread.h": "c"
+        "thread.h": "c",
+        "axi-dma.h": "c",
+        "stdio.h": "c",
+        "sleep.h": "c",
+        "*.tcc": "c",
+        "type_traits": "c",
+        "gpio_defs.h": "c"
     }
 }

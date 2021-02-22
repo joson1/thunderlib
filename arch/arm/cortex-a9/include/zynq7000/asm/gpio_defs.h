@@ -14,5 +14,6 @@
 #define GPIO_MODE_OUTPUT        1
 #define GPIO_MODE_ALTERFUN      0
 
-
+#define HIGH 1
+#define LOW  0
 

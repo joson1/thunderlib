@@ -1,17 +1,16 @@
 
 
 
-SUBDIRS +=at24cxx
-SUBDIRS +=spi-falsh
+SUBDIRS-$(CONFIG_US015) +=us015
 
 
-all:$(SUBDIRS)
+all:$(SUBDIRS-y)
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$@ $< -MD -MF $(BUILD_DIR)/$@.d
 
 
-$(SUBDIRS):ECHO
+$(SUBDIRS-y):ECHO
 	make -C $@
 
 ECHO:

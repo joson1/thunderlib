@@ -13,6 +13,8 @@ SUBDIRS +=pwm
 SUBDIRS +=timer
 SUBDIRS +=tty
 SUBDIRS +=mtd
+SUBDIRS +=sensors
+
 
 
 all:$(objs)
