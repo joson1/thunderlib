@@ -96,6 +96,7 @@ $(TARGET):$(SUBDIRS)
 	make -C $(BUILD_DIR)
 
 $(SUBDIRS):ECHO
+	@-mkdir bin
 	@genconfig
 	@make -C $@
 ECHO:
@@ -116,6 +117,9 @@ distclean: clean
 
 # menuconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
 # 	$< $(KCONFIG_FILE_PATH)
+
+
+
 
 menuconfig-win:
 	cmd.exe /c start menuconfig
