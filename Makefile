@@ -14,12 +14,18 @@ SDK_VERSION=v1.0
 # 		/c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 #export vars in .config
-config_cmd := menuconfig %_defconfig
-ifeq ($(filter $(config_cmd), $(MAKECMDGOALS)),)
-include $(TOPDIR)/.config
-CONFIG_EXPORT_VARS=$(patsubst %=y, %,$(filter %=y, $(shell cat $(TOPDIR)/.config)))
-export $(CONFIG_EXPORT_VARS)
+
+ifeq (.config, $(wildcard .config))
+    #文件存在
+	config_cmd := menuconfig %_defconfig
+	ifeq ($(filter $(config_cmd), $(MAKECMDGOALS)),)
+	include $(TOPDIR)/.config
+	CONFIG_EXPORT_VARS=$(patsubst %=y, %,$(filter %=y, $(shell cat $(TOPDIR)/.config)))
+	export $(CONFIG_EXPORT_VARS)
+	endif
 endif
+
+
 
 # ARCH 	:= $(CONFIG_ARCH)
 # CPU 	:= $(CONFIG_CPU)
@@ -117,7 +123,7 @@ menuconfig-win:
 
 menuconfig:
 	@menuconfig
-	# genconfig
+
 # %_defconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
 # 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
 # 	$< $(KCONFIG_FILE_PATH) 

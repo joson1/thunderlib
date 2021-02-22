@@ -10,6 +10,7 @@
         "sleep.h": "c",
         "*.tcc": "c",
         "type_traits": "c",
-        "gpio_defs.h": "c"
+        "gpio_defs.h": "c",
+        "us015.h": "c"
     }
 }
