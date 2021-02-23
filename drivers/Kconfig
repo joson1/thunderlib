@@ -15,5 +15,6 @@ source "drivers/sensors/Kconfig"
 
 endmenu
 
+source "drivers/mtd/Kconfig"
 
 endmenu

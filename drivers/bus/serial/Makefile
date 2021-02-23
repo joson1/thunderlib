@@ -1,5 +1,5 @@
 
-objs+=serial.o
+objs-$(CONFIG_SERIAL_EN)+=serial.o
 
 SUBDIRS =	\
 		devices
@@ -7,7 +7,7 @@ SUBDIRS =	\
 all:$(SUBDIRS)
 
 
-$(SUBDIRS):$(objs)
+$(SUBDIRS):$(objs-y)
 
 
 %.o:%.c

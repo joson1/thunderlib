@@ -1,5 +1,5 @@
 
-objs+=irq.o
+objs-$(CONFIG_INTERRUPT_EN)+=irq.o
 
 SUBDIRS =	\
 		devices
@@ -7,7 +7,7 @@ SUBDIRS =	\
 all:$(SUBDIRS)
 
 
-$(SUBDIRS):$(objs)
+$(SUBDIRS):$(objs-y)
 
 
 %.o:%.c

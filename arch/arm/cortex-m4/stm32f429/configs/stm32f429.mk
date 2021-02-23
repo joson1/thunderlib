@@ -30,7 +30,9 @@ CFLAGS+= $(MCU) $(C_DEFS) $(OPT)
 
 LDFLAGS = -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
-C_INCLUDES+= -I$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/include/CMSIS
+C_INCLUDES+= -I$(TOPDIR)/arch/$(ARCH)/$(CPU)/include/CMSIS
+
+
 
 
 
@@ -49,7 +51,7 @@ OBJDUMP		= $(CROSS_COMPILE)objdump
 # 			$(TOPDIR)/app \
 # 			$(TOPDIR)/drivers 
 
-LINK_SCRIPT := $(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)/$(LINK_SCRIPT)
+LINK_SCRIPT := $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/$(LINK_SCRIPT)
 # export CC LD MARCH CFLAGS LDFLAGS TARGET
 # export BUILD_DIR BIN_DIR TOPDIR LINK_SCRIPT
 # export PART_NO

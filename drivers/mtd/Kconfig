@@ -1,0 +1,17 @@
+menu "mtd"
+
+config AT24CXX
+    bool "at24cxx"
+    depends on SPI_EN
+    default n
+    help
+        supersonic sensor
+
+config SPI_FLASH
+    bool "spi-flash"
+    depends on SPI_EN
+    default n
+    help
+        supersonic sensor
+
+endmenu

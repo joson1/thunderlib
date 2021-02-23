@@ -1,5 +1,5 @@
 
-objs-$(GONFIG_INTERRUPT_STM32F429)+=interrupt-stm32f429.o
+objs-$(CONFIG_INTERRUPT_STM32F429)+=interrupt-stm32f429.o
 objs-$(CONFIG_INTERRUPT_ZYNQ7000)+=interrupt-zynq.o
 
 SUBDIRS =

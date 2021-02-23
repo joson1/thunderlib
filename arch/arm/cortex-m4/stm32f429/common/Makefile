@@ -4,5 +4,5 @@ objs = $(patsubst %.c,%.o,$(SOURCES))
 all:$(objs)
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$(PART_NO)-$@ $< -MD -MF $(BUILD_DIR)/$(PART_NO)-$@.d
+	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$(MARCH)-$@ $< -MD -MF $(BUILD_DIR)/$(MARCH)-$@.d
 

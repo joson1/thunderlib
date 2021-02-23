@@ -1,5 +1,5 @@
 
-objs+=i2c.o
+objs-$(CONFIG_I2C_EN)+=i2c.o
 
 SUBDIRS =	\
 		devices
@@ -7,7 +7,7 @@ SUBDIRS =	\
 all:$(SUBDIRS)
 
 
-$(SUBDIRS):$(objs)
+$(SUBDIRS):$(objs-y)
 
 
 %.o:%.c

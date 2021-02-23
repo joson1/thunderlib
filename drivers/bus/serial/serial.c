@@ -31,6 +31,12 @@ int serial_dev_attach(serial_dev_t* dev,void* pinit_info)
 	dev_register(dev,DEV_MAJOR_SERIAL,dev->id);
 
 }
+int serial_info_register(uint8_t id,void* info)
+{
+	serial_dev_t*dev=dev_open(DEV_MAJOR_SERIAL,id);
+	dev->serial_init_info = info;
+
+}
 
 /**
  * @description: 

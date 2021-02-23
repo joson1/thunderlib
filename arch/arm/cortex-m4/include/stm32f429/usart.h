@@ -66,6 +66,7 @@ typedef struct _Uart_InitDef
     u32 pclk2;
     u32 bound;
     uint8_t rx_int_en;
+    uint8_t Priority;
 }Uart_InitDef ;
 
 

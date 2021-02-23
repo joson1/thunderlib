@@ -11,6 +11,11 @@
         "*.tcc": "c",
         "type_traits": "c",
         "gpio_defs.h": "c",
-        "us015.h": "c"
+        "us015.h": "c",
+        "config.h": "c",
+        "sys.h": "c",
+        "irq.h": "c",
+        "stm32f429xx.h": "c",
+        "usart.h": "c"
     }
 }

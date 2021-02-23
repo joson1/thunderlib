@@ -1,4 +1,4 @@
-objs-$(thunderboards32) += thunderboards32.o
+objs-$(CONFIG_ThunderBoards32) += thunderboards32.o
 
 all:$(objs-y)
 

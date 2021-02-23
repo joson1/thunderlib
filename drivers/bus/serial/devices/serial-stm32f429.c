@@ -2,7 +2,7 @@
 #include "stm32f429/usart.h"
 #include "stm32f429/gpio.h"
 #include <thunder/serial.h>
-
+#include <thunder/irq.h>
 
 
 
@@ -16,16 +16,31 @@ char BUF_USART0[BUFFER_LEN_USART0]; //接收缓冲.
 char BUF_USART1[BUFFER_LEN_USART1]; //接收缓冲.
 
 
-struct serial_dev dev_usart1;
-struct serial_dev dev_usart2;
+serial_dev_t dev_usart1;
+serial_dev_t dev_usart2;
 
 
+InterruptTableEntry uart_handler[3];
+extern InterruptTableEntry uart_handler[3];
 void USART1_IRQHandler(void)
 {
 
 	if (USART1->SR & (1 << 5)) //接收到数据
 	{
-        serial_buf_push(&dev_usart1,USART1->DR);
+		if(uart_handler[0].Handler)
+			uart_handler[0].Handler( uart_handler[0].data  );
+
+	}
+
+}
+
+void USART3_IRQHandler(void)
+{
+
+	if (USART3->SR & (1 << 5)) //接收到数据
+	{
+		if(uart_handler[2].Handler)
+			uart_handler[2].Handler( uart_handler[2].data  );
 
 	}
 
@@ -34,25 +49,25 @@ void USART1_IRQHandler(void)
 void usart1_open(uint32_t boundRate)
 {
 	
-	GPIO_Init(  ((Uart_InitDef *)dev_usart1.dev_init_conf)->GPIOx_RX, 
-				((Uart_InitDef *)dev_usart1.dev_init_conf)->PIN_RX, 
+	GPIO_Init(  ((Uart_InitDef *)dev_usart1.serial_init_info)->GPIOx_RX, 
+				((Uart_InitDef *)dev_usart1.serial_init_info)->PIN_RX, 
 				GPIO_MODE_AF, GPIO_OTYPE_PP, GPIO_SPEED_50M, GPIO_PUPD_PU); 
-	GPIO_Init(  ((Uart_InitDef *)dev_usart1.dev_init_conf)->GPIOx_TX, 
-				((Uart_InitDef *)dev_usart1.dev_init_conf)->PIN_TX, 
+	GPIO_Init(  ((Uart_InitDef *)dev_usart1.serial_init_info)->GPIOx_TX, 
+				((Uart_InitDef *)dev_usart1.serial_init_info)->PIN_TX, 
 				GPIO_MODE_AF, GPIO_OTYPE_PP, GPIO_SPEED_50M, GPIO_PUPD_PU); 
 
-	GPIO_AF_Set( ((Uart_InitDef *)dev_usart1.dev_init_conf)->GPIOx_RX,
-				 ((Uart_InitDef *)dev_usart1.dev_init_conf)->PIN_RX, 
-				 ((Uart_InitDef *)dev_usart1.dev_init_conf)->GPIO_AF );	
+	GPIO_AF_Set( ((Uart_InitDef *)dev_usart1.serial_init_info)->GPIOx_RX,
+				 ((Uart_InitDef *)dev_usart1.serial_init_info)->PIN_RX, 
+				 ((Uart_InitDef *)dev_usart1.serial_init_info)->GPIO_AF );	
 				 																   //PA9,AF7
-	GPIO_AF_Set( ((Uart_InitDef *)dev_usart1.dev_init_conf)->GPIOx_TX,
-				 ((Uart_InitDef *)dev_usart1.dev_init_conf)->PIN_TX, 
-				 ((Uart_InitDef *)dev_usart1.dev_init_conf)->GPIO_AF );																	   //PA9,AF7
+	GPIO_AF_Set( ((Uart_InitDef *)dev_usart1.serial_init_info)->GPIOx_TX,
+				 ((Uart_InitDef *)dev_usart1.serial_init_info)->PIN_TX, 
+				 ((Uart_InitDef *)dev_usart1.serial_init_info)->GPIO_AF );																	   //PA9,AF7
 
 	
-	uart_init(  ((Uart_InitDef *)dev_usart1.dev_init_conf)->pclk2,//90
+	uart_init(  ((Uart_InitDef *)dev_usart1.serial_init_info)->pclk2,//90
 				boundRate,
-				((Uart_InitDef *)dev_usart1.dev_init_conf)->rx_int_en);//1
+				((Uart_InitDef *)dev_usart1.serial_init_info)->rx_int_en);//1
 }
 
 void usart1_putchar(char ch)
@@ -68,7 +83,23 @@ int usart1_getchar()
     return serial_buf_pop(&dev_usart1);
 }
 
-struct serial_dev dev_usart1 = {
+
+uint32_t usart1_interrupt_setup()
+{
+	USART1->CR1 |= 1 << 13; //串口使能
+	MY_NVIC_Init(
+				((Uart_InitDef *)dev_usart1.serial_init_info)->Priority,
+				USART1_IRQn); //组2，最低优先级
+
+	return USART1_IRQn;
+}
+
+void usart1_interrupt_clear()
+{
+
+}
+
+serial_dev_t dev_usart1 = {
 
 	.id = 0,
 	.buffer = BUF_USART0,
@@ -78,6 +109,8 @@ struct serial_dev dev_usart1 = {
 	.serial_open = &usart1_open,//boundRate
 	.putchar     = &usart1_putchar,//boundRate
 	.getchar     = &usart1_getchar,//boundRate
+	.interrput.setup = &usart1_interrupt_setup,
+	.interrput.clear = &usart1_interrupt_clear,
 
 };
 
@@ -86,31 +119,34 @@ void USART2_IRQHandler()
 {
 	if (USART2->SR & (1 << 5)) //接收到数据
 	{
-		serial_buf_push(&dev_usart2,USART2->DR);
+		if(uart_handler[1].Handler)
+			uart_handler[1].Handler( uart_handler[1].data  );
+
 	}
+
 }
 
 void usart2_open(uint32_t boundRate)
 {
-	GPIO_Init(  ((Uart_InitDef *)dev_usart2.dev_init_conf)->GPIOx_RX, 
-				((Uart_InitDef *)dev_usart2.dev_init_conf)->PIN_RX, 
+	GPIO_Init(  ((Uart_InitDef *)dev_usart2.serial_init_info)->GPIOx_RX, 
+				((Uart_InitDef *)dev_usart2.serial_init_info)->PIN_RX, 
 				GPIO_MODE_AF, GPIO_OTYPE_PP, GPIO_SPEED_50M, GPIO_PUPD_PU); 
-	GPIO_Init(  ((Uart_InitDef *)dev_usart2.dev_init_conf)->GPIOx_TX, 
-				((Uart_InitDef *)dev_usart2.dev_init_conf)->PIN_TX, 
+	GPIO_Init(  ((Uart_InitDef *)dev_usart2.serial_init_info)->GPIOx_TX, 
+				((Uart_InitDef *)dev_usart2.serial_init_info)->PIN_TX, 
 				GPIO_MODE_AF, GPIO_OTYPE_PP, GPIO_SPEED_50M, GPIO_PUPD_PU); 
 
-	GPIO_AF_Set( ((Uart_InitDef *)dev_usart2.dev_init_conf)->GPIOx_RX,
-				 ((Uart_InitDef *)dev_usart2.dev_init_conf)->PIN_RX, 
-				 ((Uart_InitDef *)dev_usart2.dev_init_conf)->GPIO_AF );	
+	GPIO_AF_Set( ((Uart_InitDef *)dev_usart2.serial_init_info)->GPIOx_RX,
+				 ((Uart_InitDef *)dev_usart2.serial_init_info)->PIN_RX, 
+				 ((Uart_InitDef *)dev_usart2.serial_init_info)->GPIO_AF );	
 				 																
-	GPIO_AF_Set( ((Uart_InitDef *)dev_usart2.dev_init_conf)->GPIOx_TX,
-				 ((Uart_InitDef *)dev_usart2.dev_init_conf)->PIN_TX, 
-				 ((Uart_InitDef *)dev_usart2.dev_init_conf)->GPIO_AF );																	   //PA9,AF7
+	GPIO_AF_Set( ((Uart_InitDef *)dev_usart2.serial_init_info)->GPIOx_TX,
+				 ((Uart_InitDef *)dev_usart2.serial_init_info)->PIN_TX, 
+				 ((Uart_InitDef *)dev_usart2.serial_init_info)->GPIO_AF );																	   //PA9,AF7
 
 	
-	uart2_init(  ((Uart_InitDef *)dev_usart2.dev_init_conf)->pclk2,//45
+	uart2_init(  ((Uart_InitDef *)dev_usart2.serial_init_info)->pclk2,//45
 				boundRate,
-				((Uart_InitDef *)dev_usart2.dev_init_conf)->rx_int_en);//1
+				((Uart_InitDef *)dev_usart2.serial_init_info)->rx_int_en);//1
 }
 
 void usart2_putchar(char ch)
@@ -126,8 +162,21 @@ int usart2_getchar()
     return serial_buf_pop(&dev_usart2);
 }
 
+uint32_t usart2_interrupt_setup()
+{
+	USART2->CR1 |= 1 << 13; //串口使能
+	MY_NVIC_Init(
+		((Uart_InitDef *)dev_usart2.serial_init_info)->Priority,
+		 USART2_IRQn); //组2，最低优先级
 
-struct serial_dev dev_usart2 = {
+	return USART2_IRQn;
+}
+
+void usart2_interrupt_clear()
+{
+
+}
+serial_dev_t dev_usart2 = {
 
 	.id = 1,
 	.buffer = BUF_USART1,
@@ -137,11 +186,13 @@ struct serial_dev dev_usart2 = {
 	.serial_open = &usart2_open,//boundRate
 	.putchar     = &usart2_putchar,//boundRate
 	.getchar     = &usart2_getchar,//boundRate
+	.interrput.setup = &usart2_interrupt_setup,
+	.interrput.clear = &usart2_interrupt_clear,
 
 };
 
 void stm32f429_serial_init()
 {
-    serial_dev_attach(&dev_usart1);
-    serial_dev_attach(&dev_usart2);
+    serial_dev_attach(&dev_usart1,0);
+    serial_dev_attach(&dev_usart2,0);
 }

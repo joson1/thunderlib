@@ -45,5 +45,5 @@ void serial_println(serial_dev_t* dev, char* str);
 
 int serial_dev_attach(serial_dev_t* dev,void* serial_init_info);
 
-int serial_dev_register(uint8_t id,void* conf);
+int serial_info_register(uint8_t id,void* info);
 uint32_t serial_input_length(serial_dev_t* dev);

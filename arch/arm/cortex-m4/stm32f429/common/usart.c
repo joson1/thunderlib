@@ -64,10 +64,9 @@ void uart_init(u32 pclk2, u32 bound,uint8_t int_en)
 	//使能接收中断
 	USART1->CR1 |= 1 << 2;		   //串口接收使能
 	USART1->CR1 |= 1 << 5;		   //接收缓冲区非空中断使能
-	MY_NVIC_Init(3, USART1_IRQn); //组2，最低优先级
 
-	if(int_en)
-		USART1->CR1 |= 1 << 13; //串口使能
+	// if(int_en)
+	// 	USART1->CR1 |= 1 << 13; //串口使能
 }
 
 char USART2_RX_BUF[USART_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.

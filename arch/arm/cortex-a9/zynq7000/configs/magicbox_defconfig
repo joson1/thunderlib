@@ -1,16 +1,12 @@
 
 #
-# Platform Config
+# Build Config
 #
 CONFIG_CROSS_COMPILE="arm-none-eabi-"
-# end of Platform Config
+# end of Build Config
 
-#
-# Select Target Board
-#
 CONFIG_MagicBox=y
 # CONFIG_Lite7020 is not set
-# end of Select Target Board
 
 #
 # kernel
@@ -34,7 +30,6 @@ CONFIG_SERIAL_EN=y
 #
 # devices
 #
-# CONFIG_SERIAL_STM32F429 is not set
 CONFIG_SERIAL_ZYNQ=y
 # end of devices
 # end of serial
@@ -47,7 +42,6 @@ CONFIG_I2C_EN=y
 #
 # devices
 #
-# CONFIG_I2C_STM32F429 is not set
 CONFIG_I2C_ZYNQ=y
 # end of devices
 # end of i2c
@@ -60,7 +54,6 @@ CONFIG_SPI_EN=y
 #
 # devices
 #
-# CONFIG_SPI_STM32F429 is not set
 CONFIG_SPI_ZYNQ=y
 # end of devices
 # end of spi
@@ -74,7 +67,6 @@ CONFIG_DMA_EN=y
 #
 # dma devices
 #
-# CONFIG_DMA_STM32F429 is not set
 CONFIG_DMA_ZYNQ7000=y
 # CONFIG_AXI_DMA is not set
 # end of dma devices
@@ -88,7 +80,6 @@ CONFIG_GPIO_EN=y
 #
 # gpio devices
 #
-# CONFIG_GPIO_STM32F429 is not set
 CONFIG_GPIO_ZYNQ7000=y
 # end of gpio devices
 # end of gpio
@@ -101,7 +92,6 @@ CONFIG_INTERRUPT_EN=y
 #
 # interrupt devices
 #
-# CONFIG_INTERRUPT_STM32F429 is not set
 CONFIG_INTERRUPT_ZYNQ7000=y
 # end of interrupt devices
 # end of interrupt
@@ -114,7 +104,6 @@ CONFIG_TIMER_EN=y
 #
 # timer devices
 #
-# CONFIG_TIMER_STM32F429 is not set
 CONFIG_TIMER_ZYNQ7000=y
 # end of timer devices
 # end of timer
@@ -125,10 +114,10 @@ CONFIG_TIMER_ZYNQ7000=y
 CONFIG_PWM_EN=y
 
 #
-# interrupt devices
+# pwm devices
 #
 CONFIG_AXI_PWM=y
-# end of interrupt devices
+# end of pwm devices
 # end of pwm
 
 #
@@ -136,4 +125,10 @@ CONFIG_AXI_PWM=y
 #
 CONFIG_TTY_EN=y
 # end of tty
+
+#
+# sensors
+#
+# CONFIG_US015 is not set
+# end of sensors
 # end of drivers

@@ -1,6 +1,6 @@
 
 
-objs-$(CONFIG_DMA_STM32F429)+=axi-dma.o
+objs-$(CONFIG_AXI_DMA)+=axi-dma.o
 objs-$(CONFIG_DMA_ZYNQ7000)+=dma-zynq7000.o
 
 

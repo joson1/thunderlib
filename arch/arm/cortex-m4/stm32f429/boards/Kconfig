@@ -1,0 +1,10 @@
+choice BOARD_CHOICE
+    bool "Board"
+config ThunderBoards32
+    bool "ThunderBoards32"
+    help
+        cpu:stm32f429
+
+
+
+endchoice

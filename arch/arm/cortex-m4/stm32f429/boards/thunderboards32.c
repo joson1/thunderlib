@@ -10,6 +10,7 @@
 #include "stm32f429/usart.h"
 #include "stm32f429/timer.h"
 #include <thunder/serial.h>
+#include <config.h>
 
 
 
@@ -27,6 +28,7 @@ Uart_InitDef uart1_conf =
     .GPIO_AF   = 7,
     .pclk2     = 90,
     .rx_int_en = 1,
+    .Priority  = 3,
 };
 Uart_InitDef uart2_conf = 
 {
@@ -37,6 +39,8 @@ Uart_InitDef uart2_conf =
     .GPIO_AF   = 7,
     .pclk2     = 45,
     .rx_int_en = 1,
+    .Priority  = 12,
+
 };
 
 
@@ -44,10 +48,12 @@ Uart_InitDef uart2_conf =
 
 void board_init()
 {
+
+#if(CONFIG_SERIAL_EN)
     stm32f429_serial_init();
-    serial_dev_register(0,&uart1_conf);
-    serial_dev_register(1,&uart2_conf);
-	
+    serial_info_register(0,&uart1_conf);
+    serial_info_register(1,&uart2_conf);
+#endif
     
     stm32f429_timer_init();
 }
