@@ -1,19 +1,24 @@
 menu "dma devices"
+
 depends on DMA_EN
 
-config DMA_STM32F429
-    bool "dma-stm32f429"
-    default n
-    
 
 config DMA_ZYNQ7000
     bool "dma-zynq7000"
-    default n
-    
+    depends on $(MARCH)="zynq7000"
+    default y
 
 config AXI_DMA
     bool "axi-dma"
+    depends on $(MARCH)="zynq7000"
     default n
-    
+
+
+
+
+config DMA_STM32F429
+    bool "dma-stm32f429"
+    depends on $(MARCH)="stm32f429"
+
 
 endmenu

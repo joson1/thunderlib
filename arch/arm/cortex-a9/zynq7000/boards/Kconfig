@@ -1,16 +1,15 @@
-menu "Select Target Board"
-
+choice BOARD_CHOICE
+    bool "Board"
 config MagicBox
     bool "MagicBox"
-    default n
     help
-        This option 
+        cpu:zynq7010
 
 config Lite7020
     bool "Lite7020"
-    default n
     help
-        This option 
+        cpu:zynq7020
 
 
-endmenu
+
+endchoice

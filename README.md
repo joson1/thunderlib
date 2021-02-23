@@ -21,9 +21,10 @@
 ## 依赖
 - python3
 - pip3
+- windows-curses
 
 执行
-pip3 install kconfiglib
+
 pip3 install windows-curses
 ## 编译
 在主Makefile中指定以下环境变量,例如

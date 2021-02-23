@@ -1,13 +1,15 @@
 menu "interrupt devices"
-depends on GPIO_EN
+depends on INTERRUPT_EN
 
 config INTERRUPT_STM32F429
     bool "interrupt-stm32f429"
+    depends on $(MARCH)="stm32f429"
     default n
     
 
 config INTERRUPT_ZYNQ7000
     bool "interrupt-zynq7000"
+    depends on $(MARCH)="zynq7000"
     default n
     
 
