@@ -20,6 +20,13 @@ int i2c_dev_attach(i2c_dev_t* dev)
  
 }
 
+int i2c_info_register(uint8_t id,void* info)
+{
+	i2c_dev_t*dev=dev_open(DEV_MAJOR_SERIAL,id);
+	dev->i2c_init_info = info;
+
+}
+
 int i2c_dev_remove(i2c_dev_t* dev)
 {
 	

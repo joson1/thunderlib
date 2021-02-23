@@ -121,7 +121,8 @@ distclean: clean
 # 	$< $(KCONFIG_FILE_PATH)
 
 
-
+genconfig:
+	@python3 $(TOPDIR)/scripts/Kconfiglib/genconfig.py
 
 menuconfig-win:
 	@cmd.exe /c start python3 $(TOPDIR)/scripts/Kconfiglib/menuconfig.py $(KCONFIG_FILE_PATH)

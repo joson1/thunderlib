@@ -2,6 +2,7 @@ menu "tty"
 
 config TTY_EN
     bool "Enable tty"
+    depends on SERIAL_EN
     default y
     help
         This option 

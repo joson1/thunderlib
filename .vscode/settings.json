@@ -16,6 +16,8 @@
         "sys.h": "c",
         "irq.h": "c",
         "stm32f429xx.h": "c",
-        "usart.h": "c"
+        "usart.h": "c",
+        "delay.h": "c",
+        "iic.h": "c"
     }
 }

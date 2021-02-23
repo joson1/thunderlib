@@ -1,5 +1,5 @@
 
-objs-$(at24cxx)+=at24cxx.o
+objs-y+=at24cxx.o
 
 
 all:$(objs-y)

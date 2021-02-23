@@ -21,7 +21,7 @@ typedef struct __i2c_dev
 	void (*set_clock)(uint32_t);//
 	int (*i2c_wirte)(uint32_t slave_addr,uint8_t* buf,uint32_t length);//
 	int (*i2c_read)(uint32_t slave_addr,uint8_t* buf,uint32_t length);//
-	void* dev_init_conf ; 
+	void* i2c_init_info; 
 	ListItem_t devItem;
 }i2c_dev_t;
 
@@ -31,3 +31,4 @@ void i2c_write(i2c_dev_t* dev,uint8_t* buf,uint32_t length,uint8_t addr7);
 
 int i2c_dev_attach(i2c_dev_t* dev);
 int i2c_dev_register(uint8_t id,void* conf);
+int i2c_info_register(uint8_t id,void* info);

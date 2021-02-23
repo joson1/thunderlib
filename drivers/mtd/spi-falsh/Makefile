@@ -1,5 +1,5 @@
 
-objs-$(spi-flash)+=spi-flash.o
+# objs-$(spi-flash)+=spi-flash.o
 
 objs-y+=spi-flash.o
 all:$(objs-y)

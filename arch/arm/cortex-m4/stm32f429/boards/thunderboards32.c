@@ -11,7 +11,8 @@
 #include "stm32f429/timer.h"
 #include <thunder/serial.h>
 #include <config.h>
-
+#include <thunder/i2c.h>
+#include "stm32f429/iic.h"
 
 
 
@@ -43,8 +44,17 @@ Uart_InitDef uart2_conf =
 
 };
 
+IIC_TypeDef i2c0_conf = 
+{
+    .SDA_GPIOx = GPIOB,
+    .SDA_PIN = GPIO_PIN_11,
+    .SCL_GPIOx = GPIOB, 
+    .SCL_PIN = GPIO_PIN_10,
+    .Speed = IIC_SPEED_HIGH,
+};
 
 
+extern stm32f429_i2c_init();
 
 void board_init()
 {
@@ -55,6 +65,11 @@ void board_init()
     serial_info_register(1,&uart2_conf);
 #endif
     
+
+#if(CONFIG_I2C_EN)
+    stm32f429_i2c_init();
+    i2c_info_register(0,&i2c0_conf);
+#endif
     stm32f429_timer_init();
 }
 
