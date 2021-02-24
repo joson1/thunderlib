@@ -18,6 +18,7 @@
         "stm32f429xx.h": "c",
         "usart.h": "c",
         "delay.h": "c",
-        "iic.h": "c"
+        "iic.h": "c",
+        "spi_defs.h": "c"
     }
 }

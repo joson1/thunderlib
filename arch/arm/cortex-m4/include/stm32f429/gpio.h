@@ -101,7 +101,14 @@
 
 
 
+typedef struct __stm32pin_t 
+{
+    GPIO_TypeDef* GPIOx;
+    u32 PIN;
 
+}stm32pin_t ;
+
+#define __STM32PIN(GPIOx,PINx) { GPIO##GPIOx ,GPIO_PIN_##PINx }
 
 
 //GPIOÕ®”√…Ë÷√ 

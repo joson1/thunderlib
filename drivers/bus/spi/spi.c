@@ -19,6 +19,12 @@ int spi_dev_attach(spi_dev_t* dev,void* pInfo)
 	dev_register(dev,DEV_MAJOR_SPI,dev->id);
 }
 
+int spi_info_register(uint8_t id,void* info)
+{
+	spi_dev_t*dev=dev_open(DEV_MAJOR_SPI,id);
+	dev->spi_init_info = info;
+
+}
 
 spi_dev_t* spi_open(uint8_t id)
 {

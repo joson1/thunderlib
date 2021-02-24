@@ -13,7 +13,8 @@
 #include <config.h>
 #include <thunder/i2c.h>
 #include "stm32f429/iic.h"
-
+#include <thunder/spi.h>
+#include "stm32f429/spi.h"
 
 
 extern void stm32f429_serial_init();
@@ -56,6 +57,26 @@ IIC_TypeDef i2c0_conf =
 
 extern stm32f429_i2c_init();
 
+SPI_InitDef spi0_conf = 
+{   
+    .AFn   = 5,
+    .mosi = __STM32PIN(A,7),
+    .miso = __STM32PIN(A,6),
+    .sck  = __STM32PIN(A,6),
+};
+
+SPI_InitDef spi1_conf = 
+{
+    .AFn   = 5,
+    .mosi = __STM32PIN(B,15),
+    .miso = __STM32PIN(B,14),
+    .sck  = __STM32PIN(B,13),
+};
+
+
+extern void stm32f429_spi_init();
+
+
 void board_init()
 {
 
@@ -70,6 +91,16 @@ void board_init()
     stm32f429_i2c_init();
     i2c_info_register(0,&i2c0_conf);
 #endif
+
+
+#if(CONFIG_SPI_EN)
+    stm32f429_spi_init();
+    spi_info_register(0,&spi0_conf);
+    spi_info_register(1,&spi1_conf);
+
+#endif
+
+
     stm32f429_timer_init();
 }
 
