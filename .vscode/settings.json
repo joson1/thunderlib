@@ -19,6 +19,7 @@
         "usart.h": "c",
         "delay.h": "c",
         "iic.h": "c",
-        "spi_defs.h": "c"
+        "spi_defs.h": "c",
+        "stddef.h": "c"
     }
 }

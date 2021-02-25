@@ -9,7 +9,7 @@
  */
 #include <thunder/gpio.h>
 #include "stm32f429/gpio.h"
-
+#include "pin-stm32.h"
 
 
 void gpio_pin_mode (uint8_t pin_id, uint32_t mode)
@@ -75,25 +75,4 @@ void gpio_pin_reset(uint8_t pin_id)
                pin_map[pin_id].pin);
 }
 
-struct pinDesc  pin_map[] = 
-{
-    {
-        .pin_id = 0,
-        .bank   = GPIOA,
-        .pin    =GPIO_PIN_0
-        
-    },
-    {
-        .pin_id = 1,
-        .bank   = GPIOA,
-        .pin    =GPIO_PIN_1
-        
-    },
-    {
-        .pin_id = 2,
-        .bank   = GPIOA,
-        .pin    =GPIO_PIN_2
-        
-    },
-};
-
+struct pinDesc  pin_map[] = PINS_STM32F429;

@@ -10,6 +10,7 @@
 #include "zynq7000/zynq.h"
 #include "zynq7000/gpio.h"
 #include <stdio.h>
+#include "pin-zynq.h"
 
 void gpio_pin_mode (uint8_t pin_id, uint32_t mode)
 {	volatile uint32_t* oen;
@@ -73,33 +74,5 @@ uint8_t gpio_pin_read(uint8_t pin_id)
 }
 
 
-struct pinDesc  pin_map[] = 
-{
-    {
-        .pin_id = 0,
-        .bank   = &GPIO_BANK0,
-        .pin    = BANK0_MIO_0
-        
-    },
-    {
-        .pin_id = 1,
-        .bank   = &GPIO_BANK0,
-        .pin    = BANK0_MIO_1
-        
-    },
-    {
-        .pin_id = 2,
-        .bank   = &GPIO_BANK0,
-        .pin    = BANK0_MIO_2
-        
-    },
-    {
-        .pin_id = 3,
-        .bank   = &GPIO_BANK0,
-        .pin    = BANK0_MIO_3
-        
-    },
-
-};
-
+struct pinDesc  pin_map[] = PINS_ZYNQ7020;   
 
