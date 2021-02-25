@@ -38,3 +38,4 @@ void gpio_pin_set  (uint8_t pin_id);
 void gpio_pin_reset(uint8_t pin_id);
 uint8_t gpio_pin_read(uint8_t pin_id);
 void gpio_pin_write(uint8_t pin_id,uint8_t value);
+uint32_t gpio_interrupt_request(uint8_t pin_id, uint8_t edge);

@@ -103,6 +103,61 @@ void Exti_Init(ExtiInitDef* pStr)
 }
 
 
+void EXTI_set_handler(uint32_t GPIO_PIN,void* event_handler)
+{
+    switch (GPIO_PIN)
+    {
+        case GPIO_PIN_0:
+                My_EXTI0_Irq = event_handler;
+                break;
+            case GPIO_PIN_1:
+                My_EXTI1_Irq = event_handler;
+                break;
+            case GPIO_PIN_2:
+                My_EXTI2_Irq = event_handler;
+            case GPIO_PIN_3:
+                My_EXTI3_Irq = event_handler;
+                break;
+            case GPIO_PIN_4:
+                My_EXTI4_Irq = event_handler;
+                break;
+            case GPIO_PIN_5:
+                My_EXTI5_Irq = event_handler;
+            case GPIO_PIN_6:
+                My_EXTI6_Irq = event_handler;
+                break;
+            case GPIO_PIN_7:
+                My_EXTI7_Irq = event_handler;
+                break;
+            case GPIO_PIN_8:
+                My_EXTI8_Irq = event_handler;
+                break;
+            case GPIO_PIN_9:
+                My_EXTI9_Irq = event_handler;
+                break;
+            case GPIO_PIN_10:
+                My_EXTI10_Irq = event_handler;
+                break;
+            case GPIO_PIN_11:
+                My_EXTI11_Irq = event_handler;
+            case GPIO_PIN_12:
+                My_EXTI12_Irq = event_handler;
+                break;
+            case GPIO_PIN_13:
+                My_EXTI13_Irq = event_handler;
+                break;
+            case GPIO_PIN_14:
+                My_EXTI14_Irq = event_handler;
+                break;
+            case GPIO_PIN_15:
+                My_EXTI15_Irq = event_handler;
+                break;
+            default:
+                break;
+
+    }
+
+}
 
 void EXTI0_IRQHandler()
 {

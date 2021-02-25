@@ -10,7 +10,7 @@
 #include <thunder/gpio.h>
 #include "stm32f429/gpio.h"
 #include "pin-stm32.h"
-
+#include "stm32f429/exti.h"
 
 void gpio_pin_mode (uint8_t pin_id, uint32_t mode)
 {
@@ -76,3 +76,82 @@ void gpio_pin_reset(uint8_t pin_id)
 }
 
 struct pinDesc  pin_map[] = PINS_STM32F429;
+
+
+
+
+uint32_t gpio_interrupt_request(uint8_t pin_id, uint8_t edge)
+{
+	GPIO_TypeDef* GPIOx = ((GPIO_TypeDef*)(pin_map[pin_id].bank));
+	uint32_t GPIO_PIN = ((GPIO_TypeDef*)(pin_map[pin_id].pin));
+    GPIO_Init( GPIOx,GPIO_PIN,GPIO_MODE_IN,0,0,GPIO_PUPD_PU);
+	uint32_t tmp;
+    switch (GPIO_PIN)
+    {
+        case GPIO_PIN_0:
+                tmp = EXTI0_IRQn;
+                break;
+            case GPIO_PIN_1:
+                tmp = EXTI1_IRQn;
+                break;
+            case GPIO_PIN_2:
+                tmp = EXTI2_IRQn;
+            case GPIO_PIN_3:
+                tmp = EXTI3_IRQn;
+                break;
+            case GPIO_PIN_4:
+                tmp = EXTI4_IRQn;
+                break;
+            case GPIO_PIN_5:
+                tmp = EXTI9_5_IRQn;
+            case GPIO_PIN_6:
+                tmp = EXTI9_5_IRQn;
+                break;
+            case GPIO_PIN_7:
+                tmp = EXTI9_5_IRQn;
+                break;
+            case GPIO_PIN_8:
+                tmp = EXTI9_5_IRQn;
+                break;
+            case GPIO_PIN_9:
+                tmp = EXTI9_5_IRQn;
+                break;
+            case GPIO_PIN_10:
+                tmp = EXTI15_10_IRQn;
+                break;
+            case GPIO_PIN_11:
+                tmp = EXTI15_10_IRQn;
+            case GPIO_PIN_12:
+                tmp = EXTI15_10_IRQn;
+                break;
+            case GPIO_PIN_13:
+                tmp = EXTI15_10_IRQn;
+                break;
+            case GPIO_PIN_14:
+                tmp = EXTI15_10_IRQn;
+                break;
+            case GPIO_PIN_15:
+                tmp = EXTI15_10_IRQn;
+                break;
+            default:
+                break;
+
+    }	
+    Ex_NVIC_Config(GPIOx,GPIO_PIN,edge);
+
+	return tmp;
+}
+
+void gpio_intr_setup(uint8_t pin_id, uint8_t Priority,uint32_t irqn,void* handler)
+{
+
+	uint32_t GPIO_PIN = ((GPIO_TypeDef*)(pin_map[pin_id].pin));
+	EXTI_set_handler(GPIO_PIN,handler);
+    MY_NVIC_Init(Priority,irqn);
+
+}
+
+
+
+
+

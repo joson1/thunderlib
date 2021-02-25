@@ -20,6 +20,8 @@
         "delay.h": "c",
         "iic.h": "c",
         "spi_defs.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "exti.h": "c",
+        "assert.h": "c"
     }
 }

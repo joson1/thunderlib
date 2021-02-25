@@ -28,3 +28,4 @@ typedef struct __ExtiInitDef
 } ExtiInitDef;
 
 extern void Exti_Init(ExtiInitDef* pStr);
+extern void EXTI_set_handler(uint32_t GPIO_PIN,void* event_handler);
