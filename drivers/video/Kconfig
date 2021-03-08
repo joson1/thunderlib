@@ -1,0 +1,10 @@
+menu "FrameBuffer"
+
+config FB_EN
+    bool "Enable FrameBuffer"
+    default n
+    help
+        This option 
+# source "drivers/timer/devices/Kconfig"
+
+endmenu

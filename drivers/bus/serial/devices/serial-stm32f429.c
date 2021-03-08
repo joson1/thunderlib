@@ -25,6 +25,7 @@ extern InterruptTableEntry uart_handler[3];
 void USART1_IRQHandler(void)
 {
 
+
 	if (USART1->SR & (1 << 5)) //接收到数据
 	{
 		if(uart_handler[0].Handler)
@@ -80,7 +81,7 @@ void usart1_putchar(char ch)
 
 int usart1_getchar()
 {
-    return serial_buf_pop(&dev_usart1);
+    return (char)USART1->DR;
 }
 
 
@@ -159,7 +160,7 @@ void usart2_putchar(char ch)
 
 int usart2_getchar()
 {
-    return serial_buf_pop(&dev_usart2);
+    return (char)USART2->DR;
 }
 
 uint32_t usart2_interrupt_setup()

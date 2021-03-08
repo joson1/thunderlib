@@ -12,6 +12,7 @@ SUBDIRS +=gpio
 SUBDIRS +=pwm
 SUBDIRS +=timer
 SUBDIRS +=tty
+SUBDIRS +=video
 SUBDIRS +=mtd
 SUBDIRS +=sensors
 

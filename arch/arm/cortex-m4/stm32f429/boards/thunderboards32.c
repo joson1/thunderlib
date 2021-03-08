@@ -15,7 +15,7 @@
 #include "stm32f429/iic.h"
 #include <thunder/spi.h>
 #include "stm32f429/spi.h"
-
+#include "stm32f429/sdram.h"
 
 extern void stm32f429_serial_init();
 extern void stm32f429_timer_init();
@@ -76,32 +76,34 @@ SPI_InitDef spi1_conf =
 
 extern void stm32f429_spi_init();
 
+extern int fb_stm32ltdc_init();
 
 void board_init()
 {
 
-#if(CONFIG_SERIAL_EN)
+// #if(CONFIG_SERIAL_EN)
+    SDRAM_Init();
     stm32f429_serial_init();
     serial_info_register(0,&uart1_conf);
     serial_info_register(1,&uart2_conf);
-#endif
-    
+// #endif
+    fb_stm32ltdc_init();
 
-#if(CONFIG_I2C_EN)
-    stm32f429_i2c_init();
-    i2c_info_register(0,&i2c0_conf);
-#endif
-
-
-#if(CONFIG_SPI_EN)
-    stm32f429_spi_init();
-    spi_info_register(0,&spi0_conf);
-    spi_info_register(1,&spi1_conf);
-
-#endif
+// #if(CONFIG_I2C_EN)
+//     stm32f429_i2c_init();
+//     i2c_info_register(0,&i2c0_conf);
+// #endif
 
 
-    stm32f429_timer_init();
+// #if(CONFIG_SPI_EN)
+//     stm32f429_spi_init();
+//     spi_info_register(0,&spi0_conf);
+//     spi_info_register(1,&spi1_conf);
+
+// #endif
+
+
+    // stm32f429_timer_init();
 }
 
 

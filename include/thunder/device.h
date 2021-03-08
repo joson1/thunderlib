@@ -1,20 +1,23 @@
 #pragma once
+#ifndef __DEVICE_H__
+#define __DEVICE_H__
 #include <stdint.h>
 #include <xlist.h>
 
 
  
-enum {
+enum DEV_MAJORx{
     DEV_MAJOR_SERIAL = 0,
 	DEV_MAJOR_I2C,
 	DEV_MAJOR_SPI,
 	DEV_MAJOR_DMA,
+	DEV_MAJOR_FB,
 
 	DEV_NbrOfMAJOR,
 };
 
 
-xList_t devList[DEV_NbrOfMAJOR];
+extern xList_t devList[DEV_NbrOfMAJOR];
 
 
 #define dev_register(pdev,major,id)                  \
@@ -33,3 +36,5 @@ xList_t devList[DEV_NbrOfMAJOR];
 
 
 void* dev_open(uint32_t major,uint32_t id);
+
+#endif

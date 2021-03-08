@@ -18,8 +18,7 @@ serial_dev_t* stty;
 void uart1_handler(void* Data)
 {
 	char ch;
-	// while( !(UART1->Channel_sts&&(1<<1)) )
-	// {
+
 
 		ch = stty->getchar();
 		stty->putchar(ch);
@@ -30,9 +29,7 @@ void uart1_handler(void* Data)
         
 		serial_buf_push(stty,ch);
 		stty->interrput.clear();
-		// UART1->Chnl_int_sts|=0x1;
-	// }
-	
+
 }
 
 void ttyio_init()

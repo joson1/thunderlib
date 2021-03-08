@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
-char INPUT_BUF[SERIAL_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.
+extern char INPUT_BUF[SERIAL_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.
 unsigned int input_rx_rp = 0;
 unsigned int input_rx_wp = 0;
 char input_state = 0;
@@ -86,7 +86,9 @@ uint32_t serial_input_length(serial_dev_t* dev)
 
 serial_dev_t* serial_open(uint8_t id,uint32_t boundRate)
 {
-	return dev_open(DEV_MAJOR_SERIAL,id);
+	serial_dev_t* dev = dev_open(DEV_MAJOR_SERIAL,id);
+	dev->serial_open(boundRate);
+	return dev;
 }
 
 

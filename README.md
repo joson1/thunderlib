@@ -51,3 +51,15 @@ make menuconfig-win
 make xxx_defconfig
 
 >xxx_defconfig文件在目录$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/ 中
+
+
+
+
+
+
+
+
+
+
+
+> xxd -i thunderlib-stm32f429-thunderboard32.bin > header.h

@@ -17,4 +17,8 @@ endmenu
 
 source "drivers/mtd/Kconfig"
 
+menu "video"
+source "drivers/video/Kconfig"
+endmenu
+
 endmenu

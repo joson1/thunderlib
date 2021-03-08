@@ -22,6 +22,9 @@
         "spi_defs.h": "c",
         "stddef.h": "c",
         "exti.h": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "fb.h": "c",
+        "device.h": "c",
+        "sdram.h": "c"
     }
 }

@@ -1,7 +1,7 @@
 
 objs =$(wildcard *.o) 
 dep = $(wildcard *.d)
-LDFLAGS+=-u_printf_float
+# LDFLAGS+=-u_printf_float
 
 # LDFLAGS+=-u_printf_float
 all:

@@ -6,7 +6,8 @@
 {                               \
     __STM32_PIN_DESC(0,A,0),    \
     __STM32_PIN_DESC(1,A,1),    \
-    __STM32_PIN_DESC(1,A,1),    \
+    __STM32_PIN_DESC(2,A,1),    \
+    __STM32_PIN_DESC(3,B,5),    \
                                 \
 }
 

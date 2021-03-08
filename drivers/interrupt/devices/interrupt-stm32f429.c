@@ -17,8 +17,8 @@ int irq_register(uint32_t Irq_id, InterruptHandler handler, uint32_t Trigger_edg
     case USART1_IRQn:
     case USART2_IRQn:
     case USART3_IRQn:
-        uart_handler[Irq_id-Irq_id].Handler = handler;
-        uart_handler[Irq_id-Irq_id].data    = Message;
+        uart_handler[Irq_id-USART1_IRQn].Handler = handler;
+        uart_handler[Irq_id-USART1_IRQn].data    = Message;
         break;
     case EXTI0_IRQn:
     case EXTI1_IRQn:
