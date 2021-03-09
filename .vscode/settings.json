@@ -25,6 +25,7 @@
         "assert.h": "c",
         "fb.h": "c",
         "device.h": "c",
-        "sdram.h": "c"
+        "sdram.h": "c",
+        "lvgl.h": "c"
     }
 }

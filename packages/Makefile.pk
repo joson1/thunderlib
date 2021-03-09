@@ -1,0 +1,5 @@
+PKDIRS += \
+		$(TOPDIR)/packages/gui/lvgl \
+		
+
+#$(TOPDIR)/packages/gui/guilite \

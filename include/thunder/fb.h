@@ -35,11 +35,7 @@ struct fb_image {
 	uint32_t dy;
 	uint32_t width;		/* Size of image */
 	uint32_t height;
-	uint32_t fg_color;		/* Only used when a mono bitmap */
-	uint32_t bg_color;
-	uint8_t  depth;		/* Depth of the image */
-	const char *data;	/* Pointer to image data */
-	struct fb_cmap cmap;	/* color map info */
+	void *data;	/* Pointer to image data */
 };
 
 

@@ -50,12 +50,15 @@ C_INCLUDES +=  \
 -I$(TOPDIR)/include \
 -I$(TOPDIR)/arch/$(ARCH)/$(CPU)/include  \
 -I$(TOPDIR)/arch/$(ARCH)/$(CPU)/include/$(MARCH) \
--I$(TOPDIR) \
+-I$(TOPDIR)/packages \
 
+
+include $(TOPDIR)/packages/Makefile.pk
 
 # for libs
 C_INCLUDES +=  \
 -I$(TOPDIR)/libs/include \
+-I$(TOPDIR) \
 
 OPT = -O0
 CFLAGS+= $(C_INCLUDES)
@@ -71,9 +74,8 @@ SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)\
 			$(TOPDIR)/libs \
 			$(TOPDIR)/drivers \
 			$(TOPDIR)/kernel \
+			$(PKDIRS) \
 			$(TOPDIR)/app \
-
-
 #mconfig
 # include $(TOPDIR)/Makefile.common
 
@@ -83,7 +85,7 @@ export TOPDIR  SDK_VERSION KCONFIG_FILE_PATH KCONFIG_SRC_PATH
 
 
 
-export  CC LD MARCH CFLAGS LDFLAGS TARGET
+export  CC CPP LD MARCH CFLAGS LDFLAGS TARGET CROSS_COMPILE
 export BUILD_DIR BIN_DIR TOPDIR LINK_SCRIPT
 export CPU ARCH MARCH BOARD
 ALL:$(TARGET)

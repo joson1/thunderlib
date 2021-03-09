@@ -81,29 +81,31 @@ extern int fb_stm32ltdc_init();
 void board_init()
 {
 
-// #if(CONFIG_SERIAL_EN)
     SDRAM_Init();
+#if(CONFIG_SERIAL_EN)
     stm32f429_serial_init();
     serial_info_register(0,&uart1_conf);
     serial_info_register(1,&uart2_conf);
-// #endif
+#endif
     fb_stm32ltdc_init();
 
-// #if(CONFIG_I2C_EN)
-//     stm32f429_i2c_init();
-//     i2c_info_register(0,&i2c0_conf);
-// #endif
+#if(CONFIG_I2C_EN)
+    stm32f429_i2c_init();
+    i2c_info_register(0,&i2c0_conf);
+#endif
 
 
-// #if(CONFIG_SPI_EN)
-//     stm32f429_spi_init();
-//     spi_info_register(0,&spi0_conf);
-//     spi_info_register(1,&spi1_conf);
+#if(CONFIG_SPI_EN)
+    stm32f429_spi_init();
+    spi_info_register(0,&spi0_conf);
+    spi_info_register(1,&spi1_conf);
 
-// #endif
+#endif
 
+#if(CONFIG_TIMER_EN)
+    stm32f429_timer_init();
+#endif
 
-    // stm32f429_timer_init();
 }
 
 

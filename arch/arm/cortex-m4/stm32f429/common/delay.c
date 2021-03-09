@@ -213,6 +213,28 @@ void delay_ms(vu16 nms)
 	}
 	if(remain)delay_xms(remain);
 } 
+
+
+
+
+
+
+extern void _sleep(uint32_t seconds);
+void _sleep(uint32_t seconds)
+{
+	delay_ms(seconds*1000);
+}
+
+
+extern void   _usleep(uint32_t us);
+
+void _usleep(uint32_t us)
+{
+	delay_us(us);
+}
+
+
+
 #endif
 			 
 

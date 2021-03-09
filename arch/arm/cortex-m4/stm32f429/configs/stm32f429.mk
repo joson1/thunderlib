@@ -37,9 +37,9 @@ C_INCLUDES+= -I$(TOPDIR)/arch/$(ARCH)/$(CPU)/include/CMSIS
 
 
 AS		= $(CROSS_COMPILE)as
-LD		= $(CROSS_COMPILE)ld
+LD		= $(CROSS_COMPILE)ld 
 CC		= $(CROSS_COMPILE)gcc
-CPP		= $(CC) -E
+CPP		= $(CROSS_COMPILE)gcc -lstdc++
 AR		= $(CROSS_COMPILE)ar
 NM		= $(CROSS_COMPILE)nm
 STRIP		= $(CROSS_COMPILE)strip

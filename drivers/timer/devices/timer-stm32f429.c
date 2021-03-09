@@ -26,7 +26,7 @@ void timer_init(uint32_t id,uint32_t ms,
     };
 
 
-    switch (id)
+    switch (id+1)
     {
     case 1:
         timerx.TIMx = TIM1;

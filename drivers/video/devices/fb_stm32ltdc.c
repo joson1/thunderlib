@@ -301,7 +301,6 @@ void LTDC_Fill(u16 sx, u16 sy, u16 ex, u16 ey, u32 color)
 
 
 
-
 //LCD清屏
 //color:颜色值
 void LTDC_Clear(u32 color)
@@ -420,6 +419,65 @@ static int stm32_ltdc_init()
 
 
 
+void ltdc_fb_imageblit(struct fb_info *info, const struct fb_image *image)
+{
+
+	u32 timeout = 0;
+	u16 offline;
+	u32 addr;
+	uint32_t pixSize = info->var.bits_per_pixel/8;
+
+	static i = 0;
+
+	if(i==0)
+	{
+		DMA2D->IFCR |= 1 << 1; //清除传输完成标志
+
+		offline = fb_stm32ltdc.var.xres-image->width; //lcdltdc.pwidth - (pex - psx + 1);
+		addr = (info->screen_base + ( (info->var.xres)*(image->dy) )*pixSize );
+		//((u32)ltdc_framebuf[lcdltdc.activelayer] + lcdltdc.pixsize * (lcdltdc.pwidth * psy + psx));
+		RCC->AHB1ENR |= 1 << 23;								//使能DM2D时钟
+		DMA2D->CR &= ~(1 << 0);									//先停止DMA2D
+		DMA2D->CR = 0 << 16;									//存储器到存储器模式
+		DMA2D->FGPFCCR = PF_RGB565;							//设置颜色格式
+		DMA2D->FGOR = 0;										//前景层行偏移为0
+		DMA2D->OOR = offline;									//设置行偏移
+		DMA2D->FGMAR = (u32)image->data;								//源地址
+		DMA2D->OMAR = addr;										//输出存储器地址
+		DMA2D->NLR = (image->height) | ((image->width) << 16); //设定行数寄存器
+		DMA2D->CR |= 1 << 0;									//启动DMA2D
+
+		i=1;
+	}else
+	{
+		while ((DMA2D->ISR & (1 << 1)) == 0) //等待传输完成
+		{
+			timeout++;
+			if (timeout > 0X1FFFFF)
+				break;
+		}
+		DMA2D->IFCR |= 1 << 1; //清除传输完成标志
+
+		offline = fb_stm32ltdc.var.xres-image->width; //lcdltdc.pwidth - (pex - psx + 1);
+		addr = (info->screen_base + ( (info->var.xres)*(image->dy) )*pixSize );
+		//((u32)ltdc_framebuf[lcdltdc.activelayer] + lcdltdc.pixsize * (lcdltdc.pwidth * psy + psx));
+		RCC->AHB1ENR |= 1 << 23;								//使能DM2D时钟
+		DMA2D->CR &= ~(1 << 0);									//先停止DMA2D
+		DMA2D->CR = 0 << 16;									//存储器到存储器模式
+		DMA2D->FGPFCCR = PF_RGB565;							//设置颜色格式
+		DMA2D->FGOR = 0;										//前景层行偏移为0
+		DMA2D->OOR = offline;									//设置行偏移
+		DMA2D->FGMAR = (u32)image->data;								//源地址
+		DMA2D->OMAR = addr;										//输出存储器地址
+		DMA2D->NLR = (image->height) | ((image->width) << 16); //设定行数寄存器
+		DMA2D->CR |= 1 << 0;									//启动DMA2D
+
+	}
+	
+
+
+}
+
 void ltdc_fb_fillrect(struct fb_info *info, const struct fb_fillrect *rect)
 {
 	u32 timeout = 0;
@@ -450,6 +508,7 @@ void ltdc_fb_fillrect(struct fb_info *info, const struct fb_fillrect *rect)
 
 struct fb_ops ltdc_ops = {
 	.fb_fillrect = &ltdc_fb_fillrect,
+	.fb_imageblit=&ltdc_fb_imageblit,
 };
 
 

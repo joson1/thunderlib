@@ -18,21 +18,17 @@
 
 #define BUF ((uint16_t*)0XC0000000)
 
+
+ 
+extern void lvgl_test();
+
+
 int main()
 {
 	cmd_init();
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
 	
-	struct fb_info* fb = fb_open(0);
-	struct fb_fillrect rect = {
-		.dx = 10,	/* screen-relative */
-		.dy = 0,
-		.width = 100,
-		.height =50 ,
-		.color = 0xBB,
-	};
-
-	fb->fbops->fb_fillrect(fb,&rect);
+	lvgl_test();
 	// printf("LCD:%d\r\n",*BUF);
 	while (1)
 	{
