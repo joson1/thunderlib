@@ -191,7 +191,7 @@ uint8_t GT9147_Init(void)
 			// if(lcddev.id==0X5510)GT9147_Send_Cfg(1);//仅4.3寸MCU屏,更新并保存配置
 			GT9147_Send_Cfg(1);
 		}
-		delay_ms(10);
+		usleep(10*1000);
 		temp[0]=0X00;	 
 		GT9147_WR_Reg(GT_CTRL_REG,temp,1);//结束复位   
 		return 0;
