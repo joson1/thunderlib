@@ -2,6 +2,7 @@
 #include <thunder/fb.h>
 #include <thunder/sleep.h>
 #include <thunder/timer.h>
+#include <thunder/input.h>
 
 // TFT_eSPI tft = TFT_eSPI(); /* TFT instance */
 struct fb_info *fb;
@@ -37,11 +38,23 @@ void my_disp_flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color
     lv_disp_flush_ready(disp);
 }
 
+input_handler_t* tp;
 /*Read the touchpad*/
 bool my_touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
     //uint16_t touchX, touchY;
+    uint8_t buf[4];
 
+    if(tp->read(buf))
+    {
+        data->state = LV_INDEV_STATE_PR;
+        data->point.x = ((uint16_t*)buf)[0];
+        data->point.y = ((uint16_t*)buf)[1];
+    }else
+    {
+         data->state = LV_INDEV_STATE_REL;
+    }
+    
     //bool touched = tft.getTouch(&touchX, &touchY, 600);
 
     // if(!touched) {
@@ -87,6 +100,7 @@ void setup()
 {
     // Serial.begin(115200); /* prepare for possible serial debug */
     fb = fb_open(0);
+    tp = input_open(INPUT_EVT_TOUCHSCREEN);
     lv_init();
 
     timer_setup(0, 5, 4, tmr_handler);
@@ -103,11 +117,11 @@ void setup()
     lv_disp_drv_register(&disp_drv);
 
     /*Initialize the (dummy) input device driver*/
-    // lv_indev_drv_t indev_drv;
-    // lv_indev_drv_init(&indev_drv);
-    // indev_drv.type = LV_INDEV_TYPE_POINTER;
-    // indev_drv.read_cb = my_touchpad_read;
-    // lv_indev_drv_register(&indev_drv);
+    lv_indev_drv_t indev_drv;
+    lv_indev_drv_init(&indev_drv);
+    indev_drv.type = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = my_touchpad_read;
+    lv_indev_drv_register(&indev_drv);
 
     /* Try an example from the lv_examples repository
 		 * https://github.com/lvgl/lv_examples*/

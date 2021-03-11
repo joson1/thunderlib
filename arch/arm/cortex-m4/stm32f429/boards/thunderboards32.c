@@ -47,10 +47,10 @@ Uart_InitDef uart2_conf =
 
 IIC_TypeDef i2c0_conf = 
 {
-    .SDA_GPIOx = GPIOB,
-    .SDA_PIN = GPIO_PIN_11,
-    .SCL_GPIOx = GPIOB, 
-    .SCL_PIN = GPIO_PIN_10,
+    .SDA_GPIOx = GPIOI,
+    .SDA_PIN = GPIO_PIN_3,
+    .SCL_GPIOx = GPIOH, 
+    .SCL_PIN = GPIO_PIN_6,
     .Speed = IIC_SPEED_HIGH,
 };
 
@@ -77,6 +77,7 @@ SPI_InitDef spi1_conf =
 extern void stm32f429_spi_init();
 
 extern int fb_stm32ltdc_init();
+extern void input_drv_attach();
 
 void board_init()
 {
@@ -87,7 +88,8 @@ void board_init()
     serial_info_register(0,&uart1_conf);
     serial_info_register(1,&uart2_conf);
 #endif
-    fb_stm32ltdc_init();
+
+    // fb_stm32ltdc_init();
 
 #if(CONFIG_I2C_EN)
     stm32f429_i2c_init();
@@ -101,7 +103,7 @@ void board_init()
     spi_info_register(1,&spi1_conf);
 
 #endif
-
+    input_drv_attach();
 #if(CONFIG_TIMER_EN)
     stm32f429_timer_init();
 #endif

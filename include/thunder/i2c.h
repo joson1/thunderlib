@@ -19,6 +19,7 @@ typedef struct __i2c_dev
 	uint8_t id;
 
 	void (*set_clock)(uint32_t);//
+	void (*open)(void);
 	int (*i2c_wirte)(uint32_t slave_addr,uint8_t* buf,uint32_t length);//
 	int (*i2c_read)(uint32_t slave_addr,uint8_t* buf,uint32_t length);//
 	void* i2c_init_info; 

@@ -1,4 +1,4 @@
-PKDIRS += \
+PKDIRS-$(GUI_EN) += \
 		$(TOPDIR)/packages/gui/lvgl \
 		
 

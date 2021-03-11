@@ -124,8 +124,8 @@ void __INLINE IIC_NAck(IIC_TypeDef *IIC)
 void IIC_write(IIC_TypeDef *IIC, uint8_t txd)
 {
     u8 t;   
-	SDA_OUT(IIC);   
     SCL_set(IIC, 0);
+	SDA_OUT(IIC);   
 	delay_us(IIC->Speed);
     for(t=0;t<8;t++)
     {       
@@ -138,12 +138,14 @@ void IIC_write(IIC_TypeDef *IIC, uint8_t txd)
 		
 		
     }	 
-
+	delay_us(1);
 }
 
 uint8_t IIC_read(IIC_TypeDef *IIC, uint8_t ack)
 {
 	unsigned char i,receive=0;
+	delay_us(30);
+
 	SDA_IN(IIC);
     for(i=0;i<8;i++ )
 	{

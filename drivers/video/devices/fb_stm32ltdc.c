@@ -541,8 +541,8 @@ extern int fb_stm32ltdc_init();
 int fb_stm32ltdc_init()
 {
 	// fb_stm32ltdc.screen_buffer = ltdc_lcd_framebuf;
-	gpio_pin_mode(3,GPIO_MODE_OUTPUT);
-	gpio_pin_set(3);
+	gpio_pin_mode(163,GPIO_MODE_OUTPUT);
+	gpio_pin_set(163);
 
     fb_dev_attach(&fb_stm32ltdc,0);
 	stm32_ltdc_init();

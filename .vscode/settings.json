@@ -26,6 +26,10 @@
         "fb.h": "c",
         "device.h": "c",
         "sdram.h": "c",
-        "lvgl.h": "c"
+        "lvgl.h": "c",
+        "input.h": "c",
+        "gt9147.h": "c",
+        "i2c.h": "c",
+        "string.h": "c"
     }
 }

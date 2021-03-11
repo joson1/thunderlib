@@ -1,0 +1,11 @@
+menu "GUI"
+
+config GUI_EN
+    bool "Enable GUI"
+    depends on FB_EN
+    default n
+    help
+        This option 
+# source "drivers/timer/devices/Kconfig"
+
+endmenu

@@ -20,15 +20,13 @@
 
 
  
-extern void lvgl_test();
 
 
 int main()
 {
 	cmd_init();
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
-	
-	lvgl_test();
+
 	// printf("LCD:%d\r\n",*BUF);
 	while (1)
 	{

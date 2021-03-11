@@ -77,6 +77,17 @@ void gpio_pin_reset(uint8_t pin_id)
 
 struct pinDesc  pin_map[] = PINS_STM32F429;
 
+void gpio_pin_write(uint8_t pin_id,uint8_t value)
+{
+    if (value)
+    {
+        gpio_pin_set(pin_id);
+    }else
+    {
+        gpio_pin_reset(pin_id);
+    }
+    
+}
 
 
 

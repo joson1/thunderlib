@@ -13,6 +13,7 @@ SUBDIRS +=pwm
 SUBDIRS +=timer
 SUBDIRS +=tty
 SUBDIRS +=video
+SUBDIRS +=input
 SUBDIRS +=mtd
 SUBDIRS +=sensors
 
