@@ -1,7 +1,7 @@
 #include <thunder/pwm.h>
 #include "zynq7000/zynq.h"
 #include "zynq7000/axi-timer.h"
-
+#include <thunder/device.h>
 
 #define XTC_ROUND_DIV(a, b)		((a + (b / 2)) / b)
 #define XTC_HZ_TO_NS(Hz)		XTC_ROUND_DIV(1000000000, Hz)
@@ -205,4 +205,6 @@ void zynq_axi_pwm_init()
     pwm_dev_attach(&pwm2);
 
 }
+
+DEV_INIT(zynq_axi_pwm_init);
 extern void zynq_axi_pwm_init();

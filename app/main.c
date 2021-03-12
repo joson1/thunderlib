@@ -15,6 +15,7 @@
 #include <thunder/dma.h>
 #include <malloc.h>
 #include <thunder/fb.h>
+#include <kernel/kernel.h>
 
 #include "drivers/iio/ad9361/AD9361/ad9361.h"
 #include "adconf.h"

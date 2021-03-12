@@ -127,6 +127,7 @@ serial_dev_t dev_usart1 = {
 };
 
 
+
 void zynq_serial_init()
 {
 	
@@ -135,3 +136,5 @@ void zynq_serial_init()
 	
 
 }
+
+DEV_INIT(zynq_serial_init);

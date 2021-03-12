@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "zynq7000/xil_exception.h"
 #include "zynq7000/xscugic_hw.h"
+#include <thunder/device.h>
 
 #define Zynq7000_GIC_CPU_BASE            0xF8F00100  /* Generic interrupt controller CPU interface */
 #define Zynq7000_GIC_DIST_BASE           0xF8F01000  /* Generic interrupt controller */
@@ -249,6 +250,9 @@ void zynq_interrupt_init()
 
 
 }
+
+DEV_INIT(zynq_interrupt_init);
+
 extern void zynq_interrupt_init();
 
 int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge,void* Message,void (*CallBack))

@@ -18,11 +18,11 @@ extern void zynq_axi_pwm_init();
 extern void zynq7000_dma_init();
 void board_init()
 {
-    zynq_interrupt_init();
-    zynq_i2c_init();
-    zynq_spi_init();
-    zynq_serial_init();
-    zynq_timer_init();
-    zynq_axi_pwm_init();
-    zynq7000_dma_init();
+    // zynq_interrupt_init();
+    // zynq_i2c_init();
+    // zynq_spi_init();
+    // zynq_serial_init();
+    // zynq_timer_init();
+    // zynq_axi_pwm_init();
+    // zynq7000_dma_init();
 }

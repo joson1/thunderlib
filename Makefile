@@ -72,6 +72,7 @@ BIN_DIR = $(TOPDIR)/bin
 
 
 SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)\
+		 	$(TOPDIR)/arch \
 			$(TOPDIR)/libs \
 			$(TOPDIR)/drivers \
 			$(TOPDIR)/kernel \

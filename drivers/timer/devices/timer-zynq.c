@@ -10,7 +10,7 @@
 #include <thunder/irq.h>
 #include <thunder/timer.h>
 #include <zynq7000/xil_exception.h>
-
+#include <thunder/device.h>
 
 extern void (*_timer_setup)(uint32_t id,uint32_t ms,uint32_t Priority,void (*event_handler)());
 
@@ -65,3 +65,5 @@ void zynq_timer_init()
 
 	_timer_setup = &timer_init;
 }
+
+DEV_INIT(zynq_timer_init);

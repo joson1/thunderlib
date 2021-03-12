@@ -1,7 +1,7 @@
 #include "zynq7000/xdmaps.h"
 #include <thunder/dma.h>
 #include <thunder/irq.h>
-
+#include <thunder/init.h>
 
 
 
@@ -176,6 +176,7 @@ void zynq7000_dma_init()
 
 
 }
+DEV_INIT(zynq7000_dma_init);
 extern void zynq7000_dma_init();
 
 extern void (__dma_interrupt_register)(uint8_t ch,void* handler);    

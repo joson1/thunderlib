@@ -129,6 +129,7 @@ _start:
 
    /* run global constructors */
    	bl __libc_init_array
+	bl do_initcalls
 	bl board_init
 	@ bl cpu_dcache_enable
 	@ bl cpu_icache_enable

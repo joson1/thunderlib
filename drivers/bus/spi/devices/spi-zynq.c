@@ -167,4 +167,6 @@ void zynq_spi_init()
     spi_dev_attach(&spi0,0);
 
 }
+
+DEV_INIT(zynq_spi_init);
 extern void zynq_spi_init();

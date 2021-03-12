@@ -363,3 +363,4 @@ void zynq_i2c_init()
     i2c_dev_attach(&i2c1);
 }
 
+DEV_INIT(zynq_i2c_init);

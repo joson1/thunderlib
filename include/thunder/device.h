@@ -3,9 +3,10 @@
 #define __DEVICE_H__
 #include <stdint.h>
 #include <xlist.h>
+#include <thunder/init.h>
 
+#define DEV_INIT(fn)		__define_initcall("0", fn, 0)
 
- 
 enum DEV_MAJORx{
     DEV_MAJOR_SERIAL = 0,
 	DEV_MAJOR_I2C,

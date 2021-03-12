@@ -35,6 +35,7 @@
         "ad9361.h": "c",
         "ad9361_api.h": "c",
         "malloc.h": "c",
-        "platform.h": "c"
+        "platform.h": "c",
+        "init.h": "c"
     }
 }
