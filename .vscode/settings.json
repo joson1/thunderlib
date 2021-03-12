@@ -30,6 +30,11 @@
         "input.h": "c",
         "gt9147.h": "c",
         "i2c.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "adconf.h": "c",
+        "ad9361.h": "c",
+        "ad9361_api.h": "c",
+        "malloc.h": "c",
+        "platform.h": "c"
     }
 }

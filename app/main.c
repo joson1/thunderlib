@@ -16,8 +16,13 @@
 #include <malloc.h>
 #include <thunder/fb.h>
 
+#include "drivers/iio/ad9361/AD9361/ad9361.h"
+#include "adconf.h"
+
+
 #define BUF ((uint16_t*)0XC0000000)
 
+struct ad9361_rf_phy *ad9361_phy;
 
  
 
@@ -26,8 +31,8 @@ int main()
 {
 	cmd_init();
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
+	ad9361_init(&ad9361_phy, &default_init_param);
 
-	// printf("LCD:%d\r\n",*BUF);
 	while (1)
 	{
 		/* code */

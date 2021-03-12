@@ -298,7 +298,7 @@ void Xil_SErrorAbortHandler(void *CallBackRef){
 *
 * @note		None.
 *
-****************************************************************************/
+**********************************************************************struct clk******/
 extern void trap_dabt();
 
 void Xil_DataAbortHandler(void *CallBackRef){

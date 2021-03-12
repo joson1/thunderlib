@@ -76,6 +76,7 @@ SUBDIRS = 	$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)\
 			$(TOPDIR)/drivers \
 			$(TOPDIR)/kernel \
 			$(PKDIRS-y) \
+			$(TOPDIR)/drivers/iio/ad9361 \
 			$(TOPDIR)/app \
 #mconfig
 # include $(TOPDIR)/Makefile.common

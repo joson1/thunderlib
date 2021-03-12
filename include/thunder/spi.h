@@ -20,6 +20,8 @@ typedef struct __spi_dev
 	void (*setBitOrder)(char Order);//
 	void (*setClkDiv)(uint8_t Div);//
 	int (*transfer)(int data);//
+	int (*write)(int data);//
+	int (*read)(uint32_t NbrOfBytes);//
 	void* spi_init_info ; 
 	ListItem_t devItem;
 }spi_dev_t;

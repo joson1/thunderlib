@@ -32,31 +32,31 @@ void spi_zynq_reset()
 
 static inline void setMode(SPI_TypeDef* spi,uint8_t Mode)
 {
+    spi->config &= ~(3<<1);
     switch (Mode)
     {
     case SPI_MODE_0:
-        spi->config &= ~(3<<(1));
+        // spi->config &= ~(3<<(1));
         break;
     case SPI_MODE_1:
-        spi->config &= ~(1<<1);
-        spi->config |=  (1<<2);
+        // spi->config &= ~(1<<1);
+        spi->config |=  (2<<1);
         /* code */
         break;
     case SPI_MODE_2:
         spi->config |=  (1<<1);    
-        spi->config &= ~(1<<2);
+        // spi->config &= ~(1<<2);
         /* code */
         break;
     case SPI_MODE_3:
-        spi->config |=  (1<<1);    
-        spi->config |=  (1<<2);    
+        spi->config |=  (3<<1);    
+        // spi->config |=  (1<<2);    
         /* code */
         break;
     
     default:
         break;
     }   
-    spi->config;
 }
 
 void setClockDivider(SPI_TypeDef* spi,uint8_t SPI_CLOCK_DIV)
@@ -69,21 +69,55 @@ void setClockDivider(SPI_TypeDef* spi,uint8_t SPI_CLOCK_DIV)
 
 static void spi_init(SPI_TypeDef* spi,uint8_t SPI_CLOCK_DIV,uint8_t Mode)
 {
-    spi->config |= (1<<14); //master mode
+    spi->config |= (1<<14); //master modespi_dev_t
+    spi->intrpt_en = 0xff;
+    
     setClockDivider(spi,SPI_CLOCK_DIV);
     setMode(spi,Mode);
+
     spi->RX_thres = 1;
     spi->En = 1;
 }
 
 static int zynq_spi_transfer(SPI_TypeDef* spi,int data)
 {
-    spi->intrpt_en = (1<<4);
+    int tmp = 0;
+    spi->config &= ~(1<<10);
     spi->Tx_data = data;
     while(!(spi->intr_status&(1<<4)));
-    spi->intrpt_en = 0;
+    spi->config |= (1<<10);
+    spi->intr_status = 0xff;
+    tmp = spi->Rx_data;
+    if(spi->intr_status&(1<<4))
+    {
+        tmp = spi->Rx_data;
+        spi->intr_status = 0xff;
+    }
+
+    return tmp;
+}
+
+static int zynq_spi_write(SPI_TypeDef* spi,int data)
+{
+    spi->config &= ~(1<<10);
+    spi->intrpt_en = (1<<4);
+    spi->Tx_data = data;
+    // while(!(spi->intr_status&(1<<4)));
+
+    return 0;
+}
+
+
+
+static int zynq_spi_read(SPI_TypeDef* spi)
+{
+    
+    // while ( !(spi->intr_status&(1<<4)) );
+    
     return spi->Rx_data;
 }
+
+
 
 static void spi0_setMode(uint32_t Mode)
 {
@@ -105,6 +139,16 @@ static void spi0_setClkDiv(uint8_t SPI_CLOCK_DIV)
     
 }
 
+int spi0_write(int data)
+{
+    zynq_spi_write(SPI0,data);
+}
+
+int spi0_read()
+{
+    return zynq_spi_read(SPI0);
+}
+
 spi_dev_t spi0 = 
 {
     .id = 0,
@@ -113,6 +157,8 @@ spi_dev_t spi0 =
     .setBitOrder=0,
     .setClkDiv=spi0_setClkDiv,
     .transfer = spi0_transfer,
+    .write =spi0_write,
+    .read =spi0_read,
 };
 
 void zynq_spi_init()

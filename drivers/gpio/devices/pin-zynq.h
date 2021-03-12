@@ -2,11 +2,79 @@
 #include "zynq7000/gpio.h"
 
 #define __ZYNQ_PIN_DESC(id,bankn,mion) {.pin_id=id,.bank=&GPIO_BANK##bankn,.pin=BANK##bankn##_MIO_##mion}
-
+#define __ZYNQ_PIN_EMIO(id,bankn,mion) {.pin_id=id,.bank=&GPIO_BANK##bankn,.pin=BANK##bankn##_EMIO_##mion}
 #define PINS_ZYNQ7020           \
 {                               \
     __ZYNQ_PIN_DESC(0,0,0),     \
     __ZYNQ_PIN_DESC(1,0,1),     \
-    __ZYNQ_PIN_DESC(1,0,2),     \
+    __ZYNQ_PIN_DESC(2,0,2),     \
+    __ZYNQ_PIN_DESC(3,0,3),     \
+    __ZYNQ_PIN_DESC(4,0,4),     \
+    __ZYNQ_PIN_DESC(5,0,5),     \
+    __ZYNQ_PIN_DESC(6,0,6),     \
+    __ZYNQ_PIN_DESC(7,0,7),     \
+    __ZYNQ_PIN_DESC(8,0,8),     \
+    __ZYNQ_PIN_DESC(9,0,9),     \
+    __ZYNQ_PIN_DESC(10,0,10),     \
+    __ZYNQ_PIN_DESC(11,0,11),     \
+    __ZYNQ_PIN_DESC(12,0,12),     \
+    __ZYNQ_PIN_DESC(13,0,13),     \
+    __ZYNQ_PIN_DESC(14,0,14),     \
+    __ZYNQ_PIN_DESC(15,0,15),     \
+    __ZYNQ_PIN_DESC(16,0,16),     \
+    __ZYNQ_PIN_DESC(17,0,17),     \
+    __ZYNQ_PIN_DESC(18,0,18),     \
+    __ZYNQ_PIN_DESC(19,0,19),     \
+    __ZYNQ_PIN_DESC(20,0,20),     \
+    __ZYNQ_PIN_DESC(21,0,21),     \
+    __ZYNQ_PIN_DESC(22,0,22),     \
+    __ZYNQ_PIN_DESC(23,0,23),     \
+    __ZYNQ_PIN_DESC(24,0,24),     \
+    __ZYNQ_PIN_DESC(25,0,25),     \
+    __ZYNQ_PIN_DESC(26,0,26),     \
+    __ZYNQ_PIN_DESC(27,0,27),     \
+    __ZYNQ_PIN_DESC(28,0,28),     \
+    __ZYNQ_PIN_DESC(29,0,29),     \
+    __ZYNQ_PIN_DESC(30,0,30),     \
+    __ZYNQ_PIN_DESC(31,0,31),     \
+    __ZYNQ_PIN_DESC(32,1,32),     \
+    __ZYNQ_PIN_DESC(33,1,33),     \
+    __ZYNQ_PIN_DESC(34,1,34),     \
+    __ZYNQ_PIN_DESC(35,1,35),     \
+    __ZYNQ_PIN_DESC(36,1,36),     \
+    __ZYNQ_PIN_DESC(37,1,37),     \
+    __ZYNQ_PIN_DESC(38,1,38),     \
+    __ZYNQ_PIN_DESC(39,1,39),     \
+    __ZYNQ_PIN_DESC(40,1,40),     \
+    __ZYNQ_PIN_DESC(41,1,41),     \
+    __ZYNQ_PIN_DESC(42,1,42),     \
+    __ZYNQ_PIN_DESC(43,1,43),     \
+    __ZYNQ_PIN_DESC(44,1,44),     \
+    __ZYNQ_PIN_DESC(45,1,45),     \
+    __ZYNQ_PIN_DESC(46,1,46),     \
+    __ZYNQ_PIN_DESC(47,1,47),     \
+    __ZYNQ_PIN_DESC(48,1,48),     \
+    __ZYNQ_PIN_DESC(49,1,49),     \
+    __ZYNQ_PIN_DESC(50,1,50),     \
+    __ZYNQ_PIN_DESC(51,1,51),     \
+    __ZYNQ_PIN_DESC(52,1,52),     \
+    __ZYNQ_PIN_DESC(53,1,53),     \
+                                    \
+    __ZYNQ_PIN_EMIO(54,2,0),     \
+    __ZYNQ_PIN_EMIO(55,2,1),     \
+    __ZYNQ_PIN_EMIO(56,2,2),     \
+    __ZYNQ_PIN_EMIO(57,2,3),     \
+    __ZYNQ_PIN_EMIO(58,2,4),     \
+    __ZYNQ_PIN_EMIO(59,2,5),     \
+    __ZYNQ_PIN_EMIO(60,2,6),     \
+    __ZYNQ_PIN_EMIO(61,2,7),     \
+    __ZYNQ_PIN_EMIO(62,2,8),     \
+    __ZYNQ_PIN_EMIO(63,2,9),     \
+    __ZYNQ_PIN_EMIO(64,2,10),     \
+    __ZYNQ_PIN_EMIO(65,2,11),     \
+    __ZYNQ_PIN_EMIO(66,2,12),     \
+    __ZYNQ_PIN_EMIO(67,2,13),     \
+    __ZYNQ_PIN_EMIO(68,2,14),     \
+    __ZYNQ_PIN_EMIO(69,2,15),     \
 }                               \
 
