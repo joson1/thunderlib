@@ -8,8 +8,17 @@
  */
 #include "kdefs.h"
 #include <kernel/thread.h>
+#include <thunder/init.h>
 
-#define __USE_OS__
 
+#define KERNEL_INIT(fn)		__define_initcall("1", fn, 0)
 
+thread_t* thread_create(
+                    const char* name,
+                    void    (*entry)(void* par),
+                    void    *par,
+                    void    (*exit)(void),
+                    uint32_t stack_size,
+                    uint32_t priority
+                    );
 

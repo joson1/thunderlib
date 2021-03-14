@@ -58,6 +58,7 @@ typedef struct
     void*   sp;        /* 线程栈指针 */
     void*   entry;     /* 线程入口地址 */
     void*   parameter; /* 线程形参 */
+    void*   exit;     /* 线程出口地址 */
     void*   stack_addr;/* 线程栈起始地址 */
     char    name[configMAX_TASK_NAME_LEN];
     uint8_t status;
@@ -77,9 +78,11 @@ k_err_t thread_init(thread_t *thread,
 						const char* name,
                         void (*entry)(void *parameter),
                         void             *parameter,
+                        void (*exit)(void),
                         void             *stack_start,
                         uint32_t       stack_size,
 						uint32_t 		priority);
+
 k_err_t thread_resume(thread_t* thread);
 												
 k_err_t thread_startup(thread_t* thread);
@@ -93,10 +96,10 @@ void system_scheduler_start(void);
 
 void schedule(void);
 
-uint8_t *cpu_hw_stack_init(void         *tentry,
+uint8_t *cpu_hw_stack_init(  void       *tentry,
                              void       *parameter,
-                             uint8_t    *stack_addr);
-														 
+                             void       *exit,
+                             uint8_t *stack_addr);				 
 
 
 void cpu_hw_context_switch(uint32_t from, uint32_t to);

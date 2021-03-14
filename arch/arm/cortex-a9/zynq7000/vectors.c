@@ -174,39 +174,39 @@ extern void cpu_interrupt_enable(uint32_t level);
 void SWInterrupt(void)
 {
 	// asm("msr cpsr_c,0x13|0x80 ");
-	uint32_t level = cpu_interrupt_disable();
+	// uint32_t level = cpu_interrupt_disable();
 	// Xil_ExceptionDisable();
 	// asm("msr cpsr_c 0x10 ");
 	// XExc_VectorTable[XIL_EXCEPTION_ID_SWI_INT].Handler(XExc_VectorTable[
 	// 				XIL_EXCEPTION_ID_SWI_INT].Data);
 	// printf("SWI\r\n");
-	if (cpu_thread_switch_interrupt_flag)
-	{
-		cpu_thread_switch_interrupt_flag = 0;
-		if (cpu_interrupt_from_thread)
-		{
-			asm("LDR     r0, =cpu_interrupt_from_thread");   //加载rt_thread_switch_interrupt_flag的地址到r0
+	// if (cpu_thread_switch_interrupt_flag)
+	// {
+	// 	cpu_thread_switch_interrupt_flag = 0;
+	// 	if (cpu_interrupt_from_thread)
+	// 	{
+	// 		asm("LDR     r0, =cpu_interrupt_from_thread");   //加载rt_thread_switch_interrupt_flag的地址到r0
 
-			asm("MOV     r1, sp");          //加载rt_thread_switch_interrupt_flag的值到r1
-			asm("STMFD   r1!, {r4 - r11} "); //将CPU寄存器r4~r11的值存储到r1指向的地址(每操作一次地址将递减一次)
-			asm("LDR     r0, [r0]");			//加载r0指向值到r0，即r0=rt_interrupt_from_thread
-			asm("STR     r1, [r0]");			//将r1的值存储到r0，即更新线程栈sp
+	// 		asm("MOV     r1, sp");          //加载rt_thread_switch_interrupt_flag的值到r1
+	// 		asm("STMFD   r1!, {r4 - r11} "); //将CPU寄存器r4~r11的值存储到r1指向的地址(每操作一次地址将递减一次)
+	// 		asm("LDR     r0, [r0]");			//加载r0指向值到r0，即r0=rt_interrupt_from_thread
+	// 		asm("STR     r1, [r0]");			//将r1的值存储到r0，即更新线程栈sp
 
-		}
-		// switch_to_thread
-		asm("LDR     r1, =cpu_interrupt_to_thread");          //获取线程栈指针到r1
-		//rt_interrupt_to_thread是一个全局变量，里面存的是线程栈指针SP的指针
-		asm("LDR     r1, [r1]");          //加载rt_interrupt_to_thread的值到r1，即sp指针的指针
-		asm("LDR     r1, [r1]");          //加载rt_interrupt_to_thread的值到r1，即sp
-		asm("LDMFD   r1!, {r4 - r11}");   //将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
-		asm("MOV     sp, r1");          //将线程栈指针更新到PSP
-
-			
+	// 	}
+	// 	// switch_to_thread
+	// 	asm("LDR     r1, =cpu_interrupt_to_thread");          //获取线程栈指针到r1
+	// 	//rt_interrupt_to_thread是一个全局变量，里面存的是线程栈指针SP的指针
+	// 	asm("LDR     r1, [r1]");          //加载rt_interrupt_to_thread的值到r1，即sp指针的指针
+	// 	asm("LDR     r1, [r1]");          //加载rt_interrupt_to_thread的值到r1，即sp
+	// 	asm("LDMFD   r1!, {r4 - r11}");   //将线程栈指针r1(操作之前先递减)指向的内容加载到CPU寄存器r4~r11
+	// 	asm("MOV     sp, r1");          //将线程栈指针更新到PSP
 
 			
 
-	}
-	cpu_interrupt_enable(level);
+			
+
+	// }
+	// cpu_interrupt_enable(level);
 	// asm("msr cpsr_c 0x13 ");
 	// Xil_ExceptionEnable();
 	// asm("msr cpsr_c,0x10 ");

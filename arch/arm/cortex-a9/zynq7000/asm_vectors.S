@@ -257,6 +257,7 @@ Undefined:					/* Undefined handler */
 SVCHandler:					/* SWI handler */
 
 	mov		lr,r0
+	bx lr
  	@ stmdb	sp!,{lr}
  	stmdb	sp!,{r0-r12,lr}
 	ldmfd	sp!,{r0-r12,pc}

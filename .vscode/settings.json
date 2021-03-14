@@ -36,6 +36,10 @@
         "ad9361_api.h": "c",
         "malloc.h": "c",
         "platform.h": "c",
-        "init.h": "c"
+        "init.h": "c",
+        "kernel.h": "c",
+        "dma.h": "c",
+        "xlist.h": "c",
+        "stdint.h": "c"
     }
 }

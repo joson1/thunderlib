@@ -113,6 +113,7 @@ void thread_idle_init(void)
 	thread_init( 	&thread_idle,
 					(char*)"IDLE",                 /* 线程控制块 */
 	                thread_idle_entry,               /* 线程入口地址 */
+					NULL,
 	                NULL,                          /* 线程形参 */
 	                &idle_thread_stack[0],        /* 线程栈起始地址 */
 	                sizeof(idle_thread_stack),

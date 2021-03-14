@@ -11,7 +11,7 @@ LIBDIR = -L$(TOPDIR)/arch/$(ARCH)/$(VENDOR)/$(PART_NO)
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 
 
-LIBS = -lc -lm -lnosys
+LIBS = -lc -lm 
 # CPU = cortex-a9
 FPU = -mfpu=vfpv3
 FLOAT-ABI = -mfloat-abi=hard
@@ -25,7 +25,7 @@ C_INCLUDES +=
 CFLAGS+= $(MCU) $(C_DEFS) $(OPT)
 
 
-LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/Xilinx.spec -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map
+LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/Xilinx.spec  -specs=nosys.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld

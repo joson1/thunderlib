@@ -96,6 +96,7 @@ void task_ed()
 
 uint8_t *cpu_hw_stack_init(  void       *tentry,
                              void       *parameter,
+                             void       *exit,
                              uint8_t *stack_addr)
 {
 	
@@ -105,7 +106,7 @@ uint8_t *cpu_hw_stack_init(  void       *tentry,
     stack_addr  = (uint8_t *)ALIGN_DOWN((uint32_t)stack_addr, 8);
     stk      = (uint32_t *)stack_addr;
     *(--stk) = (uint32_t)tentry;         /* entry point */
-    *(--stk) = (uint32_t)task_ed;          /* lr */
+    *(--stk) = ((exit)?exit:(uint32_t)task_ed);          /* lr */
     *(--stk) = 0xdeadbeef;                  /* r12 */
     *(--stk) = 0xdeadbeef;                  /* r11 */
     *(--stk) = 0xdeadbeef;                  /* r10 */

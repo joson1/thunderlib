@@ -21,19 +21,21 @@ k_err_t thread_init(thread_t *thread,
 						const char* name,
                         void (*entry)(void *parameter),
                         void             *parameter,
-                        void             *stack_start,
+                        void (*exit)(void),
+                        void*			stack_start,
                         uint32_t       stack_size,
 						uint32_t 		priority)
 {
 
     thread->entry = (void*)entry;
 	thread->parameter = parameter;
-
+	thread->exit = exit;
 	thread->stack_addr = stack_start;
 	thread->stack_size = stack_size;
 	/* 初始化线程栈，并返回线程栈指针 */
 	thread->sp = (void *)cpu_hw_stack_init( thread->entry, 
 		                                   thread->parameter,
+										   thread->exit = exit,
 							               (uint8_t *)((char *)thread->stack_addr + thread->stack_size - 4) );
 	thread->ticks_to_delay = 0;
 	thread->number_mask = 0;

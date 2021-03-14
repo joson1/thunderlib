@@ -139,7 +139,7 @@ _start:
 
 	/* Let her rip */
 	bl	main
-
+	bl  kernel_zynq_init
    /* Cleanup global constructors */
    bl __libc_fini_array
 
