@@ -30,16 +30,8 @@ uint32_t cpu_interrupt_to_thread = 0;
 uint32_t cpu_thread_switch_interrupt_flag = 0;
 #define SVCMODE     0x13
 
-void task_ed()
-{
 
-
-	while (1)
-	{
-		/* code */
-	}
-	
-}
+extern void task_ed();
 
 /*
 *************************************************************************
@@ -106,7 +98,7 @@ uint8_t *cpu_hw_stack_init(  void       *tentry,
     stack_addr  = (uint8_t *)ALIGN_DOWN((uint32_t)stack_addr, 8);
     stk      = (uint32_t *)stack_addr;
     *(--stk) = (uint32_t)tentry;         /* entry point */
-    *(--stk) = ((exit)?exit:(uint32_t)task_ed);          /* lr */
+    *(--stk) = (uint32_t)task_ed;          /* lr */
     *(--stk) = 0xdeadbeef;                  /* r12 */
     *(--stk) = 0xdeadbeef;                  /* r11 */
     *(--stk) = 0xdeadbeef;                  /* r10 */

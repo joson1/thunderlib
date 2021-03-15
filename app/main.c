@@ -68,19 +68,29 @@ void flag2_thread_entry( void *p_arg )
 		// schedule();
 	}
 }
+thread_t* pthread3;
 
-void flag2_1_thread_entry( void *p_arg )
+void flag3_thread_entry( void *p_arg )
 {
 	int cc =3;
 	float af = 30.0;
-	while(1){
+	// while(1){
 		cc++;
 		af+=0.05;
 		MOVETO(3,0);
 		printf(GREEN"thread3:%d\taf:%.2f\r\n",cc,af);
-		delay(200);
+		// delay(200);
 		sys_delay(20);
-	}
+	// }
+}
+
+void flag3_thread_exit(void* p)
+{
+	thread_t* pthread = (thread_t*)p;
+	free(pthread->stack_addr);
+	free(pthread);
+	printf("flag3_thread_exit OK\r\nstack freed!\r\n");
+
 }
 
 
@@ -98,7 +108,7 @@ int main()
 		1
 	);
 
-	thread_t* pthread2 = thread_create(
+	thread_t* pthread23 = thread_create(
 		"thread2",
 		flag2_thread_entry,
 		NULL,
@@ -106,6 +116,13 @@ int main()
 		10240,
 		1
 	);
-
+	 pthread3 = thread_create(
+		"thread3",
+		flag3_thread_entry,
+		NULL,
+		flag3_thread_exit,
+		1024,
+		3
+	);
 	
 }

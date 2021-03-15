@@ -56,9 +56,9 @@ struct stack_frame
 typedef struct 
 {
     void*   sp;        /* 线程栈指针 */
-    void*   entry;     /* 线程入口地址 */
+    void    (*entry)(void* parameter);     /* 线程入口地址 */
     void*   parameter; /* 线程形参 */
-    void*   exit;     /* 线程出口地址 */
+    void    (*exit)(void* pthread);     /* 线程出口地址 */
     void*   stack_addr;/* 线程栈起始地址 */
     char    name[configMAX_TASK_NAME_LEN];
     uint8_t status;

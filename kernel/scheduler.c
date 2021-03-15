@@ -362,3 +362,29 @@ void interrupt_exit()
 	// cpu_interrupt_enable(level);
 
 }
+
+
+extern void task_ed();
+void task_ed()
+{
+	register tmp = cpu_interrupt_disable();
+
+    /* 将任务从就绪列表中移除 */
+	xListRemove(&(pCurrentThread->tListItem));
+	/* 将任务在优先级位图中对应的位清除 */
+	if (xlistCURRENT_LIST_LENGTH(&(ThreadReadyTable[pCurrentThread->priority]))==0)
+	{
+		
+		ThreadReadyPriorityGroup &= ~(1<<pCurrentThread->priority);
+	}
+	if(pCurrentThread->exit) 
+	{
+		pCurrentThread->exit((xlistGET_LIST_ITEM_OWNER(&(pCurrentThread->tListItem))));
+	}
+	printf("Thread:%s Exit\r\n",pCurrentThread->name);
+	cpu_interrupt_enable(tmp);
+	
+	while(1);
+	
+}
+
