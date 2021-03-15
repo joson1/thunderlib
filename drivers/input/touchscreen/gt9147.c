@@ -280,17 +280,25 @@ input_handler_t handler_gt91 =
 };
 input_dev_t inputdev_gt91 = 
 {
-
+	.id = 0,
 	.event_type=INPUT_EVT_TOUCHSCREEN,
 	.input_handler=&handler_gt91,
 };
 
-extern void gt91_probe();
-void gt91_probe()
+void gt91_init()
 {
-    input_dev_register(&inputdev_gt91);
-    GT9147_Init();
+	input_dev_attach(&inputdev_gt91,INPUT_EVT_TOUCHSCREEN);
+	GT9147_Init();
 }
+
+DEV_INIT(gt91_init)
+
+// extern void gt91_probe();
+// void gt91_probe()
+// {
+//     // input_dev_register(&inputdev_gt91);
+//     GT9147_Init();
+// }
 
 
 

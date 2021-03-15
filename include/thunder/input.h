@@ -21,15 +21,6 @@ typedef struct __input_handler
 
 
 
-typedef struct __input_drv
-{
-	ListItem_t devItem;
-	xList_t inputDevList[INPUT_NbrOfEVT]; //list heads
-
-}input_drv_t;
-
-extern input_drv_t input_drv;
-
 typedef struct input_dev
 {
 	uint8_t id;
@@ -42,7 +33,8 @@ typedef struct input_dev
 int input_dev_register(input_dev_t* dev);
 input_dev_t* input_dev_open(uint8_t event_type);
 input_handler_t* input_open(uint8_t event_type);
-void input_drv_attach();
+void input_dev_attach(input_dev_t* pdev,uint8_t event_type);
+
 
 
 
