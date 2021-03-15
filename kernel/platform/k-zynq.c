@@ -91,7 +91,6 @@ int kernel_zynq_init()
 {
 	int a = 0;
 	__swi();
-	cmd_init();
 	uint32_t level = cpu_interrupt_disable();
 
     ICDICFR[0] &= ~(TRIGGER_EDGE_RISING<<(0*2));

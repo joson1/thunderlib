@@ -12,7 +12,7 @@
 
 
 
-void ttyio_init();
+void ttyio_init(uint8_t s_id);
 uint32_t kbhit();
 
 

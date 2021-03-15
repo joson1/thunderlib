@@ -50,9 +50,9 @@ int  ArgsTmp[MAX_ARGS] = {0};
 
 unsigned int NbrOfVar = sizeof(VarTab) / sizeof(struct _VarDesc);
 
-void cmd_init()
+void cmd_init(char serialid)
 {
-    ttyio_init();
+    ttyio_init(serialid);
     // timer_setup(CMDTIMER,100,5,&cmd_scan);
 }
 

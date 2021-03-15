@@ -15,7 +15,7 @@
 serial_dev_t* stty;
 #define UART1_IER	*((uint32_t *) 0xE0001008)
 
-void uart1_handler(void* Data)
+void uart_handler(void* Data)
 {
 	char ch;
 
@@ -32,13 +32,13 @@ void uart1_handler(void* Data)
 
 }
 
-void ttyio_init()
+void ttyio_init(uint8_t s_id)
 {
     
-    stty = serial_open(1,115200);
+    stty = serial_open(s_id,115200);
     if(stty)
     {
-	irq_register(stty->interrput.setup(0),&uart1_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
+	irq_register(stty->interrput.setup(0),&uart_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
 
     serial_println(stty,"stty ok");
 
