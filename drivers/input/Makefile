@@ -2,7 +2,7 @@
 objs+=input.o
 
 SUBDIRS =	\
-		touchscreen
+		# touchscreen
 
 all:$(SUBDIRS)
 
