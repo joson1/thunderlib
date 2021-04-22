@@ -19,7 +19,7 @@
 char CMDBUF[512] = { 0 };
 uint32_t buf_ptr = 0;
 // #define CMDBUF USART_RX_BUF
-#define CMDTIMER 5
+#define CMDTIMER 0
 void cmd_scan();
 
 const struct _func_desc func_nametab[] =
@@ -53,7 +53,8 @@ unsigned int NbrOfVar = sizeof(VarTab) / sizeof(struct _VarDesc);
 void cmd_init(char serialid)
 {
     ttyio_init(serialid);
-    // timer_setup(CMDTIMER,100,5,&cmd_scan);
+    timer_setup(CMDTIMER,100,5,&cmd_scan);
+
 }
 
 void cmd_scan()
@@ -88,9 +89,10 @@ void cmd_scan()
                     default:
                         break;
                 }
-                printf(">>");
+                // printf(">>");
                 sta = 1;
                 buf_ptr = 0;
+                buf_ptr --;
             }else
             {
                 sta = 0;

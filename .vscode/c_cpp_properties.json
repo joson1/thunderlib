@@ -37,18 +37,18 @@
             "name": "linux_cross",
             "includePath": [
                 "${workspaceFolder}/**",
-                "~/Documents/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/**"
+                "/home/alan/文档/Documents/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "~/Documents/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc",
+            "compilerPath": "/home/alan/文档/Documents/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
             "cppStandard": "c++11",
             "intelliSenseMode": "gcc-arm"
-        }        
+        }
     ],
     "version": 4
 }

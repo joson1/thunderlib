@@ -22,12 +22,13 @@ void uart_handler(void* Data)
 
 		ch = stty->getchar();
 		stty->putchar(ch);
+		serial_buf_push(stty,ch);
         if (ch=='\r')
         {
             stty->putchar('\n');
+		    serial_buf_push(stty,'\n');
         }
         
-		serial_buf_push(stty,ch);
 		stty->interrput.clear();
 
 }
