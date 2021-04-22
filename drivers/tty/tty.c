@@ -57,6 +57,7 @@ void cmd_init(char serialid)
 
 }
 
+
 void cmd_scan()
 {
 	static int sta = 0;
@@ -76,20 +77,21 @@ void cmd_scan()
                 switch (sta)
                 {
                     case CMD_ERR_FUNC_NOT_FOUND:
-                            printf("ERR: NO SUCH FUNCTION OR COMMAND!\r\n");
+                            printf(L_RED"ERR: NO SUCH FUNCTION OR COMMAND!\r\n");
                         /* code */
                         break;
                     case CMD_ERR_FUNC_PARAM_LACK:
-                        printf("ERR: LACK OF PARAMETERS!\r\n");
+                        printf(L_RED"ERR: LACK OF PARAMETERS!\r\n");
 
                     break;
                     case CMD_ERR_VAR_NOT_FOUND:
-                        printf("ERR: NO SUCH VAR! \r\n");
+                        printf(L_RED"ERR: NO SUCH VAR!\r\n");
                         break;
                     default:
                         break;
                 }
-                // printf(">>");
+				
+                printf(NONE">>\r\n");
                 sta = 1;
                 buf_ptr = 0;
                 buf_ptr --;
