@@ -103,7 +103,7 @@ $(TARGET):$(SUBDIRS)
 	make -C $(BUILD_DIR)
 
 $(SUBDIRS):ECHO
-	@-mkdir bin
+	@-mkdir -p bin
 	@python3 $(TOPDIR)/scripts/Kconfiglib/genconfig.py
 	@make -C $@
 ECHO:
