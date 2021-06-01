@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "pin-zynq.h"
 
+
 void gpio_pin_mode (uint8_t pin_id, uint32_t mode)
 {	volatile uint32_t* oen;
 	volatile uint32_t* con;
@@ -76,3 +77,41 @@ uint8_t gpio_pin_read(uint8_t pin_id)
 
 struct pinDesc  pin_map[] = PINS_ZYNQ7020;   
 
+
+
+void __gpio_irq_lowlevel_enable(struct pinDesc* pPin,int edge)
+{
+    ((GPIO_TypeDef*)pPin->bank)->controller->INT_EN |= pPin->pin;
+    if(edge){
+            ((GPIO_TypeDef*)pPin->bank)->controller->INT_POLARITY |= pPin->pin;
+    }else{
+            ((GPIO_TypeDef*)pPin->bank)->controller->INT_POLARITY &= ~(pPin->pin);
+        
+    }
+    
+    
+}
+
+void __gpio_irq_lowlevel_clear(struct pinDesc* pPin)
+{
+    ((GPIO_TypeDef*)pPin->bank)->controller->INT_STAT |= pPin->pin;
+}
+
+struct pinDesc*  __gpio_irq_lowlevel_match(xList_t* p)
+{
+    ListItem_t* pxIterator;
+    uint32_t i = 0;
+		for( pxIterator = ( p->xListEnd.pxNext );
+		     i<=p->NumberOfItems; 
+			 pxIterator = pxIterator->pxNext )
+		{
+            if ( ((struct pinDesc*)(pxIterator->Owner))->pin | ((GPIO_TypeDef*)(((struct pinDesc*)(pxIterator->Owner))->bank))->controller->INT_STAT )
+            {
+                return (struct pinDesc*)pxIterator->Owner;
+            }
+
+            i++;
+		}
+        return 0;
+    
+}

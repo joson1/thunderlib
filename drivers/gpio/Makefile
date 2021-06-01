@@ -1,5 +1,6 @@
 
 objs+=gpio.o
+objs+=gpio-irq.o
 
 SUBDIRS =	\
 		devices

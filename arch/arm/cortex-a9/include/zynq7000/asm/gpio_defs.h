@@ -4,7 +4,7 @@
  * @LastEditTime: 2020-08-16 21:59:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \ThunderLib\arch\arm\st\include\stm32f429\asm\gpio_defs.h
+ * @FilePath: 
  */
 
 
@@ -17,3 +17,5 @@
 #define HIGH 1
 #define LOW  0
 
+#define GPIO_IRQ_EDGE_FALLING 0
+#define GPIO_IRQ_EDGE_RISING  1

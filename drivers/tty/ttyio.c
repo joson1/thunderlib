@@ -39,7 +39,7 @@ void ttyio_init(uint8_t s_id)
     stty = serial_open(s_id,115200);
     if(stty)
     {
-	irq_register(stty->interrput.setup(0),&uart_handler,TRIGGER_EDGE_HIGHLEVEL,0,0);
+	irq_register(stty->interrput.setup(0),&uart_handler,0,0);
 
     serial_println(stty,"stty ok");
 

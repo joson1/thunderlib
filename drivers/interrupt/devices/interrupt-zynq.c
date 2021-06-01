@@ -255,23 +255,36 @@ DEV_INIT(zynq_interrupt_init);
 
 extern void zynq_interrupt_init();
 
-int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge,void* Message,void (*CallBack))
+// int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge,void* Message,void (*CallBack))
+// {
+//     uint32_t n,m;
+//     n = Irq_id/16;
+//     m = (Irq_id%16);
+//     IRQ_vector_table[Irq_id].Handler = handler;
+//     IRQ_vector_table[Irq_id].data	 = Message;
+//     IRQ_vector_table[Irq_id].CallBack= CallBack;
+//     ICDICFR[n] &= ~(Trigger_edge<<(m*2));
+//     ICDICFR[n] |=  (Trigger_edge<<(m*2));
+
+//     n = Irq_id/32;
+//     m = Irq_id%32;
+//     ICDISER[n] |= (1<<m);
+	
+//     return 0;
+// }
+
+void __irq_enable(int irq_id)
 {
     uint32_t n,m;
-    n = Irq_id/16;
-    m = (Irq_id%16);
-    IRQ_vector_table[Irq_id].Handler = handler;
-    IRQ_vector_table[Irq_id].data	 = Message;
-    IRQ_vector_table[Irq_id].CallBack= CallBack;
-    ICDICFR[n] &= ~(Trigger_edge<<(m*2));
-    ICDICFR[n] |=  (Trigger_edge<<(m*2));
+    n = irq_id/16;
+    m = (irq_id%16);
+    ICDICFR[n] &= ~(1<<(m*2));
+    ICDICFR[n] |=  (1<<(m*2));
 
-    n = Irq_id/32;
-    m = Irq_id%32;
+    n = irq_id/32;
+    m = irq_id%32;
+
     ICDISER[n] |= (1<<m);
-	
-    return 0;
 }
-
 
 

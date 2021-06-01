@@ -157,14 +157,14 @@ void zynq7000_dma_init()
 	if (Status != XST_SUCCESS) {
 		return XST_FAILURE;
 	}
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_0,XDmaPs_DoneISR_0,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_1,XDmaPs_DoneISR_1,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_2,XDmaPs_DoneISR_2,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_3,XDmaPs_DoneISR_3,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_4,XDmaPs_DoneISR_4,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_5,XDmaPs_DoneISR_5,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_6,XDmaPs_DoneISR_6,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
-    irq_register(XPAR_XDMAPS_0_DONE_INTR_7,XDmaPs_DoneISR_7,TRIGGER_EDGE_HIGHLEVEL,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_0,XDmaPs_DoneISR_0,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_1,XDmaPs_DoneISR_1,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_2,XDmaPs_DoneISR_2,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_3,XDmaPs_DoneISR_3,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_4,XDmaPs_DoneISR_4,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_5,XDmaPs_DoneISR_5,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_6,XDmaPs_DoneISR_6,&DmaInstance,0);
+    irq_register(XPAR_XDMAPS_0_DONE_INTR_7,XDmaPs_DoneISR_7,&DmaInstance,0);
     dmac_dev_attach(&dmac0);
     dmac_dev_attach(&dmac1);
     dmac_dev_attach(&dmac2);

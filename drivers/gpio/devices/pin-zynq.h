@@ -1,7 +1,7 @@
 #pragma once
 #include "zynq7000/gpio.h"
 
-#define __ZYNQ_PIN_DESC(id,bankn,mion) {.pin_id=id,.bank=&GPIO_BANK##bankn,.pin=BANK##bankn##_MIO_##mion}
+#define __ZYNQ_PIN_DESC(id,bankn,mion) {.pin_id=id,.bank=&GPIO_BANK##bankn,.pin=BANK##bankn##_MIO_##mion,.IRQn=52}
 #define __ZYNQ_PIN_EMIO(id,bankn,mion) {.pin_id=id,.bank=&GPIO_BANK##bankn,.pin=BANK##bankn##_EMIO_##mion}
 #define PINS_ZYNQ7020           \
 {                               \

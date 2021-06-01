@@ -8,6 +8,7 @@
  */
 #include <asm/interrupt_defs.h>
 #include <stdint.h>
+#include <xlist.h>
 
 typedef void (*InterruptHandler)(void *data);
 typedef struct
@@ -19,6 +20,14 @@ typedef struct
 
 
 
-extern InterruptTableEntry IRQ_vector_table[MAX_IRQn];
+//low level
+void irq_chip_init();
+void __irq_enable(int irq_id);
 
-int irq_register(uint32_t Irq_id,InterruptHandler handler,uint32_t Trigger_edge,void* Message,void (*CallBack));
+
+extern InterruptTableEntry IRQ_vector_table[MAX_IRQn];
+int irq_enable(uint32_t Irq_id);
+int irq_register(uint32_t Irq_id,InterruptHandler handler,void* Message,void (*CallBack));
+int irq_dev_reg(xList_t* pList, ListItem_t* pItem);
+
+

@@ -117,7 +117,7 @@ int kernel_zynq_init()
 
 
 	// InterruptMaptoCpu(0,27);
-    irq_register(IRQ_Zynq7000_PTIMER ,k_handler,TRIGGER_EDGE_RISING,0,0);
+    irq_register(IRQ_Zynq7000_PTIMER ,k_handler,0,0);
 
     /* The processor timer is always clocked at 1/2 CPU frequency(CPU_3x2x). */
     PRIVATE_TIMER->COUNTER = APU_FREQ/2/TICK_PER_SECOND;

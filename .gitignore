@@ -7,3 +7,4 @@ tools
 .config
 .config.old
 config.h
+core

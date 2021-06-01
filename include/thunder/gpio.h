@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 #include <asm/gpio_defs.h>
-
+#include <xlist.h>
 
 
 struct pinDesc
@@ -21,6 +21,7 @@ struct pinDesc
     uint32_t            pin;
     uint32_t            IRQn;
     void (*irq_handler)(void);
+    ListItem_t          irqitem;
 
 };
 
@@ -39,3 +40,8 @@ void gpio_pin_reset(uint8_t pin_id);
 uint8_t gpio_pin_read(uint8_t pin_id);
 void gpio_pin_write(uint8_t pin_id,uint8_t value);
 uint32_t gpio_interrupt_request(uint8_t pin_id, uint8_t edge);
+int gpio_irq_request(int pin_id, int edge, void* handler);
+
+void __gpio_irq_lowlevel_enable(struct pinDesc* pPin,int edge);
+void __gpio_irq_lowlevel_clear(struct pinDesc* pPin);
+struct pinDesc*  __gpio_irq_lowlevel_match(xList_t* p);

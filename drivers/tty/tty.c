@@ -15,11 +15,13 @@
 #include <thunder/timer.h>
 #include <thunder/tty/ttyio.h>
 #include <thunder/tty/sysfuncs.h>
+#include <thunder/irq.h>
+
 
 char CMDBUF[512] = { 0 };
 uint32_t buf_ptr = 0;
 // #define CMDBUF USART_RX_BUF
-#define CMDTIMER 0
+#define CMDTIMER 5
 void cmd_scan();
 
 const struct _func_desc func_nametab[] =
@@ -50,10 +52,18 @@ int  ArgsTmp[MAX_ARGS] = {0};
 
 unsigned int NbrOfVar = sizeof(VarTab) / sizeof(struct _VarDesc);
 
+
+static timer_dev_t* tmr;
+
+
 void cmd_init(char serialid)
 {
     ttyio_init(serialid);
-    timer_setup(CMDTIMER,100,5,&cmd_scan);
+	tmr = timer_open(CMDTIMER);
+	irq_enable(timer_irq_request(tmr,cmd_scan));
+	timer_set_period(tmr,200);
+	timer_start(tmr);
+    // timer_setup(CMDTIMER,100,5,&cmd_scan);
 
 }
 

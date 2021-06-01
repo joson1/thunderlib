@@ -41,3 +41,5 @@ i2c_dev_t* i2c_open(uint8_t id)
 	pdev->open();
 	return pdev;
 }
+
+
