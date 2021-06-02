@@ -1,4 +1,4 @@
-objs += init.o
+objs += systemInit.o
 objs += startup_stm32f429xx.o
 
 

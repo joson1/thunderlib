@@ -103,7 +103,7 @@ void board_init()
     spi_info_register(1,&spi1_conf);
 
 #endif
-    input_drv_attach();
+    // input_drv_attach();
 #if(CONFIG_TIMER_EN)
     stm32f429_timer_init();
 #endif

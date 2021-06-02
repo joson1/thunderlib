@@ -21,29 +21,12 @@
 #define KEY_PS1 (9)
 #define KEY_PS2 (10)
 
-void key1_handler()
-{
-	printf("KEY1\r\n");
-}
-void key2_handler()
-{
-	printf("KEY2\r\n");
-}
-
-void tmr_handler()
-{
-	printf(".\r\n");
-}
-
 timer_dev_t* tmrt;
 int main()
 {
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
 
 	// gpio_irq_request(KEY_PS,GPIO_IRQ_EDGE_RISING,key_handler);
-	irq_enable(gpio_irq_request(KEY_PS1,GPIO_IRQ_EDGE_FALLING,key1_handler));	
-	irq_enable(gpio_irq_request(KEY_PS2,GPIO_IRQ_EDGE_RISING,key2_handler));	
-
 
 	// tmrt = timer_open(1);
 	// timer_set_period(tmrt,500);
