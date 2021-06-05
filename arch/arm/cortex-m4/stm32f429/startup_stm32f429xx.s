@@ -109,6 +109,8 @@ LoopFillZerobss:
   bl __libc_init_array
 /* Call the clock system intitialization function.*/
   bl  SystemInit   
+ 	bl do_initcalls
+
   bl  board_init
 
 /* Call the application's entry point.*/

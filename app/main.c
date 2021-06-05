@@ -37,4 +37,5 @@ int main()
 	// 	/* code */
 	// }
 	
+	    while(1);
 }

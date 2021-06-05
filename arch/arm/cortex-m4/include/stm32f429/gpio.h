@@ -99,14 +99,26 @@
 #define GPIO_OTYPE_PP		0		//推挽输出
 #define GPIO_OTYPE_OD		1		//开漏输出 
 
+#define __STM32MUX(id,MODE,AF,OTYPE,SPEED,PUPD) id,MODE,AF,OTYPE,SPEED,PUPD
 
 
-typedef struct __stm32pin_t 
+typedef struct __stm32pin 
 {
     GPIO_TypeDef* GPIOx;
     u32 PIN;
 
 }stm32pin_t ;
+
+
+typedef struct __stm32pin_mux
+{
+    uint32_t STM32AF;
+    uint32_t GPIO_OTYPE;
+    uint32_t GPIO_SPEED;
+    uint32_t GPIO_PUPD;
+
+}stm32pin_mux_t;
+
 
 #define __STM32PIN(GPIOx,PINx) { GPIO##GPIOx ,GPIO_PIN_##PINx }
 

@@ -44,6 +44,7 @@
         "tty.h": "c",
         "zynq.h": "c",
         "interrupt_defs.h": "c",
-        "serial.h": "c"
+        "serial.h": "c",
+        "pinmux.h": "c"
     }
 }

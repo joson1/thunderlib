@@ -3,6 +3,7 @@
 
 objs+=device.o
 
+SUBDIRS +=pinmux
 SUBDIRS +=bus
 SUBDIRS +=sleep
 SUBDIRS +=interrupt

@@ -16,34 +16,13 @@
 #include <thunder/spi.h>
 #include "stm32f429/spi.h"
 #include "stm32f429/sdram.h"
+#include <thunder/tty/tty.h>
+#include <thunder/pinmux.h>
+#include "mux-stm32f429.h"
 
 extern void stm32f429_serial_init();
 extern void stm32f429_timer_init();
 
-
-Uart_InitDef uart1_conf = 
-{
-    .GPIOx_RX  = GPIOA,
-    .GPIOx_TX  = GPIOA,
-    .PIN_RX    = GPIO_PIN_10,
-    .PIN_TX    = GPIO_PIN_9,
-    .GPIO_AF   = 7,
-    .pclk2     = 90,
-    .rx_int_en = 1,
-    .Priority  = 3,
-};
-Uart_InitDef uart2_conf = 
-{
-    .GPIOx_RX  = GPIOA,
-    .GPIOx_TX  = GPIOA,
-    .PIN_RX    = GPIO_PIN_3,
-    .PIN_TX    = GPIO_PIN_2,
-    .GPIO_AF   = 7,
-    .pclk2     = 45,
-    .rx_int_en = 1,
-    .Priority  = 12,
-
-};
 
 IIC_TypeDef i2c0_conf = 
 {
@@ -79,34 +58,37 @@ extern void stm32f429_spi_init();
 extern int fb_stm32ltdc_init();
 extern void input_drv_attach();
 
+
+uint32_t pin_mux_table[] = THB_MUX_STM32F429;
+
 void board_init()
 {
 
-    SDRAM_Init();
-#if(CONFIG_SERIAL_EN)
-    stm32f429_serial_init();
-    serial_info_register(0,&uart1_conf);
-    serial_info_register(1,&uart2_conf);
-#endif
+//     // SDRAM_Init();
+// #if(CONFIG_SERIAL_EN)
+    pinmux_table_set(sizeof(pin_mux_table),pin_mux_table);
+    // serial_info_register(0,&uart1_conf);
+    // serial_info_register(1,&uart2_conf);
+// #endif
+    cmd_init(0);
+//     // fb_stm32ltdc_init();
 
-    // fb_stm32ltdc_init();
-
-#if(CONFIG_I2C_EN)
-    stm32f429_i2c_init();
-    i2c_info_register(0,&i2c0_conf);
-#endif
+// #if(CONFIG_I2C_EN)
+//     stm32f429_i2c_init();
+//     i2c_info_register(0,&i2c0_conf);
+// #endif
 
 
-#if(CONFIG_SPI_EN)
-    stm32f429_spi_init();
-    spi_info_register(0,&spi0_conf);
-    spi_info_register(1,&spi1_conf);
+// #if(CONFIG_SPI_EN)
+//     stm32f429_spi_init();
+//     spi_info_register(0,&spi0_conf);
+//     spi_info_register(1,&spi1_conf);
 
-#endif
-    // input_drv_attach();
-#if(CONFIG_TIMER_EN)
-    stm32f429_timer_init();
-#endif
+// #endif
+//     // input_drv_attach();
+// #if(CONFIG_TIMER_EN)
+//     stm32f429_timer_init();
+// #endif
 
 }
 
