@@ -1,5 +1,6 @@
 
 objs-$(CONFIG_SERIAL_EN)+=serial.o
+objs-$(CONFIG_SERIAL_EN)+=serial-irq.o
 
 SUBDIRS =	\
 		devices

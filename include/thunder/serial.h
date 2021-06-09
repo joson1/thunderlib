@@ -20,21 +20,40 @@ typedef struct
 
 }serial_intdef;
 
-
-typedef struct __serial_dev
+typedef struct __serial_dev serial_dev_t;
+struct __serial_dev
 {
-	uint8_t id;
-	char* buffer;
+	uint32_t id;
+	char buffer[SERIAL_REC_LEN];
 	uint32_t buffer_length;
 	uint32_t rp;
 	uint32_t wp;
-	void (*serial_open)(uint32_t);//boundRate
-	void (*putchar)(char);//
-	int (*getchar)(void);//
-	void* serial_init_info ; 
-	serial_intdef interrput;
+
+	void* prv_data;
+
+	struct serial_ops
+	{
+		int (*open)(serial_dev_t* pdev,uint32_t bps);//boundRate
+		void (*putchar)(serial_dev_t* pdev,char ch);//
+		int (*getchar)(serial_dev_t* pdev);//
+	}ops;
+	
+	struct serial_irq
+	{
+        uint32_t IRQn;
+        uint32_t is_shared;
+		int (*setup)(serial_dev_t* pdev, int type); 
+        void (*clear)(serial_dev_t* pdev);
+
+    	void (*handler)(serial_dev_t* pdev);
+
+        ListItem_t devItem;
+		
+	}irq;
+	
+
 	ListItem_t devItem;
-}serial_dev_t;
+};
 
 serial_dev_t* serial_open(uint8_t id,uint32_t boundRate);
 int serial_buf_pop(serial_dev_t* dev);
@@ -43,7 +62,10 @@ char serial_sendChar(serial_dev_t* dev, char ch);
 char serial_getChar(serial_dev_t* dev);
 void serial_println(serial_dev_t* dev, char* str);
 
-int serial_dev_attach(serial_dev_t* dev,void* serial_init_info);
+int serial_dev_attach(serial_dev_t* dev);
 
 int serial_info_register(uint8_t id,void* info);
 uint32_t serial_input_length(serial_dev_t* dev);
+
+
+int serial_irq_request(serial_dev_t* pdev,void* handler);

@@ -61,6 +61,9 @@ C_INCLUDES +=  \
 -I$(TOPDIR)/libs/include \
 -I$(TOPDIR) \
 
+
+SZ = $(CROSS_COMPILE)size
+
 OPT = -O0
 CFLAGS+= $(C_INCLUDES)
 CFLAGS+= -g -gdwarf-2
@@ -95,8 +98,7 @@ ALL:$(TARGET)
 	$(OBJCOPY) -O binary -S $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).bin
 	$(OBJDUMP) -D $(BIN_DIR)/$(TARGET).elf > $(BIN_DIR)/$(TARGET).dis
 	@echo  "\033[32mbuild success \033[0m"
-	@ls $(BIN_DIR)/ -l
-
+	@$(SZ) $(BIN_DIR)/$(TARGET).elf -G
 
 
 $(TARGET):$(SUBDIRS)

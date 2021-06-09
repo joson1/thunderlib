@@ -20,16 +20,16 @@ void uart_handler(void* Data)
 	char ch;
 
 
-		ch = stty->getchar();
-		stty->putchar(ch);
+		ch = stty->ops.getchar(stty);
+		stty->ops.putchar(stty,ch);
 		serial_buf_push(stty,ch);
         if (ch=='\r')
         {
-            stty->putchar('\n');
+            stty->ops.putchar(stty,'\n');
 		    serial_buf_push(stty,'\n');
         }
         
-		stty->interrput.clear();
+		stty->irq.clear(stty);
 
 }
 
@@ -39,9 +39,10 @@ void ttyio_init(uint8_t s_id)
     stty = serial_open(s_id,115200);
     if(stty)
     {
-	irq_register(stty->interrput.setup(0),&uart_handler,0,0);
+        // irq_register(stty->interrput.setup(0),&uart_handler,0,0);
+        irq_enable(serial_irq_request(stty,uart_handler));
 
-    serial_println(stty,"stty ok");
+        serial_println(stty,"stty ok");
 
     }
 

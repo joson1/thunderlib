@@ -24,20 +24,16 @@ void (*_serial_sendChar)(char) = 0;
 // static serial_dev_t* serial_dev_table = NULL;
 
 
-int serial_dev_attach(serial_dev_t* dev,void* pinit_info)
+int serial_dev_attach(serial_dev_t* dev)
 {
 
-	dev->serial_init_info = pinit_info;
 	dev_register(dev,DEV_MAJOR_SERIAL,dev->id);
 
 }
 int serial_info_register(uint8_t id,void* info)
 {
-	serial_dev_t*dev=dev_open(DEV_MAJOR_SERIAL,id);
-	dev->serial_init_info = info;
-
+	return -1;
 }
-
 /**
  * @description: 
  * @param serial_dev*
@@ -87,7 +83,8 @@ uint32_t serial_input_length(serial_dev_t* dev)
 serial_dev_t* serial_open(uint8_t id,uint32_t boundRate)
 {
 	serial_dev_t* dev = dev_open(DEV_MAJOR_SERIAL,id);
-	dev->serial_open(boundRate);
+	// dev->serial_open(boundRate);
+	dev->ops.open(dev,boundRate);
 	return dev;
 }
 
@@ -95,7 +92,8 @@ serial_dev_t* serial_open(uint8_t id,uint32_t boundRate)
 
 char serial_sendChar(serial_dev_t* dev, char ch)
 {
-	dev->putchar(ch);
+	// dev->putchar(ch);
+	dev->ops.putchar(dev,ch);
     return ch;
 }
 void serial_println(serial_dev_t* dev, char* str)
@@ -103,14 +101,16 @@ void serial_println(serial_dev_t* dev, char* str)
 
     while (*str)
     {
-        dev->putchar(*str);
+        // dev->putchar(*str);
+		dev->ops.putchar(dev,*str);
+
         str++;
     }
-    dev->putchar('\r');
-    dev->putchar('\n');
+    dev->ops.putchar(dev,'\r');
+    dev->ops.putchar(dev,'\n');
 }
 char serial_getChar(serial_dev_t* dev)
 {
 	
-    return dev->getchar();
+    return dev->ops.getchar(dev);
 }

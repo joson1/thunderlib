@@ -45,6 +45,7 @@
         "zynq.h": "c",
         "interrupt_defs.h": "c",
         "serial.h": "c",
-        "pinmux.h": "c"
+        "pinmux.h": "c",
+        "timer.h": "c"
     }
 }
