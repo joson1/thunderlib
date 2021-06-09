@@ -6,9 +6,6 @@
 #include <thunder/device.h>
 
 
-extern void stm32f429_serial_init();
-
-
 
 serial_dev_t dev_usart1;
 serial_dev_t dev_usart2;
@@ -26,9 +23,6 @@ void USART1_IRQHandler(void)
 		{
 			dev_usart1.irq.handler(&dev_usart1);
 		}
-		
-		// if(uart_handler[0].Handler)
-		// 	uart_handler[0].Handler( uart_handler[0].data  );
 		USART1->SR &= ~(1 << 5);
 	}
 
@@ -53,6 +47,8 @@ void usart_interrupt_clear(serial_dev_t* pdev)
 {
 
 }
+
+
 
 
 
@@ -90,6 +86,8 @@ int usart_open(serial_dev_t* pdev,uint32_t bps)
 
 	USART->CR1 |= 1 << 13; //串口使能
 
+	// uart_init2(90,115200);
+
 }
 
 void usart_putchr(serial_dev_t* pdev,char ch)
@@ -116,7 +114,7 @@ int usart_irq_setup(serial_dev_t* pdev, int type)
 				3,
 				(pdev->irq.IRQn)); //组2，最低优先级
 
-	USART->CR1 |= 1 << 13; //串口使能
+	USART->CR1 |= 1 << 13; //串口使能0
 
 	return pdev->irq.IRQn;
 }
