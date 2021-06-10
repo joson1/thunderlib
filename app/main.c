@@ -33,10 +33,10 @@ int main()
 
 	// gpio_irq_request(KEY_PS,GPIO_IRQ_EDGE_RISING,key_handler);
 
-	tmrt = timer_open(1);
-	timer_set_period(tmrt,500);
-	timer_start(tmrt);
-	irq_enable( timer_irq_request(tmrt,tmr_handler));
+	// tmrt = timer_open(1);
+	// timer_set_period(tmrt,500);
+	// timer_start(tmrt);
+	// irq_enable( timer_irq_request(tmrt,tmr_handler));
 	// while (1)
 	// {
 	// 	/* code */

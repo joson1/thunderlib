@@ -70,7 +70,7 @@ void board_init()
     // serial_info_register(0,&uart1_conf);
     // serial_info_register(1,&uart2_conf);
 // #endif
-    cmd_init(0);
+    cmd_init(0,1);
 //     // fb_stm32ltdc_init();
 
 // #if(CONFIG_I2C_EN)

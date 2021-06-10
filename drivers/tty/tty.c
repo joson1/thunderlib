@@ -21,7 +21,7 @@
 char CMDBUF[512] = { 0 };
 uint32_t buf_ptr = 0;
 // #define CMDBUF USART_RX_BUF
-#define CMDTIMER 0
+#define CMDTIMER 1
 void cmd_scan();
 
 const struct _func_desc func_nametab[] =
@@ -56,14 +56,13 @@ unsigned int NbrOfVar = sizeof(VarTab) / sizeof(struct _VarDesc);
 static timer_dev_t* tmr;
 
 
-void cmd_init(char serialid)
+void cmd_init(char serialid,char tmr_id)
 {
     ttyio_init(serialid);
-	// tmr = timer_open(CMDTIMER);
-	// irq_enable(timer_irq_request(tmr,cmd_scan));
-	// timer_set_period(tmr,200);
-	// timer_start(tmr);
-    // timer_setup(CMDTIMER,100,5,&cmd_scan);
+	tmr = timer_open(tmr_id);
+	irq_enable(timer_irq_request(tmr,cmd_scan));
+	timer_set_period(tmr,200);
+	timer_start(tmr);
 
 }
 

@@ -101,5 +101,5 @@ extern const struct _VarDesc VarTab[];
 extern char CMDBUF[512];
 
 int cmd_clear();
-void cmd_init(char serialid);
+void cmd_init(char serialid,char tmr_id);
 int cmd_exc();
