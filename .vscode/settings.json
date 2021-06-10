@@ -46,6 +46,7 @@
         "interrupt_defs.h": "c",
         "serial.h": "c",
         "pinmux.h": "c",
-        "timer.h": "c"
+        "timer.h": "c",
+        "tim.h": "c"
     }
 }

@@ -27,6 +27,7 @@ struct __tmr_dev
 
     struct timer_irq{
         uint32_t IRQn;
+        uint32_t priority;
         uint32_t is_shared;
         void (*clear_irq)(timer_dev_t* ptmr);
         ListItem_t devItem;

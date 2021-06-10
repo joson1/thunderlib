@@ -16,61 +16,7 @@ void (*TIM12_arr_overflow_Irq)() = NULL;
 void (*TIM13_arr_overflow_Irq)() = NULL;
 void (*TIM14_arr_overflow_Irq)() = NULL;
 
-void TIM1_UP_TIM10_IRQHandler()
-{
-    if(TIM1_arr_overflow_Irq!=0)
-    if((TIM1->SR)&0X0001)
-    {
-		TIM1->SR &= 0XFFFE;
-        TIM1_arr_overflow_Irq();	
-    }
-    
-    if(TIM10_arr_overflow_Irq!=0)
-    if((TIM10->SR)&0X0001)
-    {
-        TIM10_arr_overflow_Irq();
-        TIM10->SR &= 0XFFFE;
-    }
-}
 
-void TIM2_IRQHandler()
-{
-    if((TIM2->SR)&0X0001)
-    {
-        TIM2_arr_overflow_Irq();
-        TIM2->SR &= 0XFFFE;
-    }
-}
-
-void TIM3_IRQHandler()
-{
-    if(TIM3->SR&0x0001)
-    {
-        TIM3_arr_overflow_Irq();
-    }
-
-    TIM3->SR &= 0XFFFE;
-}
-
-void TIM4_IRQHandler()
-{
-    if(TIM4->SR & 0x0001)
-    {
-        TIM4_arr_overflow_Irq();
-    }
-    
-    TIM4->SR &= 0XFFFE;    
-}
-
-void TIM5_IRQHandler()
-{
-    if(TIM5->SR&0x0001)
-    {
-        TIM5_arr_overflow_Irq();
-    }
-    
-    TIM5->SR &= 0XFFFE;        
-}
 void TIM6_DAC_IRQHandler()
 {
     if(TIM6->SR & 0x0001)

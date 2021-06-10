@@ -119,6 +119,5 @@ void timerInit(Timer_InitDef *Timer)
     }
 
     MY_NVIC_Init(Timer->Priority,n);	
-    Timer->TIMx->CR1  |= 0x01;    //enable
 	
 }

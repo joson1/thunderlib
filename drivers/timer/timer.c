@@ -47,11 +47,20 @@ timer_dev_t* timer_open(uint8_t id)
 
 int timer_irq_request(timer_dev_t* tmr,void* handler)
 {
-    IRQ_vector_table[tmr->irq.IRQn].Handler = tmr_irq_handler;
-    IRQ_vector_table[tmr->irq.IRQn].data    =tmr;
-    xlistSET_LIST_ITEM_OWNER(&(tmr->irq.devItem),tmr); 
-    irq_dev_reg(&tmr_irq_list,&(tmr->irq.devItem));
-    tmr->handler = handler;
+    if (sizeof(IRQ_vector_table) == 0)
+    {
+        tmr->handler =handler;
+        
+    }else
+    {  /////////////////to do: add to irq-list only when irq is shared////////////
+        IRQ_vector_table[tmr->irq.IRQn].Handler = tmr_irq_handler;
+        IRQ_vector_table[tmr->irq.IRQn].data    =tmr;
+        xlistSET_LIST_ITEM_OWNER(&(tmr->irq.devItem),tmr); 
+        irq_dev_reg(&tmr_irq_list,&(tmr->irq.devItem));
+        tmr->handler = handler;
+    }
+    
+
     // __tmr_irq_lowlevel_enable(tmr); 
     return tmr->irq.IRQn;
 }
