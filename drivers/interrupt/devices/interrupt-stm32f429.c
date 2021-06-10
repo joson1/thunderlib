@@ -41,6 +41,6 @@ extern InterruptTableEntry uart_handler[3];
 
 void __irq_enable(int irq_id)
 {
-    //NVIC->ISER[irq_id/32]|=1<<irq_id%32;//使能中断位(要清除的话,设置ICER对应位为1即可)
+    NVIC->ISER[irq_id/32]|=1<<irq_id%32;//使能中断位(要清除的话,设置ICER对应位为1即可)
 }
 
