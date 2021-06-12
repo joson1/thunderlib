@@ -106,7 +106,7 @@ $(TARGET):$(SUBDIRS)
 
 $(SUBDIRS):ECHO
 	@-mkdir -p bin
-	@python3 $(TOPDIR)/scripts/Kconfiglib/genconfig.py
+	@python $(TOPDIR)/scripts/Kconfiglib/genconfig.py
 	@make -C $@
 ECHO:
 
@@ -129,14 +129,14 @@ distclean: clean
 
 
 genconfig:
-	@python3 $(TOPDIR)/scripts/Kconfiglib/genconfig.py
+	@python $(TOPDIR)/scripts/Kconfiglib/genconfig.py
 
 menuconfig-win:
-	@cmd.exe /c start python3 $(TOPDIR)/scripts/Kconfiglib/menuconfig.py $(KCONFIG_FILE_PATH)
+	@cmd.exe /c start python $(TOPDIR)/scripts/Kconfiglib/menuconfig.py $(KCONFIG_FILE_PATH)
 	
 
 menuconfig:
-	@python3 $(TOPDIR)/scripts/Kconfiglib/menuconfig.py $(KCONFIG_FILE_PATH)
+	@python $(TOPDIR)/scripts/Kconfiglib/menuconfig.py $(KCONFIG_FILE_PATH)
 
 # %_defconfig:$(TOPDIR)/scripts/kconfig-frontends/frontends/mconf/kconfig-mconf
 # 	cp $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$@ ./.config
