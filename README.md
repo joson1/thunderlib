@@ -19,6 +19,7 @@
 
 # 编译指南
 ## 依赖
+- gnu make
 - python3
 - pip3
 - windows-curses
