@@ -1,4 +1,4 @@
-objs += main.o
+objs += main_kernel_test.o
 
 all:$(objs)
 

@@ -94,18 +94,18 @@ int main()
 		flag1_thread_entry,
 		NULL,
 		NULL,
-		10240,
+		1024,
 		1
 	);
 
-	thread_t* pthread23 = thread_create(
-		"thread2",
-		flag2_thread_entry,
-		NULL,
-		NULL,
-		10240,
-		1
-	);
+	// thread_t* pthread23 = thread_create(
+	// 	"thread2",
+	// 	flag2_thread_entry,
+	// 	NULL,
+	// 	NULL,
+	// 	1024,
+	// 	1
+	// );
 	 thread_t* pthread3 = thread_create(
 		"thread3",
 		flag3_thread_entry,

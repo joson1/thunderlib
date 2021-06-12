@@ -1,5 +1,7 @@
 #define CONFIG_CROSS_COMPILE "arm-none-eabi-"
 #define CONFIG_ThunderBoards32 1
+#define CONFIG_KERNEL_EN 1
+#define CONFIG_KERNEL_STM32F429 1
 #define CONFIG_SERIAL_EN 1
 #define CONFIG_SERIAL_STM32F429 1
 #define CONFIG_I2C_EN 1

@@ -19,7 +19,7 @@ LIBS = -lc -lm -lnosys
 # CPU = -mcpu=cortex-m4
 FPU = -mfpu=fpv4-sp-d16
 FLOAT-ABI = -mfloat-abi=hard 
-MCU = -mcpu=$(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+MCU = -mcpu=$(CPU) -Wa,-mimplicit-it=thumb $(FPU) $(FLOAT-ABI)
 
 # C defines
 C_DEFS =  \

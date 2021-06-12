@@ -115,7 +115,8 @@ LoopFillZerobss:
 
 /* Call the application's entry point.*/
   bl  main
-  bx  lr    
+  bl  kernel_stm32f429_init
+  @ bx  lr    
 .size  Reset_Handler, .-Reset_Handler
 
 /**
