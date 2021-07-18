@@ -21,4 +21,5 @@ menu "video"
 source "drivers/video/Kconfig"
 endmenu
 
+source "drivers/iio/Kconfig"
 endmenu

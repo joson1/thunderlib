@@ -17,6 +17,7 @@ SUBDIRS-$(CONFIG_FB_EN) +=video
 SUBDIRS-y +=input
 SUBDIRS-y +=mtd
 SUBDIRS-y +=sensors
+SUBDIRS-$(CONFIG_IIO_EN) +=iio
 
 
 

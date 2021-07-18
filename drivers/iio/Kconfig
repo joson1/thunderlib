@@ -1,0 +1,15 @@
+menu "iio"
+
+config IIO_EN
+    bool "Enable iio devices"
+    default n
+    help
+        ADI drivers
+
+
+config IIO_AD9361
+    bool "ad936x"
+    depends on IIO_EN
+    default n
+
+endmenu

@@ -19,6 +19,8 @@
 #define CONFIG_PWM_EN 1
 #define CONFIG_TTY_EN 1
 #define CONFIG_FB_EN 1
+#define CONFIG_IIO_EN 1
+#define CONFIG_IIO_AD9361 1
 #define CONFIG_GUI_EN 1
 #define CONFIG_GUI_LVGL 1
 #define CONFIG_LV_CONF_SKIP 1
