@@ -1,11 +1,20 @@
 menu "GUI"
+depends on FB_EN
 
-config GUI_EN
-    bool "Enable GUI"
-    depends on FB_EN
-    default n
+
+config GUI_LVGL
+    bool "use lvgl"
     help
-        This option 
-# source "drivers/timer/devices/Kconfig"
+        use lvgl as gui
+
+if GUI_LVGL
+source "packages/gui/lvgl/Kconfig"
+endif
+
+config GUI_GUILITE
+    bool "use guilite"
+    help
+        use guilite as gui
+
 
 endmenu

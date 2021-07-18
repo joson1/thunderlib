@@ -16,4 +16,5 @@ endmenu
 source "$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/boards/Kconfig"
 source "kernel/Kconfig"
 source "drivers/Kconfig"
-source "packages/gui/lvgl/Kconfig"
+# source "packages/gui/lvgl/Kconfig"
+source "packages/Kconfig"

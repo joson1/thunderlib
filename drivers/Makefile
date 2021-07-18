@@ -3,32 +3,32 @@
 
 objs+=device.o
 
-SUBDIRS +=pinmux
-SUBDIRS +=bus
-SUBDIRS +=sleep
-SUBDIRS +=interrupt
-SUBDIRS +=dma
+SUBDIRS-y +=pinmux
+SUBDIRS-y +=bus
+SUBDIRS-y +=sleep
+SUBDIRS-$(CONFIG_INTERRUPT_EN) +=interrupt
+SUBDIRS-$(CONFIG_DMA_EN) +=dma
 
-SUBDIRS +=gpio
-SUBDIRS +=pwm
-SUBDIRS +=timer
-SUBDIRS +=tty
-SUBDIRS +=video
-SUBDIRS +=input
-SUBDIRS +=mtd
-SUBDIRS +=sensors
+SUBDIRS-$(CONFIG_GPIO_EN) +=gpio
+SUBDIRS-$(CONFIG_PWM_EN) +=pwm
+SUBDIRS-$(CONFIG_TIMER_EN) +=timer
+SUBDIRS-$(CONFIG_TTY_EN) +=tty
+SUBDIRS-$(CONFIG_FB_EN) +=video
+SUBDIRS-y +=input
+SUBDIRS-y +=mtd
+SUBDIRS-y +=sensors
 
 
 
 all:$(objs)
 
-$(objs):$(SUBDIRS)
+$(objs):$(SUBDIRS-y)
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c -o $(BUILD_DIR)/$@ $< -MD -MF $(BUILD_DIR)/$@.d
 
 
-$(SUBDIRS):ECHO
+$(SUBDIRS-y):ECHO
 	make -C $@
 
 ECHO:

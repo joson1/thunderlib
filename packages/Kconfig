@@ -1,0 +1,15 @@
+menu "packages"
+
+
+config GUI_EN
+    bool "enable gui"
+    help
+        depends on Framebuffer
+
+
+if GUI_EN
+    source "packages/gui/Kconfig"
+endif
+
+
+endmenu
