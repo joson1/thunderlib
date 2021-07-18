@@ -44,7 +44,7 @@
 #define BLINK                   "\e[5m"         //闪烁，白色，正常大小
 #define REVERSE            "\e[7m"              //反转，即字体背景为白色，字体为黑色
 #define HIDE                     "\e[8m"        //隐藏
-#define CLEAR                  "\e[2J"          //清除
+// #define CLEAR                  "\e[2J"          //清除
 #define CLRLINE               "\r\e[K"          //清除行
 
 #define MOVETO(x,y) printf("\033[%d;%dH", (x), (y))

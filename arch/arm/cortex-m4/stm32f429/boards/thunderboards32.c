@@ -34,7 +34,7 @@ IIC_TypeDef i2c0_conf =
 };
 
 
-extern stm32f429_i2c_init();
+// extern stm32f429_i2c_init();
 
 SPI_InitDef spi0_conf = 
 {   

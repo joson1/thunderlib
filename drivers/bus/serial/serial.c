@@ -28,6 +28,8 @@ int serial_dev_attach(serial_dev_t* dev)
 {
 
 	dev_register(dev,DEV_MAJOR_SERIAL,dev->id);
+	return 0;
+
 
 }
 int serial_info_register(uint8_t id,void* info)

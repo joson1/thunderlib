@@ -19,9 +19,9 @@ const uint32_t nBrOfPar = 6;
 int pin_mux_set(uint32_t pin_id,uint32_t* par)
 {
     struct pinDesc* pPin=&pin_map[pin_id];
-    GPIO_Init(pPin->bank,pPin->pin,par[PAR_MODE],par[PAR_OTYPE],par[PAR_SPEED],par[PAR_PUPD]);
+    GPIO_Init((GPIO_TypeDef*)(pPin->bank),pPin->pin,par[PAR_MODE],par[PAR_OTYPE],par[PAR_SPEED],par[PAR_PUPD]);
     if(par[PAR_MODE]==GPIO_MODE_AF)
-        GPIO_AF_Set(pPin->bank,pPin->pin,par[PAR_AF]);
+        GPIO_AF_Set((GPIO_TypeDef*)(pPin->bank),pPin->pin,par[PAR_AF]);
 
 }
 

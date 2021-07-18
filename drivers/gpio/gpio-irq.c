@@ -9,7 +9,7 @@ xList_t gpio_irq_list;
 void gpio_irq_handler()
 {
     struct pinDesc* pPin=0;
-    int pin_id;
+    // int pin_id;
     pPin = __gpio_irq_lowlevel_match(&gpio_irq_list);
     
     if(pPin){

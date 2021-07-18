@@ -17,6 +17,7 @@ int i2c_dev_attach(i2c_dev_t* dev)
 {
 	
 	dev_register(dev,DEV_MAJOR_I2C,dev->id);
+	return 0;
  
 }
 
@@ -24,6 +25,7 @@ int i2c_info_register(uint8_t id,void* info)
 {
 	i2c_dev_t*dev=dev_open(DEV_MAJOR_I2C,id);
 	dev->i2c_init_info = info;
+	return 0;
 
 }
 

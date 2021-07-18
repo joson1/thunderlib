@@ -50,7 +50,7 @@ int i2c0_read(uint32_t slave_addr,uint8_t* buf,uint32_t length)
 	// }
     // IIC_write((IIC_TypeDef*)(i2c0.i2c_init_info),reg);	//写寄存器地址
     // IIC_wait_ack((IIC_TypeDef*)(i2c0.i2c_init_info));		//等待应答
-	char* p= buf;
+	char* p= (char*)buf;
     IIC_start((IIC_TypeDef*)(i2c0.i2c_init_info));
 	IIC_write((IIC_TypeDef*)(i2c0.i2c_init_info),(slave_addr<<1)|1);//发送器件地址+读命令	
     IIC_wait_ack((IIC_TypeDef*)(i2c0.i2c_init_info));		//等待应答 

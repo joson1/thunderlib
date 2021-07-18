@@ -26,7 +26,7 @@ void DMA_Config(DMA_InitDef* DMA_str)
 {
 	DMA_TypeDef *DMAx;
 	u8 streamx;
-	int x;
+
 	if ((u32)(DMA_str->DMA_Streamx) > (u32)DMA2) //得到当前stream是属于DMA2还是DMA1
 	{
 		DMAx = DMA2;

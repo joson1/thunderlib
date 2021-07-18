@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_IRQn 0
+#define MAX_IRQn 1
 
 
 #define TRIGGER_EDGE_HIGHLEVEL      1

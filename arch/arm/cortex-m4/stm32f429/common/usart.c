@@ -107,7 +107,7 @@ void uart2_init(u32 pclk2, u32 bound ,uint8_t int_en)
 
 char uart2_getKey()
 {
-	unsigned int t = 0;
+	// unsigned int t = 0;
 	if (uart_rx_rp == uart_rx_wp)
 	{
 		return 0;
