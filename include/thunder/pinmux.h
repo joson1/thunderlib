@@ -4,7 +4,7 @@
 
 
 extern const uint32_t nBrOfPar;
-uint32_t pinmux_table[];
+extern uint32_t pinmux_table[];
 
 int pin_mux_set(uint32_t pin_id,uint32_t* par); //low level
 

@@ -15,7 +15,7 @@
 serial_dev_t* stty;
 #define UART1_IER	*((uint32_t *) 0xE0001008)
 
-void uart_handler(void* Data)
+static void uart_handler(void* Data)
 {
 	char ch;
 
