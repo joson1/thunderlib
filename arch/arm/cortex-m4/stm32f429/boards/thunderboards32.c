@@ -24,14 +24,13 @@ extern int fb_stm32ltdc_init();
 extern void input_drv_attach();
 
 
-uint32_t pin_mux_table[] = THB_MUX_STM32F429;
 
 void board_init()
 {
 
 //     // SDRAM_Init();
 // #if(CONFIG_SERIAL_EN)
-    pinmux_table_set(sizeof(pin_mux_table),pin_mux_table);
+    pinmux_table_set(sizeof(THB_MUX_STM32F429),THB_MUX_STM32F429);
     // serial_info_register(0,&uart1_conf);
     // serial_info_register(1,&uart2_conf);
 // #endif
