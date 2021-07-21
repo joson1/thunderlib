@@ -89,7 +89,13 @@ void GPIO_Set(GPIO_TypeDef *GPIOx, u16 GPIO_PIN)
 {
 	GPIOx->ODR |= GPIO_PIN;
 }
-
+uint8_t GPIO_read(GPIO_TypeDef *GPIOx, u16 GPIO_PIN)
+{
+	if(GPIOx->IDR & GPIO_PIN) 
+		return 1;
+	else
+	 return 0;
+}
 void GPIO_Rset(GPIO_TypeDef *GPIOx, u16 GPIO_PIN)
 {
 	GPIOx->ODR &= ~GPIO_PIN;

@@ -6,6 +6,13 @@ config I2C_STM32F429
     depends on $(MARCH)="stm32f429"
     default n
 
+config SI2C_EN
+    bool "soft i2c enable"
+    depends on GPIO_EN
+
+if SI2C_EN
+    source "drivers/bus/i2c/devices/i2c-soft.config"
+endif
 
 config I2C_ZYNQ
     bool "i2c-zynq"

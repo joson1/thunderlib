@@ -84,15 +84,24 @@ void flag3_thread_exit(void* p)
 }
 
 #include "mtd/spi-flash.h"
+#include "oled/oled.h"
 int main()
 {
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
 	spi_flah_test();
 
-
-
+	OLED_init();
+	OLED_clean();
+	OLED_printf("OK\r\n");
+	gpio_pin_mode(46,GPIO_MODE_OUTPUT);
+	gpio_pin_mode(45,GPIO_MODE_OUTPUT);
+	gpio_pin_set(46);
+	gpio_pin_set(45);
+	gpio_pin_set(79);
 	while (1)
 	{
+		OLED_setCurser(0,0);
+		OLED_printf("OK\r\n");
 		
 	}
 	

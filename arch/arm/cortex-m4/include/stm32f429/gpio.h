@@ -161,5 +161,6 @@ void GPIO_PIN_Init(u8 PIN,u32 GPIO_MODE,u32 GPIO_OTYPE,u32 GPIO_SPEED,u32 GPIO_P
 void GPIO_PIN_AF_Set(u8 pIN, u8 GPIO_AF);
 void GPIO_Set(GPIO_TypeDef *GPIOx, u16 GPIO_PIN);
 void GPIO_Rset(GPIO_TypeDef *GPIOx, u16 GPIO_PIN);
+uint8_t GPIO_read(GPIO_TypeDef *GPIOx, u16 GPIO_PIN);
 
 #endif

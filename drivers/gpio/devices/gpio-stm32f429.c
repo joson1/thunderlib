@@ -14,15 +14,34 @@
 
 void gpio_pin_mode (uint8_t pin_id, uint32_t mode)
 {
+    GPIO_TypeDef* pin =  (GPIO_TypeDef*)(pin_map[pin_id].bank);
+    uint8_t pinpos;
+
+	for (pinpos = 0; pinpos < 15; pinpos++)
+	{
+		if((pin_map[pin_id].pin>>pinpos)&0x01) break;
+	}
+	
+    if (mode==GPIO_MODE_OUTPUT)
+    {
+        pin->MODER |= (1 << (pinpos * 2));	
+        
+    }else
+    {
+        pin->MODER &= ~(3 << (pinpos * 2));	
+
+    }
     
-    GPIO_Init(
-            (GPIO_TypeDef*)(pin_map[pin_id].bank),
-            pin_map[pin_id].pin,
-            (mode&0x000f),
-            (mode&0x00f0)>>4,
-            (mode&0x0f00)>>8,
-            (mode&0xf000)>>12
-    );
+    // GPIO_Init(
+    //         (GPIO_TypeDef*)(pin_map[pin_id].bank),
+    //         pin_map[pin_id].pin,
+    //         (mode&0x000f),
+    //         (mode&0x00f0)>>4,
+    //         (mode&0x0f00)>>8,
+    //         (mode&0xf000)>>12
+    // );
+
+
 }
 void gpio_pin_dir (uint8_t pin_id, uint32_t mode)
 {
@@ -88,7 +107,11 @@ void gpio_pin_write(uint8_t pin_id,uint8_t value)
     }
     
 }
-
+uint8_t gpio_pin_read(uint8_t pin_id)
+{
+    return GPIO_read( (GPIO_TypeDef*)(pin_map[pin_id].bank),
+              pin_map[pin_id].pin);
+}
 
 
 uint32_t gpio_interrupt_request(uint8_t pin_id, uint8_t edge)

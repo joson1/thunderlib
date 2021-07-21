@@ -1,5 +1,4 @@
 PKDIRS-$(CONFIG_GUI_EN) += \
 		$(TOPDIR)/packages/gui/ \
 		
-
-#$(TOPDIR)/packages/gui/guilite \
+PKDIRS-y += $(TOPDIR)/packages/oled

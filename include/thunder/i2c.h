@@ -13,18 +13,18 @@
 #define I2C_CLOCK_100K   100000
 #define I2C_CLOCK_200K   200000
 #define I2C_CLOCK_400K   400000
-
-typedef struct __i2c_dev
+typedef struct __i2c_dev i2c_dev_t;
+struct __i2c_dev
 {
 	uint8_t id;
+	void* prv_data; 
 
-	void (*set_clock)(uint32_t);//
-	void (*open)(void);
-	int (*i2c_wirte)(uint32_t slave_addr,uint8_t* buf,uint32_t length);//
-	int (*i2c_read)(uint32_t slave_addr,uint8_t* buf,uint32_t length);//
-	void* i2c_init_info; 
+	// void (*set_clock)(uint32_t);//
+	int (*setup)(i2c_dev_t* pdev);
+	int (*i2c_wirte)(i2c_dev_t* pdev, uint32_t slave_addr,uint8_t* buf,uint32_t length);//
+	int (*i2c_read)(i2c_dev_t* pdev, uint32_t slave_addr,uint8_t* buf,uint32_t length);//
 	ListItem_t devItem;
-}i2c_dev_t;
+};
 
 
 i2c_dev_t* i2c_open(uint8_t id);
