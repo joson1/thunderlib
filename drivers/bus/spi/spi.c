@@ -12,19 +12,20 @@
 // static struct spi_dev* spi_dev_dev_table = NULL;
 
 
-int spi_dev_attach(spi_dev_t* dev,void* pInfo)
+int spi_dev_attach(spi_dev_t* dev)
 {
 	
-	dev->spi_init_info = pInfo;
 	dev_register(dev,DEV_MAJOR_SPI,dev->id);
+	return 0;
 }
 
-int spi_info_register(uint8_t id,void* info)
-{
-	spi_dev_t*dev=dev_open(DEV_MAJOR_SPI,id);
-	dev->spi_init_info = info;
+// int spi_info_register(uint8_t id,void* par)
+// {
+// 	spi_dev_t*dev=dev_open(DEV_MAJOR_SPI,id);
+// 	dev->prv_data = par;
+// 	return 0;
 
-}
+// }
 
 spi_dev_t* spi_open(uint8_t id)
 {
@@ -33,5 +34,5 @@ spi_dev_t* spi_open(uint8_t id)
 
 int spi_transfer(spi_dev_t* dev,int data)
 {
-	return dev->transfer(data);
+	return dev->transfer(dev,data);
 }

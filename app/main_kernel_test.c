@@ -83,11 +83,18 @@ void flag3_thread_exit(void* p)
 
 }
 
-
+#include "mtd/spi-flash.h"
 int main()
 {
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
+	spi_flah_test();
 
+
+
+	while (1)
+	{
+		
+	}
 	
 	thread_t* pthread1 = thread_create(
 		"thread1",

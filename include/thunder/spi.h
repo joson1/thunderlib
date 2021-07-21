@@ -11,23 +11,25 @@
 #include <stddef.h>
 #include <thunder/device.h>
 
-typedef struct __spi_dev
+typedef struct __spi_dev spi_dev_t;
+struct __spi_dev
 {
 	uint8_t id;
 
-	void (*init)(uint32_t mode);//
-	void (*setMode)(uint32_t mode);//
-	void (*setBitOrder)(char Order);//
-	void (*setClkDiv)(uint8_t Div);//
-	int (*transfer)(int data);//
-	int (*write)(int data);//
-	int (*read)(uint32_t NbrOfBytes);//
-	void* spi_init_info ; 
+	void* prv_data; 
+
+	void (*setup)(spi_dev_t* pdev,uint32_t mode,uint32_t bitOrder);//
+	// void (*setMode)(uint32_t mode);//
+	// void (*setBitOrder)(char Order);//
+	void (*setClk)(spi_dev_t* pdev,uint32_t freq);//
+	int (*transfer)(spi_dev_t* pdev,int data);//
+	int (*write)(spi_dev_t* pdev,int data);//
+	int (*read)(spi_dev_t* pdev);//
 	ListItem_t devItem;
-}spi_dev_t;
+};
 
 spi_dev_t* spi_open(uint8_t id);
 int spi_transfer(spi_dev_t* dev,int data);
 
-int spi_dev_attach(spi_dev_t* dev,void* pInfo);
+int spi_dev_attach(spi_dev_t* dev);
 int spi_info_register(uint8_t id,void* info);

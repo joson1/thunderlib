@@ -50,14 +50,15 @@ void W25QXX_Init(void)
 
 
 	W25QXX_TYPE=W25QXX_ReadID();	//读取FLASH ID.
-    printf("spi:%d\r\n",W25QXX_TYPE);
+    printf("spi:%08X\r\n",W25QXX_TYPE);
 }
-
+//pe 2 4 5 6 spi4
 void spi_flah_test()
 {
     //open
-    spi_flash=spi_open(0);
-    spi_flash->init(SPI_MODE_3);
+    spi_flash=spi_open(3);
+    // spi_flash->init(SPI_MODE_3);
+    spi_flash->setup(spi_flash,SPI_MODE_3,0);
 
     gpio_pin_mode(W25QXX_CS,GPIO_MODE_OUTPUT);
     gpio_pin_set(W25QXX_CS);

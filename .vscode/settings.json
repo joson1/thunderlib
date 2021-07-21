@@ -48,6 +48,7 @@
         "pinmux.h": "c",
         "timer.h": "c",
         "tim.h": "c",
-        "mux-stm32f429.h": "c"
+        "mux-stm32f429.h": "c",
+        "at24cxx.h": "c"
     }
 }

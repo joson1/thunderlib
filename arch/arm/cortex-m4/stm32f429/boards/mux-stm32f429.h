@@ -15,6 +15,10 @@
 #define THB_MUX_STM32F429  { \
                         __STM32MUX(120,GPIO_MODE_AF,7,0,GPIO_SPEED_100M,GPIO_PUPD_PU),  \
                         __STM32MUX(121,GPIO_MODE_AF,7,0,GPIO_SPEED_100M,GPIO_PUPD_PU),  \
+                        __STM32MUX(1,GPIO_MODE_AF,5,0,GPIO_SPEED_100M,GPIO_PUPD_PU),  \
+                        __STM32MUX(3,GPIO_MODE_OUT,0,0,GPIO_SPEED_100M,GPIO_PUPD_PU),  \
+                        __STM32MUX(4,GPIO_MODE_AF,5,0,GPIO_SPEED_100M,GPIO_PUPD_PU),  \
+                        __STM32MUX(5,GPIO_MODE_AF,5,0,GPIO_SPEED_100M,GPIO_PUPD_PU),  \
                     }
 
 
