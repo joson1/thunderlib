@@ -14,6 +14,8 @@ LIBDIR =
 # 		/c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 
+CONFIG_LINK_RAM_BASE:=0x20000000
+CONFIG_LINK_RAM_SIZE:=192k
 
 LIBS = -lc -lm -lnosys
 # CPU = -mcpu=cortex-m4

@@ -105,6 +105,8 @@ $(TARGET):$(SUBDIRS)
 
 $(SUBDIRS):ECHO
 	@-mkdir -p bin
+	@echo "CONFIG_LINK_RAM_BASE = $(CONFIG_LINK_RAM_BASE);\r\nCONFIG_LINK_RAM_SIZE = $(CONFIG_LINK_RAM_SIZE);\r\nCONFIG_STACK_SIZE = $(CONFIG_STACK_SIZE);\r\nCONFIG_HEAP_SIZE = $(CONFIG_HEAP_SIZE);" > $(TOPDIR)/link.ld
+	@cat $(LINK_SCRIPT) >> $(TOPDIR)/link.ld
 	@python $(TOPDIR)/scripts/Kconfiglib/genconfig.py
 	@make -C $@
 ECHO:

@@ -1,3 +1,7 @@
+CONFIG_LINK_RAM_BASE = 0x20000000;
+CONFIG_LINK_RAM_SIZE = 192k;
+CONFIG_STACK_SIZE = 0x400;
+CONFIG_HEAP_SIZE = 0x2000;
 /*
 ******************************************************************************
 **

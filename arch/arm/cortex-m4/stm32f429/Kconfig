@@ -1,0 +1,16 @@
+
+config LINK_RAM_BASE
+	hex "ram base address"
+	default 0x20000000
+
+config LINK_RAM_SIZE
+    int "ram size"
+    default 128000000
+
+config STACK_SIZE
+    hex "stack size"
+    default 0x400
+
+config HEAP_SIZE
+    hex "heap size"
+    default 0x2000

@@ -10,6 +10,7 @@ config CROSS_COMPILE
 	string "Compiler"
 	default "arm-none-eabi-"
 
+source "$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/Kconfig"
 
 endmenu
 
