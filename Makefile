@@ -15,23 +15,11 @@ SDK_VERSION=v1.0
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 #export vars in .config
 
-ifeq (.config, $(wildcard .config))
-    #文件存在
-	config_cmd := menuconfig %_defconfig
-	ifeq ($(filter $(config_cmd), $(MAKECMDGOALS)),)
-	include $(TOPDIR)/.config
-	CONFIG_EXPORT_VARS=$(patsubst %=y, %,$(filter %=y, $(shell cat $(TOPDIR)/.config)))
-	export $(CONFIG_EXPORT_VARS)
-	endif
-endif
-
-
 
 # ARCH 	:= $(CONFIG_ARCH)
 # CPU 	:= $(CONFIG_CPU)
 # MARCH 	:= $(CONFIG_MARCH)
 # BOARD 	:= $(CONFIG_BOARD)
-CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
 
 ARCH := arm
 CPU := cortex-m4
@@ -46,6 +34,8 @@ ARCH := arm
 CFLAGS = -Wall
 include $(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/configs/$(MARCH).mk
 
+
+
 # C includes
 C_INCLUDES +=  \
 -I$(TOPDIR)/include \
@@ -55,6 +45,20 @@ C_INCLUDES +=  \
 
 
 include $(TOPDIR)/packages/Makefile.pk
+
+
+ifeq (.config, $(wildcard .config))
+    #文件存在
+	config_cmd := menuconfig %_defconfig
+	ifeq ($(filter $(config_cmd), $(MAKECMDGOALS)),)
+	include $(TOPDIR)/.config
+	CONFIG_EXPORT_VARS=$(patsubst %=y, %,$(filter %=y, $(shell cat $(TOPDIR)/.config)))
+	export $(CONFIG_EXPORT_VARS)
+	endif
+endif
+
+CROSS_COMPILE :=$(CONFIG_CROSS_COMPILE)
+
 
 # for libs
 C_INCLUDES +=  \

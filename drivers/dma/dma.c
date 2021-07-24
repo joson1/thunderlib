@@ -6,7 +6,10 @@
 
 extern void (__dma_interrupt_register)(uint8_t ch,void* handler);    
 
-
+__attribute__((weak)) void __dma_interrupt_register(uint8_t ch,void* handler)
+{
+    return;
+}
 void dmac_dev_attach(dmac_dev_t* dev)
 {
     dev_register(dev,DEV_MAJOR_DMA,dev->id);

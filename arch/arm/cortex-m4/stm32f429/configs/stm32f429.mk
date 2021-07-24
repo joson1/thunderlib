@@ -14,8 +14,8 @@ LIBDIR =
 # 		/c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1
 # LIBDIR = -L /c/GNU Tools ARM Embedded/5.4 2016q3/lib/gcc/arm-none-eabi/5.4.1 /c/GNU Tools ARM Embedded/5.4 2016q3/arm-none-eabi/lib
 
-CONFIG_LINK_RAM_BASE:=0x20000000
-CONFIG_LINK_RAM_SIZE:=192k
+CONFIG_LINK_RAM_BASE := 0x20000000
+CONFIG_LINK_RAM_SIZE := 192k
 
 LIBS = -lc -lm -lnosys
 # CPU = -mcpu=cortex-m4
@@ -27,7 +27,7 @@ MCU = -mcpu=$(CPU) -Wa,-mimplicit-it=thumb $(FPU) $(FLOAT-ABI)
 C_DEFS =  \
 -DSTM32F429xx
 
-CFLAGS+= $(MCU) $(C_DEFS) $(OPT)
+CFLAGS+= $(MCU) $(C_DEFS) $(OPT) -Wl,-ffunction-sections 
 
 
 LDFLAGS = -specs=nano.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections

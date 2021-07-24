@@ -90,29 +90,39 @@ void SDRAM_Init(void)
 	sdctrlreg|=2<<2;				//13位行地址
 	sdctrlreg|=1<<4;				//16位数据位宽
 	sdctrlreg|=1<<6;				//4个内部存区(4 BANKS)
-	sdctrlreg|=3<<7;				//3个CAS延迟
+	sdctrlreg|=2<<7;				//3个CAS延迟
 	sdctrlreg|=0<<9;				//允许写访问
-	sdctrlreg|=2<<10;				//SDRAM时钟=HCLK/2=192M/2=96M=10.4ns
-	sdctrlreg|=1<<12;				//使能突发访问 
+	sdctrlreg|=2<<10;				//SDRAM时钟=HCLK/2=180M/2=90M=11.1ns
+	sdctrlreg|=0<<12;				//使能突发访问 
 	sdctrlreg|=0<<13;				//读通道延迟0个HCLK
  	FMC_Bank5_6->SDCR[0]=sdctrlreg;	//设置FMC BANK5 SDRAM控制寄存器(BANK5和6用于管理SDRAM).
 
 	sdtimereg|=1<<0;				//加载模式寄存器到激活时间的延迟为2个时钟周期
 	sdtimereg|=6<<4;				//退出自刷新延迟为7个时钟周期
-	sdtimereg|=5<<8;				//自刷新时间为6个时钟周期
-	sdtimereg|=5<<12;				//行循环延迟为6个时钟周期
+	sdtimereg|=8<<8;				//自刷新时间为6个时钟周期
+	sdtimereg|=11<<12;				//行循环延迟为6个时钟周期 8
 	sdtimereg|=1<<16;				//恢复延迟为2个时钟周期
-	sdtimereg|=1<<20;				//行预充电延迟为2个时钟周期
+	sdtimereg|=2<<20;				//行预充电延迟为2个时钟周期
 	sdtimereg|=1<<24;				//行到列延迟为2个时钟周期
  	FMC_Bank5_6->SDTR[0]=sdtimereg;	//设置FMC BANK5 SDRAM时序寄存器 
 
 	SDRAM_Send_Cmd(0,1,0,0);		//时钟配置使能
-	delay_us(500);					//至少延迟200us.
+	// delay_us(500);					//至少延迟200us.
+
+	volatile uint32_t i = 0xfffff;
+	while (i--)
+	{
+		
+	}
+	
+
+
+
 	SDRAM_Send_Cmd(0,2,0,0);		//对所有存储区预充电
 	SDRAM_Send_Cmd(0,3,8,0);		//设置自刷新次数 
-	mregval|=3<<0;					//设置突发长度:8(可以是1/2/4/8)
+	mregval|=1<<0;					//设置突发长度:8(可以是1/2/4/8)
 	mregval|=0<<3;					//设置突发类型:连续(可以是连续/交错)
-	mregval|=3<<4;					//设置CAS值:3(可以是2/3)
+	mregval|=2<<4;					//设置CAS值:3(可以是2/3)
 	mregval|=0<<7;					//设置操作模式:0,标准模式
 	mregval|=1<<9;					//设置突发写模式:1,单点访问
 	SDRAM_Send_Cmd(0,4,0,mregval);	//设置SDRAM的模式寄存器

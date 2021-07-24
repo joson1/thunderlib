@@ -75,8 +75,11 @@ defined in linker script */
   .weak  Reset_Handler
   .type  Reset_Handler, %function
 Reset_Handler: 
+
+  ldr   sp, =0x20000000+0x30000       /* set stack pointer */
+  bl  SystemInit   
+  bl sram_init
   ldr   sp, =_estack       /* set stack pointer */
- 
 /* Copy the data segment initializers from flash to SRAM */  
   movs  r1, #0
   b  LoopCopyDataInit
@@ -108,7 +111,6 @@ LoopFillZerobss:
 /* Call static constructors */
   bl __libc_init_array
 /* Call the clock system intitialization function.*/
-  bl  SystemInit   
  	bl do_initcalls
 
   bl  board_init
@@ -261,6 +263,7 @@ g_pfnVectors:
 * this definition.
 * 
 *******************************************************************************/
+   .weak      sram_init
    .weak      NMI_Handler
    .thumb_set NMI_Handler,Default_Handler
   

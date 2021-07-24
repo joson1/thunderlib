@@ -8,11 +8,10 @@
  */
 #include "thunderboards32.h"
 #include <config.h>
-#include "stm32f429/sdram.h"
 #include <thunder/tty/tty.h>
 #include <thunder/pinmux.h>
 #include "mux-stm32f429.h"
-
+#include "stm32f429/sdram.h"
 extern void stm32f429_serial_init();
 extern void stm32f429_timer_init();
 
@@ -24,6 +23,17 @@ extern int fb_stm32ltdc_init();
 extern void input_drv_attach();
 
 
+
+ 
+
+#define Bank5_SDRAM_ADDR    ((0XC0000000)) 			//
+//
+
+void sram_init()
+{
+    SDRAM_Init();
+}
+extern void sram_init();
 
 void board_init()
 {

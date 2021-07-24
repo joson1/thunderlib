@@ -4,7 +4,20 @@
 
 xList_t gpio_irq_list;
 
+__WEAK struct pinDesc*  __gpio_irq_lowlevel_match(xList_t* p)
+{
+ return ;
+}
 
+__WEAK void __gpio_irq_lowlevel_clear(struct pinDesc* pPin)
+{
+    return;
+}
+
+__WEAK void __gpio_irq_lowlevel_enable(struct pinDesc* pPin,int edge)
+{
+    return;
+}
 
 void gpio_irq_handler()
 {

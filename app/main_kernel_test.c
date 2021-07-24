@@ -85,11 +85,25 @@ void flag3_thread_exit(void* p)
 
 #include "mtd/spi-flash.h"
 #include "oled/oled.h"
+#include "stm32f429/sdram.h"
+
+#define Bank5_SDRAM_ADDR    ((0XC0000000)) 			//
+
 int main()
 {
+	// uint32_t cc = 0;
+	// // SDRAM_Init();
 	printf("Compile at %s,%s\r\n",__DATE__,__TIME__);
-	spi_flah_test();
+	// spi_flah_test();
+	// *((uint32_t *)(Bank5_SDRAM_ADDR)) = 0;
+	// *((uint32_t *)(Bank5_SDRAM_ADDR)) =1;
+	// printf("test:%d\r\n",*((uint32_t *)(Bank5_SDRAM_ADDR)));
 
+	// cc = *((uint32_t *)(Bank5_SDRAM_ADDR)) + 1;
+	// // // cc++;
+	// *((uint32_t *)(Bank5_SDRAM_ADDR)) = cc;
+	// printf("test:%d\r\n",*((uint32_t *)(Bank5_SDRAM_ADDR)));
+	// printf("test:%d\r\n",cc);
 	OLED_init();
 	OLED_clean();
 	OLED_printf("OK\r\n");
