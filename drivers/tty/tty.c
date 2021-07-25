@@ -61,7 +61,7 @@ void cmd_init(char serialid,char tmr_id)
     ttyio_init(serialid);
 	tmr = timer_open(tmr_id);
 	irq_enable(timer_irq_request(tmr,cmd_scan));
-	timer_set_period(tmr,200);
+	timer_set_period(tmr,300);
 	timer_start(tmr);
 
 }

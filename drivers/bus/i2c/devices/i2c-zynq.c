@@ -8,7 +8,7 @@
  */
 #include "zynq7000/zynq.h"
 #include <thunder/i2c.h>
-
+#include <config.h>
 
 
 
@@ -334,31 +334,53 @@ int i2c1_write(uint32_t slave_addr,uint8_t* buf,uint32_t length)
     return XIicPs_MasterSendPolled(I2C1,slave_addr,buf,length,0);
     // return i2c_master_transmit(I2C0,slave_addr,buf,length);
 }
+static int zynq7000_i2c_read(i2c_dev_t* pdev, uint32_t slave_addr,uint8_t* buf,uint32_t length)
+{
+	typeof(I2C0) i2c = (typeof(I2C0))(pdev->prv_data);
+    // return i2c_master_receive(I2C0,slave_addr,buf,length);
+    return XIicPs_MasterRecvPolled(i2c,buf,length,slave_addr);
+}
+
+static int zynq7000_i2c_write(i2c_dev_t* pdev, uint32_t slave_addr,uint8_t* buf,uint32_t length)
+{
+	typeof(I2C0) i2c = (typeof(I2C0))(pdev->prv_data);
+    return XIicPs_MasterSendPolled(i2c,slave_addr,buf,length,0);
+    // return i2c_master_transmit(I2C0,slave_addr,buf,length);
+}
 int i2c1_read(uint32_t slave_addr,uint8_t* buf,uint32_t length)
 {
     // return i2c_master_receive(I2C0,slave_addr,buf,length);
     return XIicPs_MasterRecvPolled(I2C1,buf,length,slave_addr);
 }
-
+static int zynq7000_i2c_setup(i2c_dev_t* pdev)
+{
+	typeof(I2C0) i2c = (typeof(I2C0))(pdev->prv_data);
+	i2c_init(i2c,CONFIG_ZYNQ7000_I2C0_SPEED);
+}
 
 i2c_dev_t i2c0 = {
     .id = 0,
-    .i2c_wirte = i2c0_write,
-    .i2c_read  = i2c0_read
+	.prv_data = I2C0,
+
+	.setup = zynq7000_i2c_setup,
+    .i2c_wirte = zynq7000_i2c_write,
+    .i2c_read  = zynq7000_i2c_read
 
 };
 i2c_dev_t i2c1 = {
     .id = 1,
-    .i2c_wirte = i2c1_write,
-    .i2c_read  = i2c1_read
+	.prv_data = I2C1,
+
+	.setup = zynq7000_i2c_setup,
+    .i2c_wirte = zynq7000_i2c_write,
+    .i2c_read  = zynq7000_i2c_read
 
 };
 extern void zynq_i2c_init();
 void zynq_i2c_init()
 {
     reset_iic();
-    i2c_init(I2C0,100000);
-    i2c_init(I2C1,100000);
+
     i2c_dev_attach(&i2c0);
     i2c_dev_attach(&i2c1);
 }

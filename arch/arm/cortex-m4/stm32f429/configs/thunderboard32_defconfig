@@ -3,18 +3,24 @@
 # Build Config
 #
 CONFIG_CROSS_COMPILE="arm-none-eabi-"
+CONFIG_LINK_RAM_BASE=0XC0000000
+CONFIG_LINK_RAM_SIZE=0x2000000
+CONFIG_STACK_SIZE=0x400
+CONFIG_HEAP_SIZE=0x2000
 # end of Build Config
 
-#
-# Select Target Board
-#
 CONFIG_ThunderBoards32=y
-# end of Select Target Board
 
 #
 # kernel
 #
-# CONFIG_KERNEL_EN is not set
+CONFIG_KERNEL_EN=y
+
+#
+# kernel devices
+#
+CONFIG_KERNEL_STM32F429=y
+# end of kernel devices
 # end of kernel
 
 #
@@ -45,7 +51,17 @@ CONFIG_I2C_EN=y
 #
 # devices
 #
-CONFIG_I2C_STM32F429=y
+# CONFIG_I2C_STM32F429 is not set
+CONFIG_SI2C_EN=y
+
+#
+# soft i2c based on gpio config
+#
+CONFIG_SOFT_I2C0_EN=y
+CONFIG_SOFT_I2C0_ID=0
+CONFIG_SOFT_I2C0_SCL=45
+CONFIG_SOFT_I2C0_SDA=46
+# end of soft i2c based on gpio config
 # end of devices
 # end of i2c
 
@@ -58,6 +74,15 @@ CONFIG_SPI_EN=y
 # devices
 #
 CONFIG_SPI_STM32F429=y
+
+#
+# stm32f429-spi config
+#
+CONFIG_STM32_SPI1_EN=y
+CONFIG_STM32_SPI2_EN=y
+CONFIG_STM32_SPI3_EN=y
+CONFIG_STM32_SPI4_EN=y
+# end of stm32f429-spi config
 # end of devices
 # end of spi
 # end of bus
@@ -131,4 +156,34 @@ CONFIG_TTY_EN=y
 # sensors
 #
 # end of sensors
+
+#
+# mtd
+#
+# CONFIG_AT24CXX is not set
+CONFIG_SPI_FLASH=y
+# end of mtd
+
+#
+# video
+#
+
+#
+# FrameBuffer
+#
+CONFIG_FB_EN=y
+# end of FrameBuffer
+# end of video
+
+#
+# iio
+#
+# CONFIG_IIO_EN is not set
+# end of iio
 # end of drivers
+
+#
+# packages
+#
+# CONFIG_GUI_EN is not set
+# end of packages

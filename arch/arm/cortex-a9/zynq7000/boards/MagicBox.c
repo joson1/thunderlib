@@ -18,7 +18,7 @@ extern void zynq_axi_pwm_init();
 extern void zynq7000_dma_init();
 void board_init()
 {
-	cmd_init(0);
+	cmd_init(0,3);
 
     // zynq_interrupt_init();
     // zynq_i2c_init();

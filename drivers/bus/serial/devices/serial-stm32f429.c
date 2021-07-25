@@ -98,7 +98,7 @@ void usart_putchr(serial_dev_t* pdev,char ch)
     USART->DR = (char)ch;
 }
 
-int usart_getchr(serial_dev_t* pdev,char ch)
+int usart_getchr(serial_dev_t* pdev)
 {
 	USART_TypeDef* USART = (USART_TypeDef*)(pdev->prv_data);
     return (char)USART->DR;

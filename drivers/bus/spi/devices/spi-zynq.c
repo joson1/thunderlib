@@ -144,29 +144,55 @@ int spi0_write(int data)
     zynq_spi_write(SPI0,data);
 }
 
-int spi0_read()
+static int zynq7000_spi_read(spi_dev_t* pdev)
 {
-    return zynq_spi_read(SPI0);
+    typeof(SPI0) spi = ( typeof(SPI0) )(pdev->prv_data);
+
+    // return zynq_spi_read(spi);
+    return zynq_spi_transfer(spi,0);
+
+}
+
+static int zynq7000_spi_write(spi_dev_t* pdev,int data)
+{
+    typeof(SPI0) spi = ( typeof(SPI0) )(pdev->prv_data);
+    // zynq_spi_write(spi,data);
+    zynq_spi_transfer(spi,data);
+    return 0;
+    
+}
+
+static int zynq7000_spi_transfer(spi_dev_t* pdev,int data)
+{
+    typeof(SPI0) spi = ( typeof(SPI0) )(pdev->prv_data);
+    return zynq_spi_transfer(spi,data);
+}
+
+
+static void zynq7000_spi_setup(spi_dev_t* pdev,uint32_t mode,uint32_t bitOrder)
+{
+    typeof(SPI0) spi = ( typeof(SPI0) )(pdev->prv_data);
+
+    spi_init(spi,SPI_CLOCK_DIV32,mode);
 }
 
 spi_dev_t spi0 = 
 {
     .id = 0,
-    .init = spi0_init,
-    .setMode = spi0_setMode,
-    .setBitOrder=0,
-    .setClkDiv=spi0_setClkDiv,
-    .transfer = spi0_transfer,
-    .write =spi0_write,
-    .read =spi0_read,
+    .prv_data = SPI0,
+
+    .setup=zynq7000_spi_setup,
+    .transfer=zynq7000_spi_transfer,
+    .write = zynq7000_spi_write,
+    .read = zynq7000_spi_read
+
 };
 
 void zynq_spi_init()
 {
     spi_zynq_reset();
-    spi_dev_attach(&spi0,0);
+    spi_dev_attach(&spi0);
 
 }
 
 DEV_INIT(zynq_spi_init);
-extern void zynq_spi_init();

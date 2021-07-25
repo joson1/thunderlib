@@ -19,4 +19,8 @@ config I2C_ZYNQ
     depends on $(MARCH)="zynq7000"
     default n
 
+if I2C_ZYNQ
+    source "drivers/bus/i2c/devices/i2c-zynq.config"
+endif
+
 endmenu

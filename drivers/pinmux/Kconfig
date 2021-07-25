@@ -1,0 +1,11 @@
+
+menu "pinmux"
+
+config PINMUX_EN
+    bool "Enable pinmux"
+    default y
+    help
+        This option 
+source "drivers/pinmux/devices/Kconfig"
+
+endmenu

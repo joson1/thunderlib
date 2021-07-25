@@ -17,46 +17,15 @@
 #define UART1_IER	*((uint32_t *) 0xE0001008)
 #define UART0_IER	*((uint32_t *) 0xE0000008)
 
-extern void zynq_serial_init();
 
 /* ----------USART---------------*/
-char BUF_USART0[BUFFER_LEN_USART0]; //接收缓冲.
-char BUF_USART1[BUFFER_LEN_USART1]; //接收缓冲.
+// char BUF_USART0[BUFFER_LEN_USART0]; //接收缓冲.
+// char BUF_USART1[BUFFER_LEN_USART1]; //接收缓冲.
 
 
-serial_dev_t dev_usart1;
-serial_dev_t dev_usart0;
 
 
-void usart1_open(uint32_t boundRate)
-{
-    uart_init(UART1,boundRate);
-}
-void usart0_open(uint32_t boundRate)
-{
-    uart_init(UART0,boundRate);
-}
-
-void usart1_putchar(char ch)
-{
-    uart_send(UART1,ch);
-}
-void usart0_putchar(char ch)
-{
-    uart_send(UART0,ch);
-}
-
-int usart1_getchar()
-{
-    return uart_get(UART1);
-}
-int usart0_getchar()
-{
-    return uart_get(UART0);
-}
-
-
-int uart1_interrupt_setup(int type)
+static int uart1_interrupt_setup(serial_dev_t* pdev, int type)
 {
 	
 	UART1->Intrp_en = 0x1;
@@ -68,7 +37,7 @@ int uart1_interrupt_setup(int type)
 	return UART1_IRQ;
 
 }
-int uart0_interrupt_setup(int type)
+static int uart0_interrupt_setup(serial_dev_t* pdev, int type)
 {
 	
 	UART0->Intrp_en = 0x1;
@@ -80,49 +49,78 @@ int uart0_interrupt_setup(int type)
 	return UART0_IRQ;
 
 }
-void uart1_interrupt_clear()
+static void uart1_interrupt_clear()
 {
 
 	UART1->Chnl_int_sts|=0x1;
 
 }
-void uart0_interrupt_clear()
+static void uart0_interrupt_clear()
 {
 
 	UART0->Chnl_int_sts|=0x1;
 
 }
 
+
+static int zynq7000_uart_open(serial_dev_t* pdev,uint32_t bps)
+{
+	typeof(UART0) uart = (typeof(UART0))(pdev->prv_data);
+    uart_init(uart,bps);
+	return 0;
+}
+
+
+static void zynq7000_uart_putchar(serial_dev_t* pdev,char ch)
+{
+	typeof(UART0) uart = (typeof(UART0))(pdev->prv_data);
+    uart_send(uart,ch);
+}
+
+static int zynq7000_uart_getchar(serial_dev_t* pdev)
+{
+	typeof(UART0) uart = (typeof(UART0))(pdev->prv_data);
+    return uart_get(uart);
+}
+
 serial_dev_t dev_usart0 = {
 
 	.id = 0,
-	.buffer = BUF_USART0,
 	.buffer_length = BUFFER_LEN_USART0,
 	.rp = 0,
 	.wp = 0,
-	.serial_open = &usart0_open,//
-	.putchar     = &usart0_putchar,//
-	.getchar     = &usart0_getchar,//
-	.interrput.setup = &uart0_interrupt_setup,
-	.interrput.clear = &uart0_interrupt_clear,
-
+	.prv_data = UART0,
+	.ops = {
+			.open=zynq7000_uart_open,
+			.putchar=zynq7000_uart_putchar,
+			.getchar=zynq7000_uart_getchar
+	},
+	.irq = {
+		.IRQn=UART0_IRQ,
+		.is_shared = 0,
+		.setup=uart0_interrupt_setup,
+		.clear=uart0_interrupt_clear
+	}
 
 };
-
-
 serial_dev_t dev_usart1 = {
 
 	.id = 1,
-	.buffer = BUF_USART1,
 	.buffer_length = BUFFER_LEN_USART1,
 	.rp = 0,
 	.wp = 0,
-	.serial_open = &usart1_open,//
-	.putchar     = &usart1_putchar,//
-	.getchar     = &usart1_getchar,//
-	.interrput.setup = &uart1_interrupt_setup,
-	.interrput.clear = &uart1_interrupt_clear,
-
+	.prv_data = UART1,
+	.ops = {
+			.open=zynq7000_uart_open,
+			.putchar=zynq7000_uart_putchar,
+			.getchar=zynq7000_uart_getchar
+	},
+	.irq = {
+		.IRQn=UART1_IRQ,
+		.is_shared = 0,
+		.setup=uart1_interrupt_setup,
+		.clear=uart1_interrupt_clear
+	}
 
 };
 
@@ -131,8 +129,8 @@ serial_dev_t dev_usart1 = {
 void zynq_serial_init()
 {
 	
-    serial_dev_attach(&dev_usart1,0);
-    serial_dev_attach(&dev_usart0,0);
+    serial_dev_attach(&dev_usart1);
+    serial_dev_attach(&dev_usart0);
 	
 
 }

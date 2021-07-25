@@ -83,11 +83,7 @@ void flag3_thread_exit(void* p)
 
 }
 
-#include "mtd/spi-flash.h"
-#include "oled/oled.h"
-#include "stm32f429/sdram.h"
 
-#define Bank5_SDRAM_ADDR    ((0XC0000000)) 			//
 
 int main()
 {
@@ -104,21 +100,14 @@ int main()
 	// *((uint32_t *)(Bank5_SDRAM_ADDR)) = cc;
 	// printf("test:%d\r\n",*((uint32_t *)(Bank5_SDRAM_ADDR)));
 	// printf("test:%d\r\n",cc);
-	OLED_init();
-	OLED_clean();
-	OLED_printf("OK\r\n");
-	gpio_pin_mode(46,GPIO_MODE_OUTPUT);
-	gpio_pin_mode(45,GPIO_MODE_OUTPUT);
-	gpio_pin_set(46);
-	gpio_pin_set(45);
-	gpio_pin_set(79);
-	while (1)
-	{
-		OLED_setCurser(0,0);
-		OLED_printf("OK\r\n");
+
+	// while (1)
+	// {
+	// 	OLED_setCurser(0,0);
+	// 	OLED_printf("OK\r\n");
 		
-	}
-	
+	// }
+	// while(1);
 	thread_t* pthread1 = thread_create(
 		"thread1",
 		flag1_thread_entry,

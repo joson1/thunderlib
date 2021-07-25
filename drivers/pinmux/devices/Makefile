@@ -1,5 +1,5 @@
 
-objs-y+=pinmux-stm32f429.o
+objs-$(PIN_MUX_STM32F429)+=pinmux-stm32f429.o
 SUBDIRS =
 
 

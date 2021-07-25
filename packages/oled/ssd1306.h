@@ -1,7 +1,8 @@
 #ifndef __SSD1306_H_
 #define __SSD1306_H_
 
-#include "iic.h"
+// #include "iic.h"
+#define u8 char
 #define SSD1306_SLAVEADDRESS 0x78
 
 #define SSD1306_DISPLAY_MODE_NORMAL 0xa6

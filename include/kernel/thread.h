@@ -24,34 +24,6 @@
 #define THREAD_STATUS_CLOSE                 0x04                /* 关闭态 */
 #define THREAD_STATUS_STAT_MASK             0x0f
 
-// struct exception_stack_frame
-// {
-//     /* 异常发生时自动保存的寄存器 */
-// 	uint32_t r0;
-//     uint32_t r1;
-//     uint32_t r2;
-//     uint32_t r3;
-//     uint32_t r12;
-//     uint32_t lr;
-//     uint32_t pc;
-//     uint32_t psr;
-// };
-
-// struct stack_frame
-// {
-//     /* r4 ~ r11 register 
-// 	  异常发生时需手动保存的寄存器 */
-//     uint32_t r4;
-//     uint32_t r5;
-//     uint32_t r6;
-//     uint32_t r7;
-//     uint32_t r8;
-//     uint32_t r9;
-//     uint32_t r10;
-//     uint32_t r11;
-
-//     struct exception_stack_frame exception_stack_frame;
-// };
 
 typedef struct 
 {

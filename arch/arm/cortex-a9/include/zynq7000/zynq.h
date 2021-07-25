@@ -43,10 +43,10 @@ typedef struct
   
 } GPIO_TypeDef;
 
-GPIO_TypeDef GPIO_BANK0;
-GPIO_TypeDef GPIO_BANK1;
-GPIO_TypeDef GPIO_BANK2;
-GPIO_TypeDef GPIO_BANK3;
+extern GPIO_TypeDef GPIO_BANK0;
+extern GPIO_TypeDef GPIO_BANK1;
+extern GPIO_TypeDef GPIO_BANK2;
+extern GPIO_TypeDef GPIO_BANK3;
 
 
 typedef struct

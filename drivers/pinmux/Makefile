@@ -1,12 +1,12 @@
 
-objs+=pinmux.o
+objs-$(CONFIG_PINMUX_EN)+=pinmux.o
 SUBDIRS =	\
 		devices
 
 all:$(SUBDIRS)
 
 
-$(SUBDIRS):$(objs)
+$(SUBDIRS):$(objs-y)
 
 
 %.o:%.c

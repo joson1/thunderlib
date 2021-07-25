@@ -22,10 +22,10 @@ C_DEFS =  \
 
 C_INCLUDES += 
 
-CFLAGS+= $(MCU) $(C_DEFS) $(OPT)
+CFLAGS+= $(MCU) $(C_DEFS) $(OPT) -Wl,-ffunction-sections 
 
 
-LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/Xilinx.spec  -specs=nosys.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map
+LDFLAGS = -specs=$(TOPDIR)/arch/$(ARCH)/$(CPU)/$(MARCH)/Xilinx.spec  -specs=nosys.specs $(MCU) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map  -Wl,--gc-sections
 
 AS		= $(CROSS_COMPILE)as
 LD		= $(CROSS_COMPILE)ld

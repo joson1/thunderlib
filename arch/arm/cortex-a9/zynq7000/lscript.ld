@@ -10,8 +10,8 @@
 /*                                                                 */
 /*******************************************************************/
 
-_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x80000;
-_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x200000;
+_STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : CONFIG_STACK_SIZE;
+_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : CONFIG_HEAP_SIZE;
 
 _ABORT_STACK_SIZE = DEFINED(_ABORT_STACK_SIZE) ? _ABORT_STACK_SIZE : 1024;
 _SUPERVISOR_STACK_SIZE = DEFINED(_SUPERVISOR_STACK_SIZE) ? _SUPERVISOR_STACK_SIZE : 2048;
@@ -21,13 +21,18 @@ _UNDEF_STACK_SIZE = DEFINED(_UNDEF_STACK_SIZE) ? _UNDEF_STACK_SIZE : 1024;
 
 /* Define Memories in the system */
 
-MEMORY
+/* MEMORY
 {
    ps7_ram_0 : ORIGIN = 0x0, LENGTH = 0x30000
    ps7_ddr_0 : ORIGIN = 0x100000, LENGTH = 0x1FF00000
    ps7_ram_1 : ORIGIN = 0xFFFF0000, LENGTH = 0xFE00
+} */
+MEMORY
+{
+   ps7_ram_0 : ORIGIN = 0x0, LENGTH = 0x30000
+   ps7_ddr_0 : ORIGIN = CONFIG_LINK_RAM_BASE, LENGTH = CONFIG_LINK_RAM_SIZE
+   ps7_ram_1 : ORIGIN = 0xFFFF0000, LENGTH = 0xFE00
 }
-
 /* Specify the default entry point to the program */
 
 ENTRY(_vector_table)
