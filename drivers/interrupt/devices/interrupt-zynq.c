@@ -12,6 +12,7 @@
 #include "zynq7000/xil_exception.h"
 #include "zynq7000/xscugic_hw.h"
 #include <thunder/device.h>
+#include "zynq7000/xil_mmu.h"
 
 #define Zynq7000_GIC_CPU_BASE            0xF8F00100  /* Generic interrupt controller CPU interface */
 #define Zynq7000_GIC_DIST_BASE           0xF8F01000  /* Generic interrupt controller */
@@ -238,10 +239,10 @@ static inline void XScuGic_Stop()
 
 void zynq_interrupt_init()
 {
+	//Xil_SetTlbAttributes(0xffff0000,0x14de2);
 
     arm_gic_dist_init(0, Zynq7000_GIC_DIST_BASE, 0);
     arm_gic_cpu_init(0, Zynq7000_GIC_CPU_BASE);
-
     // XScuGic_Stop();
     // DistributorInit();
     // CPUInitialize();

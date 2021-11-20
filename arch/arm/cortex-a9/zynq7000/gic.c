@@ -85,7 +85,7 @@ void arm_gic_mask(uint32_t index, int irq)
 
     GIC_DIST_ENABLE_CLEAR(_gic_table[index].dist_hw_base, irq) = mask;
 }
-
+//arm_gic_set_cpu(0, vector, 1 << rt_cpu_get_smp_id());
 void arm_gic_set_cpu(uint32_t index, int irq, unsigned int cpumask)
 {
     uint32_t old_tgt;
@@ -127,11 +127,13 @@ void arm_gic_dump_type(uint32_t index)
                gic_type & (1 << 10) ? "has" : "no",
                gic_type);
 }
+extern int cpu_get_smp_id();
 
 int arm_gic_dist_init(uint32_t index, uint32_t dist_base, int irq_start)
 {
     unsigned int gic_type, i;
-    uint32_t cpumask = 1 << 0;
+    uint32_t cpuid = cpu_get_smp_id();
+    uint32_t cpumask = (cpuid + 1) << 0;
 
     assert(index < ARM_GIC_MAX_NR);
 

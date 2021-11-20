@@ -19,6 +19,7 @@ thread_t* thread_create(
                     void    *par,
                     void    (*exit)(void),
                     uint32_t stack_size,
-                    uint32_t priority
+                    uint32_t priority,
+                    uint32_t cpuid
                     );
 

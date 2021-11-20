@@ -22,12 +22,15 @@
 
 /* 用于存储上一个线程的栈的sp的指针 */
 uint32_t cpu_interrupt_from_thread = 0;
+uint32_t cpu_interrupt_from_thread1 = 0;
 
 /* 用于存储下一个将要运行的线程的栈的sp的指针 */
 uint32_t cpu_interrupt_to_thread = 0;
+uint32_t cpu_interrupt_to_thread1 = 0;
 
 /* SWI中断服务函数执行标志 */
 uint32_t cpu_thread_switch_interrupt_flag = 0;
+uint32_t cpu_thread_switch_interrupt_flag1 = 0;
 #define SVCMODE     0x13
 
 

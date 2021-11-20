@@ -12,9 +12,7 @@
 extern uint32_t cpu_interrupt_disable();
 extern void cpu_interrupt_enable(uint32_t level);
 extern void cpu_interrupt_enable_f();
-extern void AddNewThreadToReadyList(thread_t* pthread);
-
-
+extern void  AddNewThreadToReadyList(thread_t* pthread,uint32_t cpuid);
 
 
 k_err_t thread_init(thread_t *thread,
@@ -24,7 +22,9 @@ k_err_t thread_init(thread_t *thread,
                         void (*exit)(void),
                         void*			stack_start,
                         uint32_t       stack_size,
-						uint32_t 		priority)
+						uint32_t 		priority,
+						uint32_t		cpuid
+						)
 {
 
     thread->entry = (void*)entry;
@@ -32,6 +32,7 @@ k_err_t thread_init(thread_t *thread,
 	thread->exit = exit;
 	thread->stack_addr = stack_start;
 	thread->stack_size = stack_size;
+	thread->cpuid = cpuid;
 	/* 初始化线程栈，并返回线程栈指针 */
 	thread->sp = (void *)cpu_hw_stack_init( thread->entry, 
 		                                   thread->parameter,
@@ -67,7 +68,7 @@ k_err_t thread_init(thread_t *thread,
 	thread->priority = priority;
     
 	/* 将任务添加到就绪列表 */
-	AddNewThreadToReadyList(thread);
+	AddNewThreadToReadyList(thread,cpuid);
 	return KERNEL_EOK;
 }
 

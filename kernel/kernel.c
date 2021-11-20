@@ -9,7 +9,8 @@ thread_t* thread_create(
                     void    *par,
                     void    (*exit)(void),
                     uint32_t stack_size,
-                    uint32_t priority
+                    uint32_t priority,
+                    uint32_t cpuid
                     )
 {
 
@@ -29,7 +30,7 @@ thread_t* thread_create(
     pthread->stack_addr = pstack;
     pthread->stack_size =stack_size;
     printf("pthread:0x%08x\tpstack:0x%08x\r\n",pthread,pstack);
-
+    pthread->cpuid = cpuid;
 
     
      thread_init(pthread,
@@ -39,7 +40,8 @@ thread_t* thread_create(
                         pthread->exit,
                         pthread->stack_addr,
                         pthread->stack_size,
-                        pthread->priority
+                        pthread->priority,
+                        cpuid
                     );
 
     return pthread;

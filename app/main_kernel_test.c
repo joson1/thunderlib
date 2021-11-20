@@ -64,14 +64,17 @@ void flag3_thread_entry( void *p_arg )
 {
 	int cc =3;
 	float af = 30.0;
-	// while(1){
+	while(1){
 		cc++;
 		af+=0.05;
 		MOVETO(3,0);
 		printf(GREEN"thread3:%d\taf:%.2f\r\n",cc,af);
 		// delay(200);
-		sys_delay(20);
-	// }
+
+			sys_delay(20);
+
+	}
+
 }
 
 void flag3_thread_exit(void* p)
@@ -109,29 +112,32 @@ int main()
 	// }
 	// while(1);
 	thread_t* pthread1 = thread_create(
-		"thread1",
+		"thread1 on cpu0",
 		flag1_thread_entry,
 		NULL,
 		NULL,
 		1024,
-		1
+		1,
+		0
 	);
 
-	// thread_t* pthread23 = thread_create(
-	// 	"thread2",
-	// 	flag2_thread_entry,
-	// 	NULL,
-	// 	NULL,
-	// 	1024,
-	// 	1
-	// );
+	thread_t* pthread23 = thread_create(
+		"thread2 on cpu1",
+		flag2_thread_entry,
+		NULL,
+		NULL,
+		1024,
+		1,
+		0
+	);
 	 thread_t* pthread3 = thread_create(
-		"thread3",
+		"thread3 on cpu1",
 		flag3_thread_entry,
 		NULL,
-		flag3_thread_exit,
-		1024,
-		3
+		NULL,
+		10240,
+		3,
+		0
 	);
 	
 }

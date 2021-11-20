@@ -55,7 +55,7 @@
 *
 ******************************************************************************/
 #include "zynq7000/bspconfig.h"
-
+#define USE_AMP 1
 	.file	"xil-crt0.S"
 	.section ".got2","aw"
 	.align	2
@@ -139,7 +139,10 @@ _start:
 
 	/* Let her rip */
 	bl	main
+	/* weak up cpu1*/
+	bl weakup_cpu1
 	bl  kernel_zynq_init
+
    /* Cleanup global constructors */
    bl __libc_fini_array
 

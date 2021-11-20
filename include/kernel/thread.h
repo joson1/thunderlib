@@ -33,6 +33,7 @@ typedef struct
     void    (*exit)(void* pthread);     /* 线程出口地址 */
     void*   stack_addr;/* 线程栈起始地址 */
     char    name[configMAX_TASK_NAME_LEN];
+    uint32_t cpuid;
     uint8_t status;
     uint32_t stack_size;
     uint32_t remaining_tick;
@@ -53,7 +54,8 @@ k_err_t thread_init(thread_t *thread,
                         void (*exit)(void),
                         void             *stack_start,
                         uint32_t       stack_size,
-						uint32_t 		priority);
+						uint32_t 		priority,
+                        uint32_t		cpuid);
 
 k_err_t thread_resume(thread_t* thread);
 												

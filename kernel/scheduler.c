@@ -2,37 +2,40 @@
 #include <kernel/klist.h>
 #include "kops.h"
 #include <stdio.h>
-extern void cpu_interrupt_enable_f();
 
+#define nBrOfCPUs (2)
+
+extern void cpu_interrupt_enable_f();
+extern int cpu_get_smp_id();
 
 extern uint32_t cpu_interrupt_disable();
 extern void cpu_interrupt_enable(uint32_t level);
 
 extern void cpu_hw_context_switch_interrupt(uint32_t from, uint32_t to);
-uint32_t interrupt_cnt = 0;
-uint32_t NumOfOverflows = 0;
-uint32_t NextThreadUnblockTime;
-uint32_t CurrentNumberOfThread = 0;
-thread_t* pCurrentThread;
-extern thread_t* pCurrentThread;
-uint32_t sys_tick_counter = 0;
+uint32_t interrupt_cnt[nBrOfCPUs] = {0};
+uint32_t NumOfOverflows[nBrOfCPUs] = {0};
+uint32_t NextThreadUnblockTime[nBrOfCPUs];
+uint32_t CurrentNumberOfThread[nBrOfCPUs] = {0};
+thread_t* pCurrentThread[nBrOfCPUs];
+extern thread_t* pCurrentThread[nBrOfCPUs];
+uint32_t sys_tick_counter[nBrOfCPUs] = {0};
 /* 线程就绪优先级组 */
-uint32_t ThreadReadyPriorityGroup=0;
+uint32_t ThreadReadyPriorityGroup[nBrOfCPUs]={0};
 
 /* 当前优先级 */
-uint8_t CurrentTopReadyPriority = 0;
+uint8_t CurrentTopReadyPriority[nBrOfCPUs] = {0};
 
 // k_list_t thread_priority_table[THREAD_PRIORITY_MAX];
 
-xList_t ThreadReadyTable[THREAD_PRIORITY_MAX];
-extern xList_t ThreadReadyTable[THREAD_PRIORITY_MAX];
+xList_t ThreadReadyTable[nBrOfCPUs][THREAD_PRIORITY_MAX];
+extern xList_t ThreadReadyTable[nBrOfCPUs][THREAD_PRIORITY_MAX];
 
 
-xList_t DelayedThreadList1;
-xList_t DelayedThreadList2;
+xList_t DelayedThreadList1[nBrOfCPUs];
+xList_t DelayedThreadList2[nBrOfCPUs];
 
-static xList_t* volatile pDelayedThreadList;
-static xList_t* volatile pOverflowDelayedThreadList;
+static xList_t* volatile pDelayedThreadList[nBrOfCPUs];
+static xList_t* volatile pOverflowDelayedThreadList[nBrOfCPUs];
 
 
 /* 线程休眠列表 */
@@ -40,47 +43,48 @@ k_list_t thread_defunct;
 
 ALIGN(8)
 /* 定义线程栈 */
-static uint8_t idle_thread_stack[512];
+static uint8_t idle_thread_stack[nBrOfCPUs][512];
 
-static thread_t thread_idle;
+static thread_t thread_idle[nBrOfCPUs];
 
 
 
-unsigned long  idletask_ctr = 0;
+unsigned long  idletask_ctr[nBrOfCPUs] = {0};
 
 #define GET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) __highest_bit_find( ( uxReadyPriorities ) ) )
 
-void ThreadLists_init()
+void ThreadLists_init(uint32_t cpuid)
 {
 
+	// uint32_t cpuid = cpu_get_smp_id();
 	for (size_t i = 0; i < configMAX_PRIORITIES; i++)
 	{
-		xList_init( &(ThreadReadyTable[i]) );
+		xList_init( &(ThreadReadyTable[cpuid][i]) );
 	}
-	xList_init(&DelayedThreadList1);
-	xList_init(&DelayedThreadList2);
-	pDelayedThreadList = &DelayedThreadList1;
-	pOverflowDelayedThreadList = &DelayedThreadList2;
+	xList_init(&DelayedThreadList1[cpuid]);
+	xList_init(&DelayedThreadList2[cpuid]);
+	pDelayedThreadList[cpuid] = &DelayedThreadList1[cpuid];
+	pOverflowDelayedThreadList[cpuid] = &DelayedThreadList2[cpuid];
 
 }
-extern void AddNewThreadToReadyList(thread_t* pthread);
-void AddNewThreadToReadyList(thread_t* pthread)
+extern void  AddNewThreadToReadyList(thread_t* pthread,uint32_t cpuid);
+void AddNewThreadToReadyList(thread_t* pthread,uint32_t cpuid)
 {
 
 	register level = cpu_interrupt_disable();
-	CurrentNumberOfThread++;
-	if (pCurrentThread == NULL)
+	CurrentNumberOfThread[cpuid]++;
+	if (pCurrentThread[cpuid] == NULL)
 	{	
-		pCurrentThread = pthread;
-		if (CurrentNumberOfThread==1U)
+		pCurrentThread[cpuid] = pthread;
+		if (CurrentNumberOfThread[cpuid]==1U)
 		{
-			ThreadLists_init();
+			ThreadLists_init(cpuid);
 		}
 		
 		
 	}
-	ThreadReadyPriorityGroup |= (1<<(pthread->priority));
-	xListInsertEnd(&(ThreadReadyTable[pthread->priority]),&(pthread->tListItem));
+	ThreadReadyPriorityGroup[cpuid] |= (1<<(pthread->priority));
+	xListInsertEnd(&(ThreadReadyTable[cpuid][pthread->priority]),&(pthread->tListItem));
 	cpu_interrupt_enable(level);
 }
 #define GT_INTS *((unsigned int*)0xF8F0020C)
@@ -90,11 +94,12 @@ void AddNewThreadToReadyList(thread_t* pthread)
 //////////////////////////////////////////////IDLE_THREAD////////////////////////////
 void thread_idle_entry(void *parameter)
 {
+	uint32_t id = 0;
     parameter = parameter;
     while (1)
     {
-        idletask_ctr ++;
-
+		// id = cpu_get_smp_id();
+        idletask_ctr[0] ++;
 		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
 		// if (GT_INTS)
 		// {
@@ -109,17 +114,20 @@ void thread_idle_entry(void *parameter)
 
 void thread_idle_init(void)
 {
+	uint32_t cpuid = cpu_get_smp_id();
 	/* 初始化线程 */
-	thread_init( 	&thread_idle,
+	thread_init( 	&(thread_idle[cpuid]),
 					(char*)"IDLE",                 /* 线程控制块 */
 	                thread_idle_entry,               /* 线程入口地址 */
 					NULL,
 	                NULL,                          /* 线程形参 */
 	                &idle_thread_stack[0],        /* 线程栈起始地址 */
 	                sizeof(idle_thread_stack),
-					0);  /* 线程栈大小，单位为字节 */
+					0,
+					cpuid);  /* 线程栈大小，单位为字节 */
 
-	printf("thread_idle init:%f\r\n",12.233);
+	// printf("thread_idle init on cpu:%d\t stack%08x\r\n",cpuid, &idle_thread_stack[cpuid][0]);
+	
 
 }
 
@@ -141,18 +149,19 @@ void system_scheduler_start(void)
 
 	uint32_t highest_ready_priority;
 
+	uint32_t cpuid = cpu_get_smp_id();
 	thread_idle_init();
 
 	/* 寻找包含就绪任务的最高优先级的队列 */
 
-	GET_HIGHEST_PRIORITY(CurrentTopReadyPriority,ThreadReadyPriorityGroup) ;
-    NextThreadUnblockTime = portMAX_DELAY;
-	sys_tick_counter = 0;
+	GET_HIGHEST_PRIORITY(CurrentTopReadyPriority[cpuid],ThreadReadyPriorityGroup[cpuid]) ;
+    NextThreadUnblockTime[cpuid] = portMAX_DELAY;
+	sys_tick_counter[cpuid] = 0;
 
-	xlistGET_OWNER_OF_NEXT_ENTRY(pCurrentThread,&(ThreadReadyTable[CurrentTopReadyPriority]));
+	xlistGET_OWNER_OF_NEXT_ENTRY(pCurrentThread[cpuid],&(ThreadReadyTable[cpuid][CurrentTopReadyPriority[cpuid]]));
 
 	// show_stack(pCurrentThread->sp);
-	cpu_hw_context_switch_to((uint32_t)&pCurrentThread->sp);
+	cpu_hw_context_switch_to((uint32_t)&(pCurrentThread[cpuid])->sp);
     /* 永远不会返回 */
 
 }
@@ -165,13 +174,14 @@ inline void schedule(void)
 {
 	register thread_t *to_thread;
 	register thread_t *from_thread;
+	uint32_t cpuid = cpu_get_smp_id();
 	// register unsigned long highest_ready_priority;
-	uint32_t level = cpu_interrupt_disable();	
+	// uint32_t level = cpu_interrupt_disable();	
     /* 获取就绪的最高优先级 */
-	GET_HIGHEST_PRIORITY(CurrentTopReadyPriority,ThreadReadyPriorityGroup) ;
+	GET_HIGHEST_PRIORITY(CurrentTopReadyPriority[cpuid],ThreadReadyPriorityGroup[cpuid]) ;
     
 	/* 获取就绪的最高优先级对应的线程控制块 */
-	xlistGET_OWNER_OF_NEXT_ENTRY(to_thread,&(ThreadReadyTable[CurrentTopReadyPriority]));
+	xlistGET_OWNER_OF_NEXT_ENTRY(to_thread,&(ThreadReadyTable[cpuid][CurrentTopReadyPriority[cpuid]]));
 	// if (to_thread==0)
 	// {
 	// 	xlistGET_OWNER_OF_NEXT_ENTRY(to_thread,&(ThreadReadyTable[CurrentTopReadyPriority]));
@@ -179,15 +189,15 @@ inline void schedule(void)
 	
 
     /* 如果目标线程不是当前线程，则要进行线程切换 */
-	if(to_thread!=pCurrentThread)
+	if(to_thread!=pCurrentThread[cpuid])
 	{
-		from_thread = pCurrentThread;
-		pCurrentThread = to_thread;
-		if (interrupt_cnt==0)
+		from_thread = pCurrentThread[cpuid];
+		pCurrentThread[cpuid]= to_thread;
+		if (interrupt_cnt[cpuid]==0)
 		{
 			cpu_hw_context_switch((uint32_t)&from_thread->sp,
 									(uint32_t)&to_thread->sp);
-			cpu_interrupt_enable(level);
+			// cpu_interrupt_enable(level);
 		}else
 		{
 			cpu_hw_context_switch_interrupt((uint32_t)&from_thread->sp,
@@ -197,7 +207,7 @@ inline void schedule(void)
 		
 		// current_priority = (uint8_t)highest_ready_priority;
 	}
-	cpu_interrupt_enable(level);
+	// cpu_interrupt_enable(level);
 	
 }
 
@@ -205,14 +215,15 @@ inline void schedule(void)
 static void prvResetNextTaskUnblockTime( void )
 {
     thread_t *pxTCB;
+	uint32_t cpuid = cpu_get_smp_id();
 
-	if( xlistLIST_IS_EMPTY( pDelayedThreadList ) != 0 )
+	if( xlistLIST_IS_EMPTY( pDelayedThreadList[cpuid] ) != 0 )
 	{
 		/* The new current delayed list is empty.  Set xNextTaskUnblockTime to
 		the maximum possible value so it is	extremely unlikely that the
 		if( xTickCount >= xNextTaskUnblockTime ) test will pass until
 		there is an item in the delayed list. */
-		NextThreadUnblockTime = portMAX_DELAY;
+		NextThreadUnblockTime[cpuid] = portMAX_DELAY;
 	}
 	else
 	{
@@ -220,8 +231,8 @@ static void prvResetNextTaskUnblockTime( void )
 		the item at the head of the delayed list.  This is the time at
 		which the task at the head of the delayed list should be removed
 		from the Blocked state. */
-		( pxTCB ) = ( thread_t * ) xlistGET_OWNER_OF_HEAD_ENTRY( pDelayedThreadList );
-		NextThreadUnblockTime = xlistGET_LIST_ITEM_VALUE( &( ( pxTCB )->tListItem ) );
+		( pxTCB ) = ( thread_t * ) xlistGET_OWNER_OF_HEAD_ENTRY( pDelayedThreadList[cpuid] );
+		NextThreadUnblockTime[cpuid] = xlistGET_LIST_ITEM_VALUE( &( ( pxTCB )->tListItem ) );
 	}
 }
 
@@ -231,11 +242,12 @@ static void prvResetNextTaskUnblockTime( void )
  */
 #define taskSWITCH_DELAYED_LISTS()\
 {\
+	uint32_t cpuid = cpu_get_smp_id();\
 	xList_t *pxTemp;\
-	pxTemp = pDelayedThreadList;\
-	pDelayedThreadList = pOverflowDelayedThreadList;\
-	pOverflowDelayedThreadList = pxTemp;\
-	NumOfOverflows++;\
+	pxTemp = pDelayedThreadList[cpuid];\
+	pDelayedThreadList[cpuid] = pOverflowDelayedThreadList[cpuid];\
+	pOverflowDelayedThreadList[cpuid] = pxTemp;\
+	NumOfOverflows[cpuid]++;\
 	prvResetNextTaskUnblockTime();\
 }
 
@@ -246,38 +258,37 @@ static inline void _tick_increase(void)
     uint32_t i;
 	register thread_t *pThread;
 	uint32_t ItemValue;
-    sys_tick_counter++ ;
-	if (sys_tick_counter == 0)
+	uint32_t cpuid = cpu_get_smp_id();
+    sys_tick_counter[cpuid]++ ;
+	if (sys_tick_counter[cpuid] == 0)
 	{
 		taskSWITCH_DELAYED_LISTS();
 	}
 	/* 最近的延时任务延时到期 */
-	if ( sys_tick_counter >= NextThreadUnblockTime )
+	if ( sys_tick_counter[cpuid] >= NextThreadUnblockTime[cpuid] )
 	{
 			for (  ;   ; )
 			{
-				 if ( xlistLIST_IS_EMPTY(pDelayedThreadList) != 0 )
-				 {
-					 NextThreadUnblockTime = portMAX_DELAY;
-					 break;
-				 }else
-				 {
-					pThread = (thread_t*)xlistGET_OWNER_OF_HEAD_ENTRY( pDelayedThreadList );
-					// pThread = (thread_t*)(&(pDelayedThreadList->xListEnd)->pxNext->Owner)
-					ItemValue = xlistGET_LIST_ITEM_VALUE(&( pThread->tListItem ));
-					if (sys_tick_counter<ItemValue)
-					{
-						NextThreadUnblockTime = ItemValue;
-						break;
-					}
-					pThread->status = THREAD_STATUS_RUNNING;
-					xListRemove( &(pThread->tListItem) );
-					AddNewThreadToReadyList(pThread);
+				if ( xlistLIST_IS_EMPTY(pDelayedThreadList[cpuid]) != 0 )
+				{
+					NextThreadUnblockTime[cpuid] = portMAX_DELAY;
+					break;
+				}else
+				{
+				pThread = (thread_t*)xlistGET_OWNER_OF_HEAD_ENTRY( pDelayedThreadList[cpuid] );
+				// pThread = (thread_t*)(&(pDelayedThreadList->xListEnd)->pxNext->Owner)
+				ItemValue = xlistGET_LIST_ITEM_VALUE(&( pThread->tListItem ));
+				if (sys_tick_counter[cpuid]<ItemValue)
+				{
+					NextThreadUnblockTime[cpuid] = ItemValue;
+					break;
+				}
+				pThread->status = THREAD_STATUS_RUNNING;
+				xListRemove( &(pThread->tListItem) );
+				AddNewThreadToReadyList(pThread,cpuid);
 
-
-
-				 }
-				 
+				}
+				
 			}
 			
 	}
@@ -302,38 +313,39 @@ void sys_delay(uint32_t TicksToWait)
 	register tmp = cpu_interrupt_disable();
 	uint32_t delay;
 	uint32_t TimeToWake;
-	const uint32_t ConstTickCount = sys_tick_counter;
+	uint32_t cpuid = cpu_get_smp_id();
+	const uint32_t ConstTickCount = sys_tick_counter[cpuid];
 
     /* 将任务从就绪列表中移除 */
-	xListRemove(&(pCurrentThread->tListItem));
+	xListRemove(&(pCurrentThread[cpuid]->tListItem));
 	/* 将任务在优先级位图中对应的位清除 */
-	if (xlistCURRENT_LIST_LENGTH(&(ThreadReadyTable[pCurrentThread->priority]))==0)
+	if (xlistCURRENT_LIST_LENGTH(&(ThreadReadyTable[cpuid][pCurrentThread[cpuid]->priority]))==0)
 	{
 		
-		ThreadReadyPriorityGroup &= ~(1<<pCurrentThread->priority);
+		ThreadReadyPriorityGroup[cpuid] &= ~(1<<pCurrentThread[cpuid]->priority);
 	}
 	
 
 	TimeToWake = ConstTickCount+TicksToWait;
 
-	xlistSET_LIST_ITEM_VALUE( &(pCurrentThread->tListItem),TimeToWake );
+	xlistSET_LIST_ITEM_VALUE( &(pCurrentThread[cpuid]->tListItem),TimeToWake );
 	if (TimeToWake<ConstTickCount)
 	{
-		xListInsert(pOverflowDelayedThreadList,&(pCurrentThread->tListItem));
+		xListInsert(pOverflowDelayedThreadList[cpuid],&(pCurrentThread[cpuid]->tListItem));
 	}else
 	{
-		xListInsert(pDelayedThreadList,&(pCurrentThread->tListItem));
-		if (TimeToWake<NextThreadUnblockTime)
+		xListInsert(pDelayedThreadList[cpuid],&(pCurrentThread[cpuid]->tListItem));
+		if (TimeToWake<NextThreadUnblockTime[cpuid])
 		{
-			NextThreadUnblockTime = TimeToWake;
+			NextThreadUnblockTime[cpuid] = TimeToWake;
 		}
 		
 	}
-	pCurrentThread->status = THREAD_STATUS_SUSPEND;
+	pCurrentThread[cpuid]->status = THREAD_STATUS_SUSPEND;
 	cpu_interrupt_enable(tmp);
 	
 	// schedule();
-	while (pCurrentThread->status == THREAD_STATUS_SUSPEND)
+	while (pCurrentThread[cpuid]->status == THREAD_STATUS_SUSPEND)
 	{
 		delay++;
 	}
@@ -349,16 +361,19 @@ extern void interrupt_enter();
 
 void interrupt_enter()
 {
+	uint32_t cpuid = cpu_get_smp_id();
 	// uint32_t level = cpu_interrupt_disable();
-	interrupt_cnt++;
+	interrupt_cnt[cpuid]++;
 	// cpu_interrupt_enable(level);
 }
 
 extern void interrupt_exit();
 void interrupt_exit()
 {
+	uint32_t cpuid = cpu_get_smp_id();
+
 	// uint32_t level = cpu_interrupt_disable();
-	interrupt_cnt--;
+	interrupt_cnt[cpuid]--;
 	// cpu_interrupt_enable(level);
 
 }
@@ -368,20 +383,20 @@ extern void task_ed();
 void task_ed()
 {
 	register tmp = cpu_interrupt_disable();
-
+	uint32_t cpuid = cpu_get_smp_id();
     /* 将任务从就绪列表中移除 */
-	xListRemove(&(pCurrentThread->tListItem));
+	xListRemove(&(pCurrentThread[cpuid]->tListItem));
 	/* 将任务在优先级位图中对应的位清除 */
-	if (xlistCURRENT_LIST_LENGTH(&(ThreadReadyTable[pCurrentThread->priority]))==0)
+	if (xlistCURRENT_LIST_LENGTH(&(ThreadReadyTable[cpuid][pCurrentThread[cpuid]->priority]))==0)
 	{
 		
-		ThreadReadyPriorityGroup &= ~(1<<pCurrentThread->priority);
+		ThreadReadyPriorityGroup[cpuid] &= ~(1<<pCurrentThread[cpuid]->priority);
 	}
-	if(pCurrentThread->exit) 
+	if(pCurrentThread[cpuid]->exit) 
 	{
-		pCurrentThread->exit((xlistGET_LIST_ITEM_OWNER(&(pCurrentThread->tListItem))));
+		pCurrentThread[cpuid]->exit((xlistGET_LIST_ITEM_OWNER(&(pCurrentThread[cpuid]->tListItem))));
 	}
-	printf("Thread:%s Exit\r\n",pCurrentThread->name);
+	printf("Thread:%s Exit\r\n",pCurrentThread[cpuid]->name);
 	cpu_interrupt_enable(tmp);
 	
 	while(1);
