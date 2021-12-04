@@ -176,7 +176,7 @@ extern kernel_zynq_init();
 int kernel_zynq_init()
 {
 	int a = 0;
-	__swi();
+	// __swi();
 	uint32_t level = cpu_interrupt_disable();
     // __setsp();
     // __setvfp();

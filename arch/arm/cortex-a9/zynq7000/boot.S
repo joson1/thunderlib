@@ -93,6 +93,20 @@
 #include "zynq7000/xparameters.h"
 #include "zynq7000/xil_errata.h"
 
+.equ Mode_USR,        0x10
+.equ Mode_FIQ,        0x11
+.equ Mode_IRQ,        0x12
+.equ Mode_SVC,        0x13
+.equ Mode_ABT,        0x17
+.equ Mode_UND,        0x1B
+.equ Mode_SYS,        0x1F
+.set secondary_cpu_entry, 0xFFFFFFF0
+
+.equ I_Bit,           0x80            @ when I bit is set, IRQ is disabled
+.equ F_Bit,           0x40            @ when F bit is set, FIQ is disabled
+
+
+
 .globl MMUTable
 .global _prestart
 .global _boot
@@ -164,15 +178,96 @@
 _prestart:
 _boot:
 
-#if XPAR_CPU_ID==0
-        /* only allow cpu0 through */
-	mrc	p15,0,r1,c0,c0,5
-	and	r1, r1, #0xf
-        cmp	r1, #0
+    @ cps #Mode_SVC
+@     /* disable the data alignment check */
+@     mrc p15, 0, r1, c1, c0, 0
+@     bic r1, #(1<<0)             /* Disable MMU */
+@     bic r1, #(1<<1)             /* Disable Alignment fault checking */
+@     bic r1, #(1<<2)             /* Disable data cache */
+@     bic r1, #(1<<11)            /* Disable program flow prediction */
+@     bic r1, #(1<<12)            /* Disable instruction cache */
+@     bic r1, #(3<<19)            /* bit[20:19] must be zero */
+@     mcr p15, 0, r1, c1, c0, 0
+
+
+@ 	mrc	p15,0,r1,c0,c0,5
+@ 	and	r1, r1, #0xf
+@ 	cmp	r1, #0
+@     beq     normal_setup
+@     @ cpu id > 0, stop or wait
+
+@     ldr r0, =secondary_cpu_entry
+@     mov r1, #0
+@     str r1, [r0] /* clean secondary_cpu_entry */
+@ secondary_loop:
+@     @ cpu core 1 goes into sleep until core 0 wakeup it
+@     wfe
+@     ldr r1, =secondary_cpu_entry
+@     ldr r0, [r1]
+@     cmp r0, #0
+@     blxne r0 /* if(secondary_cpu_entry) secondary_cpu_entry(); */
+@     b secondary_loop
+
+
+@ normal_setup:
+
+
+
+@ 	/*set up stack*/
+@     bl      stack_setup
+
+@     ldr r0, =_boot
+@     ldr r1, =secondary_cpu_entry
+@     str r1, [r0] 
+@     sev
+@     /* enable branch prediction */
+@     mrc p15, 0, r0, c1, c0, 0
+@     orr     r0, r0, #(1<<11)
+@     mcr p15, 0, r0, c1, c0, 0
+
+
+
+@ 	/* jump to C startup code */
+@ 	b	_start				
+
+
+@ stack_setup:
+
+@     @  Set the startup stack for svc
+@     ldr     sp, =SPV_stack
+
+@     @  Enter Undefined Instruction Mode and set its Stack Pointer
+@     msr     cpsr_c, #Mode_UND|I_Bit|F_Bit
+@     ldr     sp, =Undef_stack
+
+@     @  Enter Abort Mode and set its Stack Pointer
+@     msr     cpsr_c, #Mode_ABT|I_Bit|F_Bit
+@     ldr     sp, =Abort_stack
+    
+@ 	@  Enter FIQ Mode and set its Stack Pointer
+@     msr     cpsr_c, #Mode_FIQ|I_Bit|F_Bit
+@     ldr     sp, =FIQ_stack
+
+@     @  Enter IRQ Mode and set its Stack Pointer
+@     msr     cpsr_c, #Mode_IRQ|I_Bit|F_Bit
+@     ldr     sp, =IRQ_stack
+
+@     /* come back to SVC mode */
+@     msr     cpsr_c, #Mode_SVC|I_Bit|F_Bit
+@     bx      lr
+
+
+
+
+
+
+
+	/* only allow cpu0 through */
+	mrc	p15,0,r1,c0,c0,#5
+	and	r1, r1, #15
+	cmp	r1, #0
 	beq	CheckEFUSE
-	EndlessLoop0:
-		wfe
-	b	EndlessLoop0
+    b   OKToRun
 
 CheckEFUSE:
         ldr r0,=EFUSEStaus
@@ -185,32 +280,16 @@ CheckEFUSE:
         ldr     r1,=SLCRUnlockKey               /* set unlock key */
         str     r1, [r0]                        /* Unlock SLCR */
 
-	ldr r0,=SLCRCPURSTReg
-	ldr r1,[r0]                             /* Read CPU Software Reset Control register */
-	orr r1,r1,#0x22
+		ldr r0,=SLCRCPURSTReg
+		ldr r1,[r0]                             /* Read CPU Software Reset Control register */
+		orr r1,r1,#0x22
         str r1,[r0]                             /* Reset CPU1 */
 
         ldr	r0,=SLCRlockReg         	/* Load SLCR base address base + lock register */
-	ldr	r1,=SLCRlockKey	        	/* set lock key */
-	str	r1, [r0]	        	/* lock SLCR */
+		ldr	r1,=SLCRlockKey	        	/* set lock key */
+		str	r1, [r0]	        	/* lock SLCR */
 
-#elif XPAR_CPU_ID==1
-	/* only allow cpu1 through */
-       mrc	p15,0,r1,c0,c0,5
-       and	r1, r1, #0xf
-       cmp	r1, #1
-       beq	CheckEFUSE1
-       b        EndlessLoop1
 
-CheckEFUSE1:
-        ldr r0,=EFUSEStaus
-        ldr r1,[r0]                             /* Read eFuse setting */
-        ands r1,r1,#0x80                        /* Check whether device is having single core */
-	beq OKToRun
-	EndlessLoop1:
-	        wfe
-	b	EndlessLoop1
-#endif
 
 OKToRun:
 	mrc     p15, 0, r0, c0, c0, 0		/* Get the revision */
@@ -218,19 +297,6 @@ OKToRun:
 	and     r6, r0, #0x0000000f
 	orr     r6, r6, r5, lsr #20-4
 
-#ifdef CONFIG_ARM_ERRATA_742230
-        cmp     r6, #0x22                       /* only present up to r2p2 */
-        mrcle   p15, 0, r10, c15, c0, 1         /* read diagnostic register */
-        orrle   r10, r10, #1 << 4               /* set bit #4 */
-        mcrle   p15, 0, r10, c15, c0, 1         /* write diagnostic register */
-#endif
-
-#ifdef CONFIG_ARM_ERRATA_743622
-	teq     r5, #0x00200000                 /* only present in r2p* */
-	mrceq   p15, 0, r10, c15, c0, 1         /* read diagnostic register */
-	orreq   r10, r10, #1 << 6               /* set bit #6 */
-	mcreq   p15, 0, r10, c15, c0, 1         /* write diagnostic register */
-#endif
 
 	/* set VBAR to the _vector_table address in linker script */
 	ldr	r0, =vector_base
@@ -252,6 +318,36 @@ OKToRun:
 	mrc	p15, 0, r0, c1, c0, 0		/* read CP15 register 1 */
 	bic	r0, r0, #0x1			/* clear bit 0 */
 	mcr	p15, 0, r0, c1, c0, 0		/* write value back */
+
+
+	mov	r0, r0
+	mrc	p15, 0, r1, c1, c0, 2		/* read cp access control register (CACR) into r1 */
+	orr	r1, r1, #(0xf << 20)		/* enable full access for p10 & p11 */
+	mcr	p15, 0, r1, c1, c0, 2		/* write back into CACR */
+
+
+	/* enable vfp */
+	fmrx	r1, FPEXC			/* read the exception register */
+	orr	r1,r1, #FPEXC_EN		/* set VFP enable bit, leave the others in orig state */
+	fmxr	FPEXC, r1			/* write back the exception register */
+
+
+	mrc	p15,0,r0,c1,c0,0		/* flow prediction enable */
+	orr	r0, r0, #(0x01 << 11)		/* #0x8000 */
+	mcr	p15,0,r0,c1,c0,0
+
+	/*set scu enable bit in scu*/
+	ldr	r7, =0xf8f00000
+	ldr	r0, [r7]
+	orr	r0, r0, #0x1
+	str	r0, [r7]
+
+
+	mrc	p15,0,r1,c0,c0,5
+	and	r1, r1, #0xf
+	cmp	r1, #1
+    beq startup1
+
 
 #ifdef SHAREABLE_DDR
 	/* Mark the entire DDR memory as shareable */
@@ -318,26 +414,24 @@ shareable_loop:
 	msr	cpsr, r2
 	ldr	r13,=SYS_stack			/* SYS stack pointer */
 
-	/*set scu enable bit in scu*/
-	ldr	r7, =0xf8f00000
-	ldr	r0, [r7]
-	orr	r0, r0, #0x1
-	str	r0, [r7]
+@     msr     cpsr_c, #Mode_SVC|I_Bit|F_Bit
+
+
 
 	/* enable MMU and cache */
 
-	ldr	r0,=TblBase			/* Load MMU translation table base */
-	orr	r0, r0, #0x5B			/* Outer-cacheable, WB */
-	mcr	15, 0, r0, c2, c0, 0		/* TTB0 */
+	@ ldr	r0,=TblBase			/* Load MMU translation table base */
+	@ orr	r0, r0, #0x5B			/* Outer-cacheable, WB */
+	@ mcr	15, 0, r0, c2, c0, 0		/* TTB0 */
 
-	mvn	r0,#0				/* Load MMU domains -- all ones=manager */
-	mcr	p15,0,r0,c3,c0,0
+	@ mvn	r0,#0				/* Load MMU domains -- all ones=manager */
+	@ mcr	p15,0,r0,c3,c0,0
 
-	/* Enable mmu, icahce and dcache */
-	ldr	r0,=CRValMmuCac
-	mcr	p15,0,r0,c1,c0,0		/* Enable cache and MMU */
-	dsb					/* dsb	allow the MMU to start up */
-	isb					/* isb	flush prefetch buffer */
+	@ /* Enable mmu, icahce and dcache */
+	@ ldr	r0,=CRValMmuCac
+	@ mcr	p15,0,r0,c1,c0,0		/* Enable cache and MMU */
+	@ dsb					/* dsb	allow the MMU to start up */
+	@ isb					/* isb	flush prefetch buffer */
 
 	/* Write to ACTLR */
 	mrc	p15, 0, r0, c1, c0, 1		/* Read ACTLR*/
@@ -347,89 +441,86 @@ shareable_loop:
 
 /* Invalidate L2 Cache and enable L2 Cache*/
 /* For AMP, assume running on CPU1. Don't initialize L2 Cache (up to Linux) */
-#if USE_AMP!=1
-	ldr	r0,=L2CCCrtl			/* Load L2CC base address base + control register */
-	mov	r1, #0				/* force the disable bit */
-	str	r1, [r0]			/* disable the L2 Caches */
+@ #if USE_AMP!=1
+@ 	ldr	r0,=L2CCCrtl			/* Load L2CC base address base + control register */
+@ 	mov	r1, #0				/* force the disable bit */
+@ 	str	r1, [r0]			/* disable the L2 Caches */
 
-	ldr	r0,=L2CCAuxCrtl			/* Load L2CC base address base + Aux control register */
-	ldr	r1,[r0]				/* read the register */
-	ldr	r2,=L2CCAuxControl		/* set the default bits */
-	orr	r1,r1,r2
-	str	r1, [r0]			/* store the Aux Control Register */
+@ 	ldr	r0,=L2CCAuxCrtl			/* Load L2CC base address base + Aux control register */
+@ 	ldr	r1,[r0]				/* read the register */
+@ 	ldr	r2,=L2CCAuxControl		/* set the default bits */
+@ 	orr	r1,r1,r2
+@ 	str	r1, [r0]			/* store the Aux Control Register */
 
-	ldr	r0,=L2CCTAGLatReg		/* Load L2CC base address base + TAG Latency address */
-	ldr	r1,=L2CCTAGLatency		/* set the latencies for the TAG*/
-	str	r1, [r0]			/* store the TAG Latency register Register */
+@ 	ldr	r0,=L2CCTAGLatReg		/* Load L2CC base address base + TAG Latency address */
+@ 	ldr	r1,=L2CCTAGLatency		/* set the latencies for the TAG*/
+@ 	str	r1, [r0]			/* store the TAG Latency register Register */
 
-	ldr	r0,=L2CCDataLatReg		/* Load L2CC base address base + Data Latency address */
-	ldr	r1,=L2CCDataLatency		/* set the latencies for the Data*/
-	str	r1, [r0]			/* store the Data Latency register Register */
+@ 	ldr	r0,=L2CCDataLatReg		/* Load L2CC base address base + Data Latency address */
+@ 	ldr	r1,=L2CCDataLatency		/* set the latencies for the Data*/
+@ 	str	r1, [r0]			/* store the Data Latency register Register */
 
-	ldr	r0,=L2CCWay			/* Load L2CC base address base + way register*/
-	ldr	r2, =0xFFFF
-	str	r2, [r0]			/* force invalidate */
+@ 	ldr	r0,=L2CCWay			/* Load L2CC base address base + way register*/
+@ 	ldr	r2, =0xFFFF
+@ 	str	r2, [r0]			/* force invalidate */
 
-	ldr	r0,=L2CCSync			/* need to poll 0x730, PSS_L2CC_CACHE_SYNC_OFFSET */
-						/* Load L2CC base address base + sync register*/
-	/* poll for completion */
-Sync:	ldr	r1, [r0]
-	cmp	r1, #0
-	bne	Sync
+@ 	ldr	r0,=L2CCSync			/* need to poll 0x730, PSS_L2CC_CACHE_SYNC_OFFSET */
+@ 						/* Load L2CC base address base + sync register*/
+@ 	/* poll for completion */
+@ Sync:	ldr	r1, [r0]
+@ 	cmp	r1, #0
+@ 	bne	Sync
 
-	ldr	r0,=L2CCIntRaw			/* clear pending interrupts */
-	ldr	r1,[r0]
-	ldr	r0,=L2CCIntClear
-	str	r1,[r0]
+@ 	ldr	r0,=L2CCIntRaw			/* clear pending interrupts */
+@ 	ldr	r1,[r0]
+@ 	ldr	r0,=L2CCIntClear
+@ 	str	r1,[r0]
 
-	ldr	r0,=SLCRUnlockReg		/* Load SLCR base address base + unlock register */
-	ldr	r1,=SLCRUnlockKey	    	/* set unlock key */
-	str	r1, [r0]		    	/* Unlock SLCR */
+@ 	ldr	r0,=SLCRUnlockReg		/* Load SLCR base address base + unlock register */
+@ 	ldr	r1,=SLCRUnlockKey	    	/* set unlock key */
+@ 	str	r1, [r0]		    	/* Unlock SLCR */
 
-	ldr	r0,=SLCRL2cRamReg		/* Load SLCR base address base + l2c Ram Control register */
-	ldr	r1,=SLCRL2cRamConfig        	/* set the configuration value */
-	str	r1, [r0]	        	/* store the L2c Ram Control Register */
+@ 	ldr	r0,=SLCRL2cRamReg		/* Load SLCR base address base + l2c Ram Control register */
+@ 	ldr	r1,=SLCRL2cRamConfig        	/* set the configuration value */
+@ 	str	r1, [r0]	        	/* store the L2c Ram Control Register */
 
-	ldr	r0,=SLCRlockReg         	/* Load SLCR base address base + lock register */
-	ldr	r1,=SLCRlockKey	        	/* set lock key */
-	str	r1, [r0]	        	/* lock SLCR */
+@ 	ldr	r0,=SLCRlockReg         	/* Load SLCR base address base + lock register */
+@ 	ldr	r1,=SLCRlockKey	        	/* set lock key */
+@ 	str	r1, [r0]	        	/* lock SLCR */
 
-	ldr	r0,=L2CCCrtl			/* Load L2CC base address base + control register */
-	ldr	r1,[r0]				/* read the register */
-	mov	r2, #L2CCControl		/* set the enable bit */
-	orr	r1,r1,r2
-	str	r1, [r0]			/* enable the L2 Caches */
-#endif
+@ 	ldr	r0,=L2CCCrtl			/* Load L2CC base address base + control register */
+@ 	ldr	r1,[r0]				/* read the register */
+@ 	mov	r2, #L2CCControl		/* set the enable bit */
+@ 	orr	r1,r1,r2
+@ 	str	r1, [r0]			/* enable the L2 Caches */
+@ #endif
 
-	mov	r0, r0
-	mrc	p15, 0, r1, c1, c0, 2		/* read cp access control register (CACR) into r1 */
-	orr	r1, r1, #(0xf << 20)		/* enable full access for p10 & p11 */
-	mcr	p15, 0, r1, c1, c0, 2		/* write back into CACR */
 
-	/* enable vfp */
-	fmrx	r1, FPEXC			/* read the exception register */
-	orr	r1,r1, #FPEXC_EN		/* set VFP enable bit, leave the others in orig state */
-	fmxr	FPEXC, r1			/* write back the exception register */
 
-	mrc	p15,0,r0,c1,c0,0		/* flow prediction enable */
-	orr	r0, r0, #(0x01 << 11)		/* #0x8000 */
-	mcr	p15,0,r0,c1,c0,0
 
-	mrc	p15,0,r0,c1,c0,1		/* read Auxiliary Control Register */
-	orr	r0, r0, #(0x1 << 2)		/* enable Dside prefetch */
-	orr	r0, r0, #(0x1 << 1)		/* enable L2 Prefetch hint */
-	mcr	p15,0,r0,c1,c0,1		/* write Auxiliary Control Register */
+
+	@ mrc	p15,0,r0,c1,c0,1		/* read Auxiliary Control Register */
+	@ orr	r0, r0, #(0x1 << 2)		/* enable Dside prefetch */
+	@ orr	r0, r0, #(0x1 << 1)		/* enable L2 Prefetch hint */
+	@ mcr	p15,0,r0,c1,c0,1		/* write Auxiliary Control Register */
 
 	mrs	r0, cpsr			/* get the current PSR */
 	bic	r0, r0, #0x100			/* enable asynchronous abort exception */
 	msr	cpsr_xsf, r0
 
+    mrc p15, 0, r1, c1, c0, 1
+    mov r0, #(1<<6)
+    orr r1, r0
+    mcr p15, 0, r1, c1, c0, 1 //enable smp
 
+	cps #Mode_SVC
+	
 	b	_start				/* jump to C startup code */
 	and	r0, r0, r0			/* no op */
 
 .Ldone:	b	.Ldone				/* Paranoia: we should never get here */
-
+startup1:
+    bl kernel1_zynq_init
 
 /*
  *************************************************************************
@@ -485,6 +576,11 @@ finished:
 	isb
 
 	bx	lr
+
+
+
+
+
 
 .end
 /**

@@ -68,8 +68,11 @@
 
 .globl _vector_table
 .global cpu_thread_switch_interrupt_flag
+@ .global cpu_thread_switch_interrupt_flag1
 .global cpu_interrupt_from_thread
+@ .global cpu_interrupt_from_thread1
 .global cpu_interrupt_to_thread
+@ .global cpu_interrupt_to_thread1
     
 .equ Mode_USR,        0x10
 .equ Mode_FIQ,        0x11
@@ -117,8 +120,12 @@ IRQHandler:					/* IRQ vector handler */
 
     @ if cpu_thread_switch_interrupt_flag set, jump to
     @ hw_context_switch_interrupt_do and don't return
+    mrc     p15, #0, r4, c0, c0, #5
+    and     r4, r4,#15
+
+
     ldr     r0, =cpu_thread_switch_interrupt_flag
-    ldr     r1, [r0]
+    ldr     r1, [r0,r4,LSL #2]
     cmp     r1, #1
     beq     hw_context_switch_interrupt_do
 #if defined (__VFP_FP__) && !defined(__SOFTFP__)
@@ -129,14 +136,13 @@ IRQHandler:					/* IRQ vector handler */
     vldmia sp!, {d0-d15}
 #endif
 
-@ #endif
     ldmfd   sp!, {r0-r12,pc}^
     @ subs    pc,  lr, #4
 
 
 hw_context_switch_interrupt_do:
     mov     r1,  #0         @ clear flag
-    str     r1,  [r0]
+    str     r1,  [r0,r4,LSL #2]
 
 #if defined (__VFP_FP__) && !defined(__SOFTFP__)
     ldmfd sp!, {r1}         /* Restore floating point registers */
@@ -170,13 +176,15 @@ hw_context_switch_interrupt_do:
     vmrs r1, FPEXC
     stmfd sp!,{r1}
 #endif
+    mrc     p15, #0, r8, c0, c0, #5
+    and     r8, r8,#15
 
     ldr     r4,  =cpu_interrupt_from_thread
-    ldr     r5,  [r4]
+    ldr     r5,  [r4,r8,LSL #2]
     str     sp,  [r5]       @ store sp in preempted tasks's TCB
 
     ldr     r6,  =cpu_interrupt_to_thread
-    ldr     r7,  [r6]
+    ldr     r7,  [r6,r8,LSL #2]
     ldr     sp,  [r7]       @ get new task's stack pointer
 
 #if defined (__VFP_FP__) && !defined(__SOFTFP__)
@@ -191,7 +199,6 @@ hw_context_switch_interrupt_do:
     msr     spsr_cxsf, r4
 
     ldmfd   sp!, {r0-r12,lr,pc}^ @ pop new task's r0-r12,lr & pc, copy spsr to cpsr
-
 
 
 

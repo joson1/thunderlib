@@ -3,9 +3,10 @@
 @*************************************************************************
 @                                 全局变量
 @*************************************************************************
-.global cpu_cpu_thread_switch_interrupt_flag
+
+.global cpu_thread_switch_interrupt_flag
 .global cpu_interrupt_from_thread
-.global cpu_cpu_interrupt_to_thread
+.global cpu_interrupt_to_thread
 #define NOINT           0xc0 
 
 
@@ -99,20 +100,26 @@ _ARM_MODE:
 
     ldmfd sp!, {r0-r12, lr, pc}^  @ pop new task r0-r12, lr & pc, copy spsr to cpsr
 
-
+@ (r0:uint32_t from,r1:uint32_t to);
 .globl cpu_hw_context_switch_interrupt
 cpu_hw_context_switch_interrupt:
+
+    mrc     p15, #0, r4, c0, c0, #5
+    and     r4, r4,#15
+
     ldr r2, =cpu_thread_switch_interrupt_flag
+    add r2, r2, r4,LSL #2 
     ldr r3, [r2]
+
     cmp r3, #1
     beq _reswitch
     mov r3, #1              @ set cpu_thread_switch_interrupt_flag to 1
     str r3, [r2]
     ldr r2, =cpu_interrupt_from_thread   @ set cpu_interrupt_from_thread
-    str r0, [r2]
+    str r0, [r2,r4,LSL #2]
 _reswitch:
     ldr r2, =cpu_interrupt_to_thread     @ set cpu_interrupt_to_thread
-    str r1, [r2]
+    str r1, [r2,r4,LSL #2]
     bx  lr
 
 

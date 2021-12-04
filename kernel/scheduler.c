@@ -43,7 +43,8 @@ k_list_t thread_defunct;
 
 ALIGN(8)
 /* 定义线程栈 */
-static uint8_t idle_thread_stack[nBrOfCPUs][512];
+static uint8_t idle_thread_stack[512];
+static uint8_t idle_thread2_stack[512];
 
 static thread_t thread_idle[nBrOfCPUs];
 
@@ -132,6 +133,46 @@ void thread_idle_init(void)
 }
 
 
+void thread_idle2_entry(void *parameter)
+{
+	uint32_t id = 0;
+    parameter = parameter;
+    while (1)
+    {
+		// id = cpu_get_smp_id();
+        idletask_ctr[1] ++;
+		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
+		// if (GT_INTS)
+		// {
+		// 	GT_INTS =0;
+		// 	GT_CON_REG0 = 0;
+		// 	GT_CON_REG1 = 0;
+
+		// }
+		
+    }
+}
+
+void thread_idle2_init(void)
+{
+	uint32_t cpuid = cpu_get_smp_id();
+	/* 初始化线程 */
+	thread_init( 	&(thread_idle[cpuid]),
+					(char*)"IDLE2",                 /* 线程控制块 */
+	                thread_idle2_entry,               /* 线程入口地址 */
+					NULL,
+	                NULL,                          /* 线程形参 */
+	                &idle_thread2_stack[0],        /* 线程栈起始地址 */
+	                sizeof(idle_thread2_stack),
+					0,
+					cpuid);  /* 线程栈大小，单位为字节 */
+
+	// printf("thread_idle init on cpu:%d\t stack%08x\r\n",cpuid, &idle_thread_stack[cpuid][0]);
+	
+
+}
+
+
 
 /* 初始化系统调度器 */
 void system_scheduler_init(void)
@@ -151,6 +192,11 @@ void system_scheduler_start(void)
 
 	uint32_t cpuid = cpu_get_smp_id();
 	thread_idle_init();
+	if (cpuid)
+	{
+		thread_idle2_init();
+	}
+	
 
 	/* 寻找包含就绪任务的最高优先级的队列 */
 

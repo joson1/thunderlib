@@ -26,7 +26,7 @@ void flag1_thread_entry( void *p_arg )
 	uint32_t level;
 	for( ;; )
 	{
-		MOVETO(1,0);
+		// MOVETO(1,0);
 
 		printf(YELLOW"thread1:%d\taf:%.2f\r\n",aa,af);
 		aa++;
@@ -47,7 +47,7 @@ void flag2_thread_entry( void *p_arg )
 	uint32_t level;
 	for( ;; )
 	{
-		MOVETO(2,0);
+		// MOVETO(2,0);
 
 		printf(BLUE"thread2:%d\taf:%.2f\r\n",aa,af);
 		aa++;
@@ -67,7 +67,7 @@ void flag3_thread_entry( void *p_arg )
 	while(1){
 		cc++;
 		af+=0.05;
-		MOVETO(3,0);
+		// MOVETO(3,0);
 		printf(GREEN"thread3:%d\taf:%.2f\r\n",cc,af);
 		// delay(200);
 
@@ -137,7 +137,7 @@ int main()
 		NULL,
 		10240,
 		3,
-		0
+		1
 	);
 	
 }
