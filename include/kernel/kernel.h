@@ -11,7 +11,7 @@
 #include <thunder/init.h>
 
 
-#define KERNEL_INIT(fn)		__define_initcall("1", fn, 0)
+#define KERNEL_SEV_INIT(fn)		__define_initcall("1", fn, 0)
 
 thread_t* thread_create(
                     const char* name,

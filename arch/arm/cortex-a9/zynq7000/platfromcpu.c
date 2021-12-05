@@ -8,7 +8,7 @@
  */
 #include <kernel/thread.h>
 #define VFP_DATA_NR 32
-#define CPUS (2)
+#define CPUS nBrOfCPUs
 /*
 *************************************************************************
 *                                 数据类型

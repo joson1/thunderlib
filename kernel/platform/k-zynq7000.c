@@ -228,3 +228,105 @@ void weakup_cpu1()
     Xil_DCacheFlushLine(CPU1STARTADDR);
     __sev();
 }
+
+
+
+
+//////////////////////////////////////////////IDLE_THREAD////////////////////////////
+
+
+static thread_t thread_idle[nBrOfCPUs];
+ALIGN(4)
+static uint8_t idle_thread_stack[nBrOfCPUs][512];
+extern unsigned long  idletask_ctr[nBrOfCPUs];
+
+
+void thread_idle0_entry(void *parameter)
+{
+	uint32_t id = 0;
+    parameter = parameter;
+    while (1)
+    {
+		// id = cpu_get_smp_id();
+        idletask_ctr[0] ++;
+		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
+		// if (GT_INTS)
+		// {
+		// 	GT_INTS =0;
+		// 	GT_CON_REG0 = 0;
+		// 	GT_CON_REG1 = 0;
+
+		// }
+		
+    }
+}
+
+void thread_idle0_init(void)
+{
+	// uint32_t cpuid = cpu_get_smp_id();
+	/* 初始化线程 */
+	thread_init( 	&(thread_idle[0]),
+					(char*)"IDLE(0)",                 /* 线程控制块 */
+	                thread_idle0_entry,               /* 线程入口地址 */
+					NULL,
+	                NULL,                          /* 线程形参 */
+	                idle_thread_stack[0],        /* 线程栈起始地址 */
+	                sizeof(idle_thread_stack)/2, /* 线程栈大小，单位为字节 */
+					0,
+					0);  
+
+	// printf("thread_idle init on cpu:%d\t stack%08x\r\n",cpuid, &idle_thread_stack[cpuid][0]);
+	
+
+}
+
+
+void thread_idle1_entry(void *parameter)
+{
+	uint32_t id = 0;
+    parameter = parameter;
+    while (1)
+    {
+		// id = cpu_get_smp_id();
+        idletask_ctr[1] ++;
+		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
+		// if (GT_INTS)
+		// {
+		// 	GT_INTS =0;
+		// 	GT_CON_REG0 = 0;
+		// 	GT_CON_REG1 = 0;
+
+		// }
+		
+    }
+}
+
+void thread_idle1_init(void)
+{
+	/* 初始化线程 */
+	thread_init( 	&(thread_idle[1]),
+					(char*)"IDLE(1)",                 /* 线程控制块 */
+	                thread_idle1_entry,               /* 线程入口地址 */
+					NULL,
+	                NULL,                          /* 线程形参 */
+	                idle_thread_stack[1],        /* 线程栈起始地址 */
+	                sizeof(idle_thread_stack)/2,
+					0,
+					1);  /* 线程栈大小，单位为字节 */
+
+	// printf("thread_idle init on cpu:%d\t stack%08x\r\n",cpuid, &idle_thread_stack[cpuid][0]);
+	
+
+}
+
+
+
+
+
+void zynq7000_kernel_services_init()
+{
+    thread_idle0_init();
+    thread_idle1_init();
+}
+
+KERNEL_SEV_INIT(zynq7000_kernel_services_init);

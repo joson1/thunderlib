@@ -51,6 +51,7 @@
         "mux-stm32f429.h": "c",
         "at24cxx.h": "c",
         "kops.h": "c",
-        "cp15.h": "c"
+        "cp15.h": "c",
+        "kdefs.h": "c"
     }
 }

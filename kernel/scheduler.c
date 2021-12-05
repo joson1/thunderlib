@@ -3,8 +3,6 @@
 #include "kops.h"
 #include <stdio.h>
 
-#define nBrOfCPUs (2)
-
 extern void cpu_interrupt_enable_f();
 extern int cpu_get_smp_id();
 
@@ -12,15 +10,15 @@ extern uint32_t cpu_interrupt_disable();
 extern void cpu_interrupt_enable(uint32_t level);
 
 extern void cpu_hw_context_switch_interrupt(uint32_t from, uint32_t to);
-uint32_t interrupt_cnt[nBrOfCPUs] = {0};
-uint32_t NumOfOverflows[nBrOfCPUs] = {0};
-uint32_t NextThreadUnblockTime[nBrOfCPUs];
-uint32_t CurrentNumberOfThread[nBrOfCPUs] = {0};
-thread_t* pCurrentThread[nBrOfCPUs];
+uint32_t interrupt_cnt[nBrOfCPUs] = { [0 ... nBrOfCPUs-1]=0,   };
+uint32_t NumOfOverflows[nBrOfCPUs] = { [0 ... nBrOfCPUs-1]=0,   };
+uint32_t NextThreadUnblockTime[nBrOfCPUs]={ [0 ... nBrOfCPUs-1]=0,   };
+uint32_t CurrentNumberOfThread[nBrOfCPUs] = { [0 ... nBrOfCPUs-1]=0,   };
+thread_t* pCurrentThread[nBrOfCPUs]={ [0 ... nBrOfCPUs-1]=0,   };
 extern thread_t* pCurrentThread[nBrOfCPUs];
-uint32_t sys_tick_counter[nBrOfCPUs] = {0};
+uint32_t sys_tick_counter[nBrOfCPUs] = { [0 ... nBrOfCPUs-1]=0,   };
 /* 线程就绪优先级组 */
-uint32_t ThreadReadyPriorityGroup[nBrOfCPUs]={0};
+uint32_t ThreadReadyPriorityGroup[nBrOfCPUs]={ [0 ... nBrOfCPUs-1]=0,   };
 
 /* 当前优先级 */
 uint8_t CurrentTopReadyPriority[nBrOfCPUs] = {0};
@@ -43,13 +41,8 @@ k_list_t thread_defunct;
 
 ALIGN(8)
 /* 定义线程栈 */
-static uint8_t idle_thread_stack[512];
-static uint8_t idle_thread2_stack[512];
 
-static thread_t thread_idle[nBrOfCPUs];
-
-
-
+extern unsigned long  idletask_ctr[nBrOfCPUs];
 unsigned long  idletask_ctr[nBrOfCPUs] = {0};
 
 #define GET_HIGHEST_PRIORITY( uxTopPriority, uxReadyPriorities ) uxTopPriority = ( 31UL - ( uint32_t ) __highest_bit_find( ( uxReadyPriorities ) ) )
@@ -92,86 +85,6 @@ void AddNewThreadToReadyList(thread_t* pthread,uint32_t cpuid)
 #define GT_CON_REG0 *((unsigned int *)(0xF8F00200))
 #define GT_CON_REG1 *((unsigned int *)(0xf8f00204))
 
-//////////////////////////////////////////////IDLE_THREAD////////////////////////////
-void thread_idle_entry(void *parameter)
-{
-	uint32_t id = 0;
-    parameter = parameter;
-    while (1)
-    {
-		// id = cpu_get_smp_id();
-        idletask_ctr[0] ++;
-		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
-		// if (GT_INTS)
-		// {
-		// 	GT_INTS =0;
-		// 	GT_CON_REG0 = 0;
-		// 	GT_CON_REG1 = 0;
-
-		// }
-		
-    }
-}
-
-void thread_idle_init(void)
-{
-	uint32_t cpuid = cpu_get_smp_id();
-	/* 初始化线程 */
-	thread_init( 	&(thread_idle[cpuid]),
-					(char*)"IDLE",                 /* 线程控制块 */
-	                thread_idle_entry,               /* 线程入口地址 */
-					NULL,
-	                NULL,                          /* 线程形参 */
-	                &idle_thread_stack[0],        /* 线程栈起始地址 */
-	                sizeof(idle_thread_stack),
-					0,
-					cpuid);  /* 线程栈大小，单位为字节 */
-
-	// printf("thread_idle init on cpu:%d\t stack%08x\r\n",cpuid, &idle_thread_stack[cpuid][0]);
-	
-
-}
-
-
-void thread_idle2_entry(void *parameter)
-{
-	uint32_t id = 0;
-    parameter = parameter;
-    while (1)
-    {
-		// id = cpu_get_smp_id();
-        idletask_ctr[1] ++;
-		// printf("sys_tick_counter:%d,GT_INTS:%08x,GT_CON_REG0:%08x,GT_CON_REG1:%08x\r\n",sys_tick_counter,GT_INTS,GT_CON_REG0,GT_CON_REG1);
-		// if (GT_INTS)
-		// {
-		// 	GT_INTS =0;
-		// 	GT_CON_REG0 = 0;
-		// 	GT_CON_REG1 = 0;
-
-		// }
-		
-    }
-}
-
-void thread_idle2_init(void)
-{
-	uint32_t cpuid = cpu_get_smp_id();
-	/* 初始化线程 */
-	thread_init( 	&(thread_idle[cpuid]),
-					(char*)"IDLE2",                 /* 线程控制块 */
-	                thread_idle2_entry,               /* 线程入口地址 */
-					NULL,
-	                NULL,                          /* 线程形参 */
-	                &idle_thread2_stack[0],        /* 线程栈起始地址 */
-	                sizeof(idle_thread2_stack),
-					0,
-					cpuid);  /* 线程栈大小，单位为字节 */
-
-	// printf("thread_idle init on cpu:%d\t stack%08x\r\n",cpuid, &idle_thread_stack[cpuid][0]);
-	
-
-}
-
 
 
 /* 初始化系统调度器 */
@@ -191,11 +104,11 @@ void system_scheduler_start(void)
 	uint32_t highest_ready_priority;
 
 	uint32_t cpuid = cpu_get_smp_id();
-	thread_idle_init();
-	if (cpuid)
-	{
-		thread_idle2_init();
-	}
+	// thread_idle_init();
+	// if (cpuid)
+	// {
+	// 	thread_idle2_init();
+	// }
 	
 
 	/* 寻找包含就绪任务的最高优先级的队列 */

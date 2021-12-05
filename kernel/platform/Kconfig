@@ -13,4 +13,11 @@ config KERNEL_ZYNQ7000
     default n
     
 
+
+config ZYNQ7000_CPUS
+    depends on KERNEL_ZYNQ7000
+	int "number of cpus 0f zynq7000"
+	default 2
+
+
 endmenu
