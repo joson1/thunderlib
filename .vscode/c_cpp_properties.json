@@ -3,7 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/arch/arm/cortex-a9/include"
             ],
             "defines": [
                 "_DEBUG",
@@ -37,17 +39,17 @@
             "name": "linux_cross",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/home/alan/文档/Documents/gcc-arm-none-eabi-9-2020-q2-update/arm-none-eabi/include/**"
+                "~/Documents/gcc-arm-10.3-2021.07-x86_64-arm-none-eabi/arm-none-eabi/include/**"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "/home/alan/文档/Documents/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc",
+            "compilerPath": "~/Documents/gcc-arm-10.3-2021.07-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
             "cppStandard": "c++11",
-            "intelliSenseMode": "gcc-arm"
+            "intelliSenseMode": "linux-gcc-arm"
         }
     ],
     "version": 4

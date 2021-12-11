@@ -7,7 +7,7 @@
  * @FilePath: \ThunderLib\app\main.c
  */
 
-#include <thunder/sleep.h>
+
 #include <stdio.h>
 #include <thunder/tty/tty.h>
 #include <thunder/gpio.h>
@@ -16,7 +16,7 @@
 #include <malloc.h>
 #include <thunder/fb.h>
 #include <kernel/kernel.h>
-
+#include <kernel/sleep.h>
 
 /* 线程1 */
 void flag1_thread_entry( void *p_arg )
@@ -32,7 +32,7 @@ void flag1_thread_entry( void *p_arg )
 		aa++;
 		af+=0.1;
 
-		sys_delay(10);
+		sleep(10);
 
 		/* 线程切换，这里是手动切换 */		
 		// schedule();
@@ -53,7 +53,7 @@ void flag2_thread_entry( void *p_arg )
 		aa++;
 		af+=0.01;
 
-		sys_delay(20);
+		sleep(20);
 
 		/* 线程切换，这里是手动切换 */		
 		// schedule();
@@ -71,7 +71,7 @@ void flag3_thread_entry( void *p_arg )
 		printf(GREEN"thread3:%d\taf:%.2f\r\n",cc,af);
 		// delay(200);
 
-			sys_delay(20);
+			sleep(20);
 
 	}
 

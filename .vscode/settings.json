@@ -52,6 +52,7 @@
         "at24cxx.h": "c",
         "kops.h": "c",
         "cp15.h": "c",
-        "kdefs.h": "c"
+        "kdefs.h": "c",
+        "uart.h": "c"
     }
 }

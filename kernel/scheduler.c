@@ -266,8 +266,8 @@ void sys_tick_handler()
 }
 extern void sys_tick_handler();
 
-
-void sys_delay(uint32_t TicksToWait)
+#include <kernel/sleep.h>
+void sleep(uint32_t Ticks)
 {
 	register tmp = cpu_interrupt_disable();
 	uint32_t delay;
@@ -285,7 +285,7 @@ void sys_delay(uint32_t TicksToWait)
 	}
 	
 
-	TimeToWake = ConstTickCount+TicksToWait;
+	TimeToWake = ConstTickCount+Ticks;
 
 	xlistSET_LIST_ITEM_VALUE( &(pCurrentThread[cpuid]->tListItem),TimeToWake );
 	if (TimeToWake<ConstTickCount)

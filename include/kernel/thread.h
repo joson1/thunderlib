@@ -81,6 +81,4 @@ void cpu_hw_context_switch_to(uint32_t to);
 void cpu_hw_context_switch_interrupt(uint32_t from, uint32_t to);
 														 
 
-void sys_delay(uint32_t ticks);
-
 void thread_idle_init(void);

@@ -5,7 +5,7 @@ objs+=device.o
 
 SUBDIRS-y +=pinmux
 SUBDIRS-y +=bus
-SUBDIRS-y +=sleep
+SUBDIRS-y +=delay
 SUBDIRS-$(CONFIG_INTERRUPT_EN) +=interrupt
 SUBDIRS-$(CONFIG_DMA_EN) +=dma
 
